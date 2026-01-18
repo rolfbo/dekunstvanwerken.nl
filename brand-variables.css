@@ -1,0 +1,257 @@
+/*
+ * ============================================================================
+ * De Kunst van Werken - Brand CSS Variables
+ * ============================================================================
+ * 
+ * Description:
+ * This file contains all CSS custom properties (variables) defined in the
+ * official Brand Style Guide. Import this file into any project to ensure
+ * consistent brand implementation across digital properties.
+ * 
+ * Usage:
+ * 1. Import this file at the top of your main CSS: @import 'brand-variables.css';
+ * 2. Or copy the :root block into your existing stylesheet
+ * 3. Reference variables like: color: var(--color-primary);
+ * 
+ * Version: 1.0
+ * Last Updated: January 2026
+ * Reference: /instructions/style_guide.md
+ * ============================================================================
+ */
+
+:root {
+    /* ========================================================================
+     * COLOR PALETTE
+     * ========================================================================
+     * All brand colors with their semantic names.
+     * Use semantic names (--color-primary) in your code, not raw hex values.
+     */
+    
+    /* --- Primary Colors --- */
+    /* Deep Professional Blue - Main brand color for headers, buttons, logos */
+    --color-primary: #004a99;
+    --color-primary-rgb: 0, 74, 153;          /* For rgba() usage */
+    --color-primary-hsl: 211, 100%, 30%;      /* For hsla() usage */
+    
+    /* Lighter Blue - Hover states, links, secondary elements */
+    --color-secondary: #3498db;
+    --color-secondary-rgb: 52, 152, 219;
+    --color-secondary-hsl: 204, 70%, 53%;
+    
+    /* Warm Orange - CTAs, attention elements (use sparingly!) */
+    --color-accent: #e67e22;
+    --color-accent-rgb: 230, 126, 34;
+    --color-accent-hsl: 28, 80%, 52%;
+    
+    /* --- Neutral Colors --- */
+    /* Light gray/white for backgrounds */
+    --color-bg-light: #f8fafc;
+    --color-bg-light-rgb: 248, 250, 252;
+    
+    /* Pure white for cards, nav, sections */
+    --color-white: #ffffff;
+    
+    /* Dark blue-gray for body text */
+    --color-text-dark: #2c3e50;
+    --color-text-dark-rgb: 44, 62, 80;
+    
+    /* White text for dark backgrounds */
+    --color-text-light: #ffffff;
+    
+    /* Light gray for borders, dividers */
+    --color-border: #d1d8e0;
+    --color-border-rgb: 209, 216, 224;
+    
+    /* --- Semantic Color Aliases --- */
+    /* Use these in your components for better readability */
+    --color-link: var(--color-primary);
+    --color-link-hover: var(--color-secondary);
+    --color-button-primary-bg: var(--color-primary);
+    --color-button-primary-hover: var(--color-secondary);
+    --color-heading: var(--color-primary);
+    --color-focus-ring: var(--color-accent);
+    --color-success: #27ae60;               /* Optional: for form validation */
+    --color-error: #e74c3c;                 /* Optional: for form validation */
+    
+    /* ========================================================================
+     * TYPOGRAPHY
+     * ========================================================================
+     */
+    
+    /* --- Font Families --- */
+    --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-heading: var(--font-primary);    /* Same family, different weight */
+    --font-body: var(--font-primary);
+    
+    /* --- Font Sizes --- */
+    /* Based on a 16px (1rem) base size */
+    --font-size-xs: 0.75rem;                /* 12px - captions */
+    --font-size-sm: 0.875rem;               /* 14px - small text */
+    --font-size-base: 1rem;                 /* 16px - body default */
+    --font-size-lg: 1.125rem;               /* 18px - body large */
+    --font-size-xl: 1.375rem;               /* 22px - H5/H4 */
+    --font-size-2xl: 1.75rem;               /* 28px - H3 */
+    --font-size-3xl: 2.5rem;                /* 40px - H2 */
+    --font-size-4xl: 3rem;                  /* 48px - H1 */
+    
+    /* --- Font Weights --- */
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    /* --- Line Heights --- */
+    --line-height-tight: 1.2;               /* Headings */
+    --line-height-snug: 1.4;                /* Subheadings, UI text */
+    --line-height-normal: 1.6;              /* Body text */
+    --line-height-relaxed: 1.8;             /* Large body text blocks */
+    
+    /* --- Letter Spacing --- */
+    --letter-spacing-tight: -0.025em;       /* Large headings */
+    --letter-spacing-normal: 0;             /* Default */
+    --letter-spacing-wide: 0.025em;         /* All-caps text */
+    
+    /* ========================================================================
+     * SPACING
+     * ========================================================================
+     * Based on an 8px unit system for consistent rhythm.
+     */
+    
+    --space-unit: 8px;                      /* Base unit */
+    --space-xs: 4px;                        /* 0.5 units */
+    --space-sm: 8px;                        /* 1 unit */
+    --space-md: 16px;                       /* 2 units */
+    --space-lg: 24px;                       /* 3 units */
+    --space-xl: 32px;                       /* 4 units */
+    --space-2xl: 48px;                      /* 6 units */
+    --space-3xl: 64px;                      /* 8 units */
+    --space-section: 80px;                  /* 10 units - between sections */
+    
+    /* --- Component-specific Spacing --- */
+    --padding-container: 2rem;              /* Container side padding */
+    --padding-container-mobile: 1rem;       /* Container padding on mobile */
+    --padding-card: 2rem;                   /* Card internal padding */
+    --padding-button-x: 1.5rem;             /* Button horizontal padding */
+    --padding-button-y: 0.8rem;             /* Button vertical padding */
+    --padding-input: 0.8rem;                /* Form input padding */
+    
+    /* ========================================================================
+     * LAYOUT
+     * ========================================================================
+     */
+    
+    --max-width-content: 1100px;            /* Max content width */
+    --max-width-text: 700px;                /* Max width for readable text */
+    --max-width-form: 600px;                /* Max width for forms */
+    
+    --nav-height: 80px;                     /* Navigation bar height */
+    --hero-height: 70vh;                    /* Hero section height */
+    
+    /* ========================================================================
+     * BORDERS & RADIUS
+     * ========================================================================
+     */
+    
+    --border-width: 1px;
+    --border-style: solid;
+    --border-default: var(--border-width) var(--border-style) var(--color-border);
+    
+    --radius-sm: 3px;                       /* Small elements */
+    --radius-md: 5px;                       /* Buttons, inputs */
+    --radius-lg: 10px;                      /* Cards */
+    --radius-xl: 12px;                      /* Large cards, modals */
+    --radius-full: 9999px;                  /* Pills, circular elements */
+    
+    /* ========================================================================
+     * SHADOWS
+     * ========================================================================
+     */
+    
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.1);
+    
+    /* Specific shadows */
+    --shadow-nav: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-card-hover: var(--shadow-lg);
+    
+    /* ========================================================================
+     * TRANSITIONS & ANIMATIONS
+     * ========================================================================
+     */
+    
+    --transition-fast: 150ms ease;
+    --transition-base: 300ms ease;
+    --transition-slow: 500ms ease;
+    
+    /* Standard transition for interactive elements */
+    --transition: all 0.3s ease;
+    
+    /* ========================================================================
+     * Z-INDEX SCALE
+     * ========================================================================
+     * Organized z-index values to prevent stacking conflicts.
+     */
+    
+    --z-base: 0;
+    --z-dropdown: 100;
+    --z-sticky: 500;
+    --z-fixed: 900;
+    --z-nav: 1000;
+    --z-modal-backdrop: 1100;
+    --z-modal: 1200;
+    --z-tooltip: 1300;
+    --z-toast: 1400;
+    
+    /* ========================================================================
+     * BREAKPOINTS
+     * ========================================================================
+     * Note: CSS custom properties cannot be used in media queries.
+     * These are for reference only. Use the actual values in media queries.
+     * 
+     * Mobile:           < 576px
+     * Mobile Landscape: 576px - 767px
+     * Tablet:           768px - 991px
+     * Desktop:          992px - 1199px
+     * Large Desktop:    ≥ 1200px
+     */
+    
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+}
+
+/* ============================================================================
+ * DARK MODE SUPPORT (Optional)
+ * ============================================================================
+ * Uncomment and customize if dark mode is needed in the future.
+ */
+
+/*
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg-light: #1a1a2e;
+        --color-text-dark: #eaeaea;
+        --color-white: #16213e;
+        --color-border: #3a3a5a;
+    }
+}
+*/
+
+/* ============================================================================
+ * REDUCED MOTION SUPPORT
+ * ============================================================================
+ * Respects user preferences for reduced motion (WCAG 2.2 compliance).
+ */
+
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --transition-fast: 0ms;
+        --transition-base: 0ms;
+        --transition-slow: 0ms;
+        --transition: none;
+    }
+}

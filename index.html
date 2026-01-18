@@ -1,7 +1,11 @@
 <!-- 
    Main Entry Point for dekunstvanwerken.nl
-   Description: This is a professional landing page for "De Kunst van Werken".
-   It focuses on health and safety services (Arbo), whitelabel solutions, and a contact form.
+   Description: This is a professional landing page for "de Kunst van Werken B.V.".
+   It focuses on occupational health services (Arbo), whitelabel solutions, and direct contact via email.
+   
+   Legal Entity: de Kunst van Werken B.V.
+   KVK: 94098344
+   
    Location: /var/www/dekunstvanwerken.nl/index.html
 -->
 
@@ -138,39 +142,32 @@
         </div>
     </section>
 
-    <!-- Contact Section: Form -->
+    <!-- Contact Section: Direct Email -->
     <section id="contact">
         <div class="container">
             <div class="section-title">
                 <h2>Neem Contact Op</h2>
-                <p>Wilt u meer weten over onze diensten of een offerte aanvragen? Vul het formulier in.</p>
+                <p>Wilt u meer weten over onze diensten of een offerte aanvragen? Neem direct contact met ons op via e-mail.</p>
             </div>
             
-            <div class="contact-container">
-                <form action="#" method="POST">
-                    <div class="form-group">
-                        <label for="name">Naam</label>
-                        <input type="text" id="name" name="name" placeholder="Uw volledige naam" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">E-mailadres</label>
-                        <input type="email" id="email" name="email" placeholder="uw@email.nl" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="subject">Onderwerp</label>
-                        <select id="subject" name="subject" style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 5px;">
-                            <option value="algemeen">Algemene vraag</option>
-                            <option value="offerte">Offerte aanvraag</option>
-                            <option value="whitelabel">Whitelabel mogelijkheden</option>
-                            <option value="overig">Overig</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Bericht</label>
-                        <textarea id="message" name="message" placeholder="Hoe kunnen wij u helpen?" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Verstuur Bericht</button>
-                </form>
+            <div class="contact-container" style="text-align: center;">
+                <!-- General Information Card -->
+                <div class="service-card" style="margin-bottom: 2rem;">
+                    <h3>Algemene Informatie</h3>
+                    <p>Voor vragen over onze diensten, offertes, whitelabel mogelijkheden of andere zakelijke zaken.</p>
+                    <a href="mailto:info@dekunstvanwerken.nl" class="btn btn-primary" style="margin-top: 1rem;">
+                        info@dekunstvanwerken.nl
+                    </a>
+                </div>
+                
+                <!-- Medical Information Card -->
+                <div class="service-card">
+                    <h3>Medische Informatie</h3>
+                    <p>Voor medische vragen, verzuimbegeleiding of contact met de bedrijfsarts.</p>
+                    <a href="mailto:medisch@dekunstvanwerken.nl" class="btn btn-primary" style="margin-top: 1rem;">
+                        medisch@dekunstvanwerken.nl
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -178,14 +175,14 @@
     <!-- Footer Area -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 De Kunst van Werken. Alle rechten voorbehouden.</p>
+            <p>&copy; 2026 de Kunst van Werken B.V. Alle rechten voorbehouden.</p>
             <div class="footer-links" style="margin-top: 1rem;">
                 <a href="klachten.html">Klachtenregeling</a>
                 <a href="#">Privacybeleid</a>
                 <a href="#">Algemene Voorwaarden</a>
             </div>
             <p style="font-size: 0.8rem; color: #bdc3c7; margin-top: 1rem;">
-                De Kunst van Werken is een handelsnaam van bearBytes.
+                de Kunst van Werken B.V. | KVK: 94098344
             </p>
         </div>
     </footer>

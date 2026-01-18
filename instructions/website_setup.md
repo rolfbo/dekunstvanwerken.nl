@@ -36,7 +36,13 @@ The service descriptions are based on the legal requirements as defined by the D
 ### 4. Complaints Procedure (`klachten.html`)
 Fulfills the legal requirement for healthcare/wellbeing providers (Wkkgz) by providing information about the complaints officer via Stichting DOKh.
 
+## Contact Method
+The website uses direct email contact instead of a contact form. This ensures immediate, direct communication with potential clients.
+
+**Email Addresses:**
+- **General Information:** info@dekunstvanwerken.nl
+- **Medical Information:** medisch@dekunstvanwerken.nl
+
 ## Future Considerations
-- **Form Handling:** Currently, the contact form uses `action="#"`. A backend script (e.g., PHP or a serverless function) needs to be implemented to actually send the emails.
 - **Assets:** Placeholder images or Unsplash links can be replaced with real company photos.
 - **SSL:** Ensure HTTPS is enabled via Let's Encrypt for the domain.
