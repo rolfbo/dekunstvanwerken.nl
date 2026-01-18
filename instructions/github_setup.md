@@ -61,5 +61,44 @@ If successful, you will see a message like:
 
 ---
 
+## 5. GitHub CLI (gh) Installation
+The GitHub CLI allows you to interact with GitHub directly from the command line - creating repositories, managing issues, and more.
+
+**Install command:**
+```bash
+sudo apt update && sudo apt install -y gh
+```
+
+**Authenticate with GitHub:**
+```bash
+gh auth login
+```
+Follow the prompts to authenticate via browser.
+
+---
+
+## 6. Repository Information
+The project code is hosted on GitHub at the following location:
+
+- **Repository URL:** https://github.com/rolfbo/dekunstvanwerken.nl
+- **Clone via SSH:** `git clone git@github.com:rolfbo/dekunstvanwerken.nl.git`
+- **Clone via HTTPS:** `git clone https://github.com/rolfbo/dekunstvanwerken.nl.git`
+
+**Useful commands:**
+```bash
+# Pull latest changes from GitHub
+git pull origin main
+
+# Push local changes to GitHub
+git add .
+git commit -m "Your commit message"
+git push origin main
+
+# Check repository status
+git status
+```
+
+---
+
 ## Conclusion
-Git is now installed and configured. Once the SSH key is added to GitHub, you will be able to clone, push, and pull repositories seamlessly.
+Git is now installed and configured. The project repository is live on GitHub and ready for collaboration and deployment.
