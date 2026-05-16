@@ -6,16 +6,16 @@
 */
 
 /* --- Variables --- */
+/* Local aliases mapped to the brand design tokens in brand-variables.css. */
 :root {
-    --primary-color: #004a99; /* Deep Professional Blue */
-    --secondary-color: #3498db; /* Lighter Blue */
-    --accent-color: #e67e22; /* Warm Orange for Call to Action */
-    --bg-light: #f8fafc; /* Light Gray/White Background */
-    --text-dark: #2c3e50; /* Dark Blue-Gray for Text */
-    --text-light: #ffffff; /* White Text */
-    --border-color: #d1d8e0;
-    --max-width: 1100px;
-    --transition: all 0.3s ease;
+    --primary-color: var(--color-primary);
+    --secondary-color: var(--color-secondary);
+    --accent-color: var(--color-accent);
+    --bg-light: var(--color-bg-light);
+    --text-dark: var(--color-text-dark);
+    --text-light: var(--color-text-light);
+    --border-color: var(--color-border);
+    --max-width: var(--max-width-content);
 }
 
 /* --- Reset & Global Styles --- */
