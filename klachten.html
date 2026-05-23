@@ -1,5 +1,5 @@
 <!-- 
-This file provides information about the complaints procedure for bearBytes (dekunstvanwerken.nl).
+This file provides information about the complaints procedure for de Kunst van Werken B.V. (dekunstvanwerken.nl).
 It fulfills the legal requirements of the Wkkgz by informing clients how to submit a complaint
 and providing contact details for the independent complaints officer via Stichting DOKh.
 Location: /var/www/dekunstvanwerken.nl/klachten.html
@@ -10,33 +10,36 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klachtenregeling - bearBytes</title>
-    
+    <title>Klachtenregeling - De Kunst van Werken</title>
+
+    <!-- Brand design tokens -->
+    <link rel="stylesheet" href="brand-variables.css">
+
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--font-primary);
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f0f2f5;
-            color: #333;
+            background-color: var(--color-bg-light);
+            color: var(--color-text-dark);
         }
 
         .container {
             max-width: 800px;
             margin: 2rem auto;
             padding: 2.5rem;
-            background: white;
+            background: var(--color-white);
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         h1, h2 {
-            color: #2c3e50;
+            color: var(--color-text-dark);
         }
 
         h1 {
-            border-bottom: 2px solid #3498db;
+            border-bottom: 2px solid var(--color-secondary);
             padding-bottom: 10px;
             margin-bottom: 1.5rem;
         }
@@ -44,7 +47,7 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
         .info-box {
             background-color: #e8f4fd;
             padding: 1rem;
-            border-left: 5px solid #3498db;
+            border-left: 5px solid var(--color-secondary);
             margin: 1.5rem 0;
             border-radius: 4px;
         }
@@ -55,7 +58,7 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
 
         .step-number {
             font-weight: bold;
-            color: #3498db;
+            color: var(--color-secondary);
             font-size: 1.2rem;
             margin-right: 10px;
         }
@@ -71,15 +74,15 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
             display: inline-block;
             margin-top: 1rem;
             padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
+            background-color: var(--color-primary);
+            color: var(--color-white);
             text-decoration: none;
             border-radius: 5px;
             transition: background 0.3s;
         }
 
         .btn-back:hover {
-            background-color: #2980b9;
+            background-color: var(--color-secondary);
         }
     </style>
 </head>
@@ -87,13 +90,13 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
     <div class="container">
         <h1>Klachtenregeling</h1>
         
-        <p>Bij <strong>bearBytes</strong> (dekunstvanwerken.nl) hechten wij veel waarde aan de kwaliteit van onze dienstverlening. Toch kan het gebeuren dat u niet tevreden bent. In dat geval horen wij dat graag, zodat we samen naar een oplossing kunnen zoeken.</p>
+        <p>Bij <strong>de Kunst van Werken B.V.</strong> (dekunstvanwerken.nl) hechten wij veel waarde aan de kwaliteit van onze dienstverlening. Toch kan het gebeuren dat u niet tevreden bent. In dat geval horen wij dat graag, zodat we samen naar een oplossing kunnen zoeken.</p>
 
         <div class="info-box">
             <strong>Gegevens zorgverlener:</strong><br>
             Naam: R. Bosscha<br>
-            Bedrijfsnaam: bearBytes<br>
-            KvK-nummer: 76819167<br>
+            Bedrijfsnaam: de Kunst van Werken B.V.<br>
+            KvK-nummer: 94098344<br>
             E-mail: rolfbosscha@dekunstvanwerken.nl<br>
             Telefoon: +31 (0) 6 38 90 32 64
         </div>
@@ -107,11 +110,11 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
 
         <div class="step">
             <span class="step-number">2.</span> <strong>Onafhankelijke Klachtenfunctionaris</strong><br>
-            Indien het gesprek niet tot een gewenste oplossing leidt, kunt u gratis gebruikmaken van een onafhankelijke klachtenfunctionaris. bearBytes is hiervoor aangesloten bij <strong>Stichting DOKh</strong>. De klachtenfunctionaris kan bemiddelen en u adviseren over de verdere procedure.
+            Indien het gesprek niet tot een gewenste oplossing leidt, kunt u gratis gebruikmaken van een onafhankelijke klachtenfunctionaris. de Kunst van Werken B.V. is hiervoor aangesloten bij <strong>Stichting DOKh</strong>. De klachtenfunctionaris kan bemiddelen en u adviseren over de verdere procedure.
             <br><br>
             U kunt contact opnemen met DOKh via:<br>
             Website: <a href="https://www.dokh.nl" target="_blank">www.dokh.nl</a><br>
-            E-mail: <a href="mailto:klachtenen@dokh.nl">klachten@dokh.nl</a><br>
+            E-mail: <a href="mailto:klachten@dokh.nl">klachten@dokh.nl</a><br>
             Telefoon: 072-520 83 25
         </div>
 
@@ -123,7 +126,7 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
         <a href="index.html" class="btn-back">Terug naar Home</a>
 
         <footer>
-            &copy; 2026 bearBytes | Aangesloten bij Stichting DOKh
+            &copy; 2026 de Kunst van Werken B.V. | Aangesloten bij Stichting DOKh
         </footer>
     </div>
 </body>
