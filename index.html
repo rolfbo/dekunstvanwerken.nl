@@ -15,20 +15,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>De Kunst van Werken | Professionele Arbodienstverlening</title>
-    
+    <meta name="description" content="de Kunst van Werken B.V. – professionele Nederlandse arbodienstverlening: verzuimbegeleiding, RI&E-toetsing, PAGO/PMO, aanstellingskeuringen en bedrijfsarts. Ook beschikbaar als whitelabel-partner.">
+    <meta name="author" content="de Kunst van Werken B.V.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://dekunstvanwerken.nl/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="de Kunst van Werken">
+    <meta property="og:locale" content="nl_NL">
+    <meta property="og:url" content="https://dekunstvanwerken.nl/">
+    <meta property="og:title" content="De Kunst van Werken | Professionele Arbodienstverlening">
+    <meta property="og:description" content="Professionele arbodienstverlening voor werkgevers in Nederland: verzuim, RI&E, PAGO/PMO, bedrijfsarts en whitelabel-diensten.">
+    <meta property="og:image" content="https://dekunstvanwerken.nl/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="De Kunst van Werken | Professionele Arbodienstverlening">
+    <meta name="twitter:description" content="Professionele arbodienstverlening voor werkgevers in Nederland: verzuim, RI&E, PAGO/PMO, bedrijfsarts en whitelabel-diensten.">
+    <meta name="twitter:image" content="https://dekunstvanwerken.nl/og-image.png">
+
     <!-- Brand design tokens, then custom stylesheet -->
     <link rel="stylesheet" href="brand-variables.css">
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Favicon placeholder (optional) -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#004a99">
+
+    <!-- Structured data: ProfessionalService / MedicalBusiness -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["ProfessionalService", "MedicalBusiness"],
+      "name": "de Kunst van Werken B.V.",
+      "url": "https://dekunstvanwerken.nl/",
+      "logo": "https://dekunstvanwerken.nl/favicon.svg",
+      "image": "https://dekunstvanwerken.nl/og-image.png",
+      "description": "Professionele Nederlandse arbodienstverlening: verzuimbegeleiding, RI&E-toetsing, PAGO/PMO, aanstellingskeuringen, bedrijfsarts en whitelabel-diensten.",
+      "email": "info@dekunstvanwerken.nl",
+      "telephone": "+31638903264",
+      "inLanguage": "nl",
+      "areaServed": {
+        "@type": "Country",
+        "name": "Nederland"
+      },
+      "knowsAbout": [
+        "Arbodienstverlening",
+        "Verzuimbegeleiding",
+        "Re-integratie",
+        "RI&E",
+        "PAGO",
+        "PMO",
+        "Aanstellingskeuring",
+        "Bedrijfsarts",
+        "Whitelabel arbodienst"
+      ],
+      "identifier": {
+        "@type": "PropertyValue",
+        "propertyID": "KVK",
+        "value": "94098344"
+      }
+    }
+    </script>
 </head>
 <body>
 
     <!-- Navigation Header -->
     <nav>
         <div class="container">
-            <div class="logo">De Kunst van Werken</div>
+            <a href="#hero" class="logo" aria-label="de Kunst van Werken — home">
+                <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+                    <rect width="40" height="40" rx="8" fill="var(--color-primary)"/>
+                    <path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M10 33 Q20 35.5 30 33" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                </svg>
+                <span class="logo-text">de Kunst van Werken</span>
+            </a>
             <ul class="nav-links">
                 <li><a href="#hero">Home</a></li>
                 <li><a href="#services">Diensten</a></li>
@@ -179,8 +244,8 @@
             <p>&copy; 2026 de Kunst van Werken B.V. Alle rechten voorbehouden.</p>
             <div class="footer-links" style="margin-top: 1rem;">
                 <a href="klachten.html">Klachtenregeling</a>
-                <a href="#">Privacybeleid</a>
-                <a href="#">Algemene Voorwaarden</a>
+                <a href="privacybeleid.html">Privacybeleid</a>
+                <a href="voorwaarden.html">Algemene Voorwaarden</a>
             </div>
             <p style="font-size: 0.8rem; color: #bdc3c7; margin-top: 1rem;">
                 de Kunst van Werken B.V. | KVK: 94098344

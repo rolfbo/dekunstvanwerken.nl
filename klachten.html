@@ -1,4 +1,4 @@
-<!-- 
+<!--
 This file provides information about the complaints procedure for de Kunst van Werken B.V. (dekunstvanwerken.nl).
 It fulfills the legal requirements of the Wkkgz by informing clients how to submit a complaint
 and providing contact details for the independent complaints officer via Stichting DOKh.
@@ -10,86 +10,32 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klachtenregeling - De Kunst van Werken</title>
+    <title>Klachtenregeling | De Kunst van Werken</title>
+    <meta name="description" content="Klachtenregeling van de Kunst van Werken B.V. – informatie over hoe u een klacht kunt indienen en de aangesloten onafhankelijke klachtenfunctionaris via Stichting DOKh.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://dekunstvanwerken.nl/klachten.html">
 
-    <!-- Brand design tokens -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#004a99">
+
+    <!-- Brand design tokens + shared legal-page styles -->
     <link rel="stylesheet" href="brand-variables.css">
-
-    <style>
-        body {
-            font-family: var(--font-primary);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: var(--color-bg-light);
-            color: var(--color-text-dark);
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2.5rem;
-            background: var(--color-white);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        h1, h2 {
-            color: var(--color-text-dark);
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--color-secondary);
-            padding-bottom: 10px;
-            margin-bottom: 1.5rem;
-        }
-
-        .info-box {
-            background-color: #e8f4fd;
-            padding: 1rem;
-            border-left: 5px solid var(--color-secondary);
-            margin: 1.5rem 0;
-            border-radius: 4px;
-        }
-
-        .step {
-            margin-bottom: 1.5rem;
-        }
-
-        .step-number {
-            font-weight: bold;
-            color: var(--color-secondary);
-            font-size: 1.2rem;
-            margin-right: 10px;
-        }
-
-        footer {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #7f8c8d;
-        }
-
-        .btn-back {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 10px 20px;
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .btn-back:hover {
-            background-color: var(--color-secondary);
-        }
-    </style>
+    <link rel="stylesheet" href="legal.css">
 </head>
 <body>
-    <div class="container">
+    <div class="legal-container">
+        <div class="legal-header">
+            <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+                <rect width="40" height="40" rx="8" fill="#004a99"/>
+                <path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M10 33 Q20 35.5 30 33" stroke="#e67e22" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+            </svg>
+            <a class="logo-text" href="index.html">de Kunst van Werken</a>
+        </div>
+
         <h1>Klachtenregeling</h1>
-        
+
         <p>Bij <strong>de Kunst van Werken B.V.</strong> (dekunstvanwerken.nl) hechten wij veel waarde aan de kwaliteit van onze dienstverlening. Toch kan het gebeuren dat u niet tevreden bent. In dat geval horen wij dat graag, zodat we samen naar een oplossing kunnen zoeken.</p>
 
         <div class="info-box">
@@ -97,7 +43,7 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
             Naam: R. Bosscha<br>
             Bedrijfsnaam: de Kunst van Werken B.V.<br>
             KvK-nummer: 94098344<br>
-            E-mail: rolfbosscha@dekunstvanwerken.nl<br>
+            E-mail: <a href="mailto:rolfbosscha@dekunstvanwerken.nl">rolfbosscha@dekunstvanwerken.nl</a><br>
             Telefoon: +31 (0) 6 38 90 32 64
         </div>
 
@@ -113,7 +59,7 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
             Indien het gesprek niet tot een gewenste oplossing leidt, kunt u gratis gebruikmaken van een onafhankelijke klachtenfunctionaris. de Kunst van Werken B.V. is hiervoor aangesloten bij <strong>Stichting DOKh</strong>. De klachtenfunctionaris kan bemiddelen en u adviseren over de verdere procedure.
             <br><br>
             U kunt contact opnemen met DOKh via:<br>
-            Website: <a href="https://www.dokh.nl" target="_blank">www.dokh.nl</a><br>
+            Website: <a href="https://www.dokh.nl" target="_blank" rel="noopener">www.dokh.nl</a><br>
             E-mail: <a href="mailto:klachten@dokh.nl">klachten@dokh.nl</a><br>
             Telefoon: 072-520 83 25
         </div>
@@ -125,7 +71,7 @@ Location: /var/www/dekunstvanwerken.nl/klachten.html
 
         <a href="index.html" class="btn-back">Terug naar Home</a>
 
-        <footer>
+        <footer class="legal-footer">
             &copy; 2026 de Kunst van Werken B.V. | Aangesloten bij Stichting DOKh
         </footer>
     </div>

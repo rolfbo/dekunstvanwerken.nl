@@ -97,9 +97,24 @@ nav .container {
 }
 
 .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.logo-mark {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.logo-text {
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--primary-color);
+    line-height: 1;
 }
 
 .nav-links {

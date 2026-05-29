@@ -1,0 +1,122 @@
+/*
+   Shared styles for legal/informational pages
+   (klachten.html, privacybeleid.html, voorwaarden.html)
+   Depends on brand-variables.css for design tokens.
+*/
+
+body {
+    font-family: var(--font-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg-light);
+    color: var(--color-text-dark);
+}
+
+.legal-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: var(--color-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.legal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.legal-header .logo-mark {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.legal-header .logo-text {
+    font-weight: bold;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+h1, h2, h3 {
+    color: var(--color-text-dark);
+}
+
+h1 {
+    border-bottom: 2px solid var(--color-secondary);
+    padding-bottom: 10px;
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    margin-top: 2rem;
+    font-size: 1.4rem;
+}
+
+h3 {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+ul, ol {
+    margin: 0 0 1rem 1.5rem;
+}
+
+ul li, ol li {
+    margin-bottom: 0.4rem;
+}
+
+.info-box {
+    background-color: #e8f4fd;
+    padding: 1rem;
+    border-left: 5px solid var(--color-secondary);
+    margin: 1.5rem 0;
+    border-radius: 4px;
+}
+
+.step {
+    margin-bottom: 1.5rem;
+}
+
+.step-number {
+    font-weight: bold;
+    color: var(--color-secondary);
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.meta {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 2rem;
+}
+
+.btn-back {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 10px 20px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.btn-back:hover {
+    background-color: var(--color-secondary);
+}
+
+.legal-footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
