@@ -94,7 +94,10 @@
                 </svg>
                 <span class="logo-text">de Kunst van Werken</span>
             </a>
-            <ul class="nav-links">
+            <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu openen">
+                <span class="nav-toggle-bar"></span>
+            </button>
+            <ul class="nav-links" id="primary-nav">
                 <li><a href="#hero">Home</a></li>
                 <li><a href="#services">Diensten</a></li>
                 <li><a href="#werkwijze">Werkwijze</a></li>
@@ -213,7 +216,8 @@
         <div class="container">
             <div class="section-title">
                 <h2>Neem Contact Op</h2>
-                <p>Wilt u meer weten over onze diensten of een offerte aanvragen? Neem direct contact met ons op via e-mail.</p>
+                <p>Wilt u meer weten over onze diensten of een offerte aanvragen? Neem direct contact met ons op via e-mail of telefoon.</p>
+                <p class="contact-phone"><strong>Telefoon:</strong> <a href="tel:+31638903264">+31 (0) 6 38 90 32 64</a></p>
             </div>
             
             <div class="contact-container" style="text-align: center;">
@@ -253,5 +257,25 @@
         </div>
     </footer>
 
+    <script>
+    (function () {
+        const toggle = document.querySelector('.nav-toggle');
+        const menu = document.getElementById('primary-nav');
+        if (!toggle || !menu) return;
+        const close = () => {
+            menu.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.setAttribute('aria-label', 'Menu openen');
+        };
+        toggle.addEventListener('click', () => {
+            const open = menu.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+        });
+        menu.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') close();
+        });
+    })();
+    </script>
 </body>
 </html>

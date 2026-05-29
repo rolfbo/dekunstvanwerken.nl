@@ -129,6 +129,59 @@ nav .container {
     color: var(--secondary-color);
 }
 
+/* --- Mobile menu toggle (hamburger) --- */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+}
+
+.nav-toggle-bar,
+.nav-toggle-bar::before,
+.nav-toggle-bar::after {
+    display: block;
+    width: 24px;
+    height: 3px;
+    background: currentColor;
+    border-radius: 2px;
+}
+
+.nav-toggle-bar {
+    position: relative;
+}
+
+.nav-toggle-bar::before,
+.nav-toggle-bar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    transition: transform 0.25s ease, top 0.25s ease;
+}
+
+.nav-toggle-bar::before { top: -8px; }
+.nav-toggle-bar::after  { top:  8px; }
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar {
+    background: transparent;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar::before {
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar::after {
+    top: 0;
+    transform: rotate(-45deg);
+}
+
 /* --- Hero Section --- */
 #hero {
     background: linear-gradient(rgba(0, 74, 153, 0.8), rgba(0, 74, 153, 0.8)), 
@@ -264,27 +317,18 @@ nav .container {
     margin: 0 auto;
 }
 
-.form-group {
-    margin-bottom: 1.5rem;
+.contact-phone {
+    margin-top: 0.75rem;
+    font-size: 1.1rem;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
+.contact-phone a {
+    color: var(--primary-color);
     font-weight: bold;
 }
 
-.form-group input, 
-.form-group textarea {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-family: inherit;
-}
-
-.form-group textarea {
-    height: 150px;
+.contact-phone a:hover {
+    color: var(--secondary-color);
 }
 
 /* --- Footer --- */
@@ -310,10 +354,44 @@ footer {
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-    .nav-links {
-        display: none; /* In a real project we'd add a mobile menu */
+    .nav-toggle {
+        display: inline-flex;
     }
-    
+
+    .nav-links {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background: var(--text-light);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+    }
+
+    .nav-links.open {
+        max-height: 400px;
+    }
+
+    .nav-links li {
+        margin: 0;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 1rem 2rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-links li:last-child a {
+        border-bottom: none;
+    }
+
     #hero h1 {
         font-size: 2rem;
     }
