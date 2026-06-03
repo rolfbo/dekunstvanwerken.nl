@@ -1,0 +1,311 @@
+<!--
+   Opbouwschema-calculator for de Kunst van Werken B.V.
+   Helps visualise a phased return-to-work week and the weekly +1u progression
+   toward full-time. Educational tool only — actual schedules are set by
+   werknemer, werkgever en bedrijfsarts together.
+   Location: /var/www/dekunstvanwerken.nl/opbouwschema.html
+-->
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opbouwschema-calculator | De Kunst van Werken</title>
+    <meta name="description" content="Bereken een voorstel voor een gefaseerd opbouwschema bij re-integratie. Geef het aantal uren per week op en zie hoe de week eruit kan zien — ochtenden eerst, met +1 uur per week richting fulltime.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://dekunstvanwerken.nl/opbouwschema.html">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#004a99">
+
+    <link rel="stylesheet" href="brand-variables.css">
+    <link rel="stylesheet" href="legal.css">
+
+    <style>
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0 1.5rem;
+        }
+        .form-row label {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 160px;
+            font-weight: bold;
+            color: var(--color-text-dark);
+        }
+        .form-row input {
+            padding: 0.6rem;
+            border: 1px solid var(--color-border);
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-top: 0.35rem;
+            font-family: inherit;
+        }
+        .form-row input:focus {
+            outline: 2px solid var(--color-secondary);
+            outline-offset: 2px;
+        }
+
+        .summary {
+            background: #e8f4fd;
+            border-left: 5px solid var(--color-secondary);
+            padding: 0.8rem 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: 90px repeat(5, 1fr);
+            gap: 6px;
+            margin: 1rem 0 1.5rem;
+        }
+        .week-grid .head,
+        .week-grid .row-label {
+            font-weight: bold;
+            color: var(--color-text-dark);
+            text-align: center;
+            padding: 0.4rem 0;
+        }
+        .week-grid .row-label {
+            text-align: left;
+            align-self: center;
+        }
+        .week-grid .cell {
+            background: var(--color-bg-light);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #b0b6bf;
+        }
+        .week-grid .cell.filled {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #fff;
+        }
+        .week-grid .cell.partial {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+            color: #fff;
+        }
+
+        .principle {
+            background: #fff5ec;
+            border-left: 5px solid var(--color-accent);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .progression {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .progression th,
+        .progression td {
+            border-bottom: 1px solid var(--color-border);
+            padding: 0.55rem 0.5rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        .progression th {
+            background: var(--color-bg-light);
+            color: var(--color-text-dark);
+        }
+        .progression tr:last-child td {
+            border-bottom: none;
+            font-weight: bold;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        @media (max-width: 600px) {
+            .week-grid {
+                grid-template-columns: 70px repeat(5, 1fr);
+                gap: 4px;
+            }
+            .week-grid .cell {
+                min-height: 52px;
+                font-size: 0.85rem;
+            }
+            .week-grid .head {
+                font-size: 0.85rem;
+            }
+            .progression {
+                font-size: 0.85rem;
+            }
+            .progression th, .progression td {
+                padding: 0.4rem 0.35rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="legal-container">
+        <div class="legal-header">
+            <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+                <rect width="40" height="40" rx="8" fill="#004a99"/>
+                <path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M10 33 Q20 35.5 30 33" stroke="#e67e22" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+            </svg>
+            <a class="logo-text" href="index.html">de Kunst van Werken</a>
+        </div>
+
+        <h1>Opbouwschema-calculator</h1>
+        <p>Een gefaseerde terugkeer naar werk werkt het beste als er voldoende ruimte is voor herstel tussen werkdagen. Geef het aantal uren op dat de werknemer deze week kan werken, dan ziet u meteen hoe de week eruit kan zien en hoe de opbouw richting fulltime loopt (&plus;1 uur per week).</p>
+
+        <form id="form" onsubmit="return false;">
+            <div class="form-row">
+                <label>Uren deze week
+                    <input type="number" id="huidig" min="1" max="40" step="1" value="8" required>
+                </label>
+                <label>Doel (uren per week)
+                    <input type="number" id="doel" min="1" max="60" step="1" value="40" required>
+                </label>
+            </div>
+        </form>
+
+        <h2>Voorstel deze week</h2>
+        <div class="summary" id="summary"></div>
+        <div class="week-grid" id="grid" aria-label="Weekschema"></div>
+
+        <div class="principle">
+            <strong>Eigen werk in de ochtend.</strong> Vul de opbouw-uren met het werk dat bij de functie hoort &mdash; geen losse hand-en-spandiensten. Dat maakt het herstel duurzaam en de terugkeer betekenisvol.
+        </div>
+
+        <h2>Opbouw naar het doel</h2>
+        <p>Elke week wordt er &eacute;&eacute;n uur toegevoegd. Zo ziet de opbouw eruit:</p>
+        <table class="progression" id="prog">
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Uren</th>
+                    <th>Dagdelen</th>
+                    <th>Verdeling</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <p class="disclaimer">
+            Dit voorstel is een hulpmiddel voor het gesprek tussen werknemer, werkgever en bedrijfsarts en is geen medisch advies. Een individueel opbouwschema wordt altijd op maat opgesteld, rekening houdend met belastbaarheid, herstel en de aard van het werk.
+        </p>
+
+        <a href="index.html" class="btn-back">Terug naar Home</a>
+    </div>
+
+    <script>
+    (function () {
+        const DAGDEEL = 4;
+        // Order favours rest days between workdays:
+        // first all mornings (Ma, Wo, Vr, then Di, Do), then afternoons in the same order.
+        const slotOrder = [
+            'Mon-am','Wed-am','Fri-am','Tue-am','Thu-am',
+            'Mon-pm','Wed-pm','Fri-pm','Tue-pm','Thu-pm'
+        ];
+        const days = ['Ma','Di','Wo','Do','Vr'];
+        const dayKey = { Ma:'Mon', Di:'Tue', Wo:'Wed', Do:'Thu', Vr:'Fri' };
+        const slotLabel = (slot) => {
+            const [d, h] = slot.split('-');
+            const nl = { Mon:'Ma', Tue:'Di', Wed:'Wo', Thu:'Do', Fri:'Vr' }[d];
+            return nl + (h === 'am' ? '-och' : '-mid');
+        };
+
+        function planWeek(hours) {
+            const plan = {};
+            let remaining = Math.max(0, hours);
+            for (const slot of slotOrder) {
+                if (remaining <= 0) break;
+                const h = Math.min(DAGDEEL, remaining);
+                plan[slot] = h;
+                remaining -= h;
+            }
+            return plan;
+        }
+
+        function describe(plan) {
+            return slotOrder
+                .filter(s => s in plan)
+                .map(s => `${slotLabel(s)} (${plan[s]}u)`)
+                .join(', ');
+        }
+
+        function makeCell(text, cls) {
+            const el = document.createElement('div');
+            el.className = cls;
+            el.textContent = text;
+            return el;
+        }
+
+        function renderGrid(plan) {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            grid.appendChild(makeCell('', 'head'));
+            days.forEach(d => grid.appendChild(makeCell(d, 'head')));
+            [['Ochtend', 'am'], ['Middag', 'pm']].forEach(([label, half]) => {
+                grid.appendChild(makeCell(label, 'row-label'));
+                days.forEach(d => {
+                    const key = `${dayKey[d]}-${half}`;
+                    const h = plan[key];
+                    if (h === undefined) {
+                        grid.appendChild(makeCell('', 'cell'));
+                    } else {
+                        const cls = h === DAGDEEL ? 'cell filled' : 'cell partial';
+                        grid.appendChild(makeCell(`${h}u`, cls));
+                    }
+                });
+            });
+        }
+
+        function renderProgression(start, target) {
+            const tbody = document.querySelector('#prog tbody');
+            tbody.innerHTML = '';
+            const from = Math.min(start, target);
+            const to = Math.max(start, target);
+            let weekNum = 1;
+            for (let h = from; h <= to; h++) {
+                const plan = planWeek(h);
+                const dagdelen = Object.keys(plan).length;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${weekNum}</td><td>${h} u</td><td>${dagdelen}</td><td>${describe(plan)}</td>`;
+                tbody.appendChild(tr);
+                weekNum++;
+                if (weekNum > 60) break;
+            }
+        }
+
+        function update() {
+            const huidig = clamp(+document.getElementById('huidig').value || 1, 1, 40);
+            const doel   = clamp(+document.getElementById('doel').value   || 40, 1, 60);
+            const plan = planWeek(huidig);
+            const dagdelen = Object.keys(plan).length;
+            const summary = document.getElementById('summary');
+            const richting = doel >= huidig ? 'opbouw richting fulltime' : 'afbouw richting deeltijd';
+            summary.innerHTML = `<strong>${huidig} uur</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ochtenden eerst, met rustdagen ertussen &middot; ${richting}.`;
+            renderGrid(plan);
+            renderProgression(huidig, doel);
+        }
+        function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+
+        document.getElementById('form').addEventListener('input', update);
+        update();
+    })();
+    </script>
+</body>
+</html>

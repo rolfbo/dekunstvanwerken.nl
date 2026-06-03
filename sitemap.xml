@@ -6,6 +6,11 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://dekunstvanwerken.nl/opbouwschema.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dekunstvanwerken.nl/klachten.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
