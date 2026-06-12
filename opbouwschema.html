@@ -13,16 +13,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Opbouwschema-calculator | De Kunst van Werken</title>
     <meta name="description" content="Bereken een voorstel voor een gefaseerd opbouwschema bij re-integratie. Geef het aantal uren per week op en zie hoe de week eruit kan zien — ochtenden eerst, met +1 uur per week richting fulltime.">
+    <meta name="author" content="de Kunst van Werken B.V.">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://dekunstvanwerken.nl/opbouwschema.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="de Kunst van Werken">
+    <meta property="og:locale" content="nl_NL">
+    <meta property="og:url" content="https://dekunstvanwerken.nl/opbouwschema.html">
+    <meta property="og:title" content="Opbouwschema-calculator | De Kunst van Werken">
+    <meta property="og:description" content="Een hulpmiddel voor het opstellen van een gefaseerd opbouwschema bij re-integratie: ochtenden eerst, +1 uur per week richting fulltime.">
+    <meta property="og:image" content="https://dekunstvanwerken.nl/og-image.png">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta name="theme-color" content="#004a99">
 
     <link rel="stylesheet" href="brand-variables.css">
-    <link rel="stylesheet" href="legal.css">
+    <link rel="stylesheet" href="style.css">
 
     <style>
+        /* Calculator-specific styles, scoped to this page */
+        #opbouwschema {
+            background: var(--bg-light);
+        }
+
+        .calculator-card {
+            max-width: 820px;
+            margin: 0 auto;
+            background: var(--text-light);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .calculator-card h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .calculator-card h2:first-of-type {
+            margin-top: 1rem;
+        }
+
+        .calculator-card p {
+            margin-bottom: 1rem;
+        }
+
         .form-row {
             display: flex;
             flex-wrap: wrap;
@@ -35,25 +74,25 @@
             flex: 1;
             min-width: 160px;
             font-weight: bold;
-            color: var(--color-text-dark);
+            color: var(--text-dark);
         }
         .form-row input {
             padding: 0.6rem;
-            border: 1px solid var(--color-border);
+            border: 1px solid var(--border-color);
             border-radius: 5px;
             font-size: 1rem;
             margin-top: 0.35rem;
             font-family: inherit;
         }
         .form-row input:focus {
-            outline: 2px solid var(--color-secondary);
+            outline: 2px solid var(--secondary-color);
             outline-offset: 2px;
         }
 
         .summary {
             background: #e8f4fd;
-            border-left: 5px solid var(--color-secondary);
-            padding: 0.8rem 1rem;
+            border-left: 5px solid var(--secondary-color);
+            padding: 0.85rem 1rem;
             border-radius: 4px;
             margin: 1rem 0;
         }
@@ -67,7 +106,7 @@
         .week-grid .head,
         .week-grid .row-label {
             font-weight: bold;
-            color: var(--color-text-dark);
+            color: var(--text-dark);
             text-align: center;
             padding: 0.4rem 0;
         }
@@ -76,8 +115,8 @@
             align-self: center;
         }
         .week-grid .cell {
-            background: var(--color-bg-light);
-            border: 1px solid var(--color-border);
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             min-height: 64px;
             display: flex;
@@ -87,19 +126,19 @@
             color: #b0b6bf;
         }
         .week-grid .cell.filled {
-            background: var(--color-primary);
-            border-color: var(--color-primary);
+            background: var(--primary-color);
+            border-color: var(--primary-color);
             color: #fff;
         }
         .week-grid .cell.partial {
-            background: var(--color-secondary);
-            border-color: var(--color-secondary);
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
             color: #fff;
         }
 
         .principle {
             background: #fff5ec;
-            border-left: 5px solid var(--color-accent);
+            border-left: 5px solid var(--accent-color);
             padding: 1rem;
             border-radius: 4px;
             margin: 1.5rem 0;
@@ -113,14 +152,14 @@
         }
         .progression th,
         .progression td {
-            border-bottom: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--border-color);
             padding: 0.55rem 0.5rem;
             text-align: left;
             vertical-align: top;
         }
         .progression th {
-            background: var(--color-bg-light);
-            color: var(--color-text-dark);
+            background: var(--bg-light);
+            color: var(--text-dark);
         }
         .progression tr:last-child td {
             border-bottom: none;
@@ -132,10 +171,13 @@
             color: #7f8c8d;
             margin-top: 2rem;
             padding-top: 1rem;
-            border-top: 1px solid var(--color-border);
+            border-top: 1px solid var(--border-color);
         }
 
         @media (max-width: 600px) {
+            .calculator-card {
+                padding: 1.5rem;
+            }
             .week-grid {
                 grid-template-columns: 70px repeat(5, 1fr);
                 gap: 4px;
@@ -157,60 +199,120 @@
     </style>
 </head>
 <body>
-    <div class="legal-container">
-        <div class="legal-header">
-            <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-                <rect width="40" height="40" rx="8" fill="#004a99"/>
-                <path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                <path d="M10 33 Q20 35.5 30 33" stroke="#e67e22" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-            </svg>
-            <a class="logo-text" href="index.html">de Kunst van Werken</a>
+
+    <!-- Navigation Header -->
+    <nav>
+        <div class="container">
+            <a href="index.html#hero" class="logo" aria-label="de Kunst van Werken — home">
+                <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+                    <rect width="40" height="40" rx="8" fill="var(--color-primary)"/>
+                    <path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M10 33 Q20 35.5 30 33" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                </svg>
+                <span class="logo-text">de Kunst van Werken</span>
+            </a>
+            <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu openen">
+                <span class="nav-toggle-bar"></span>
+            </button>
+            <ul class="nav-links" id="primary-nav">
+                <li><a href="index.html#hero">Home</a></li>
+                <li><a href="index.html#services">Diensten</a></li>
+                <li><a href="opbouwschema.html" aria-current="page">Opbouwschema</a></li>
+                <li><a href="index.html#werkwijze">Werkwijze</a></li>
+                <li><a href="index.html#whitelabel">Whitelabel</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
         </div>
+    </nav>
 
-        <h1>Opbouwschema-calculator</h1>
-        <p>Een gefaseerde terugkeer naar werk werkt het beste als er voldoende ruimte is voor herstel tussen werkdagen. Geef het aantal uren op dat de werknemer deze week kan werken, dan ziet u meteen hoe de week eruit kan zien en hoe de opbouw richting fulltime loopt (&plus;1 uur per week).</p>
-
-        <form id="form" onsubmit="return false;">
-            <div class="form-row">
-                <label>Uren deze week
-                    <input type="number" id="huidig" min="1" max="40" step="1" value="8" required>
-                </label>
-                <label>Doel (uren per week)
-                    <input type="number" id="doel" min="1" max="60" step="1" value="40" required>
-                </label>
+    <!-- Opbouwschema-calculator -->
+    <section id="opbouwschema">
+        <div class="container">
+            <div class="section-title">
+                <h2>Opbouwschema-calculator</h2>
+                <p>Een gefaseerde terugkeer naar werk werkt het beste als er voldoende ruimte is voor herstel tussen werkdagen. Geef het aantal uren op dat de werknemer deze week kan werken, dan ziet u meteen hoe de week eruit kan zien en hoe de opbouw richting fulltime loopt (&plus;1 uur per week).</p>
             </div>
-        </form>
 
-        <h2>Voorstel deze week</h2>
-        <div class="summary" id="summary"></div>
-        <div class="week-grid" id="grid" aria-label="Weekschema"></div>
+            <div class="calculator-card">
+                <form id="form" onsubmit="return false;">
+                    <div class="form-row">
+                        <label>Uren deze week
+                            <input type="number" id="huidig" min="1" max="40" step="1" value="8" required>
+                        </label>
+                        <label>Doel (uren per week)
+                            <input type="number" id="doel" min="1" max="60" step="1" value="40" required>
+                        </label>
+                    </div>
+                </form>
 
-        <div class="principle">
-            <strong>Eigen werk in de ochtend.</strong> Vul de opbouw-uren met het werk dat bij de functie hoort &mdash; geen losse hand-en-spandiensten. Dat maakt het herstel duurzaam en de terugkeer betekenisvol.
+                <h2>Voorstel deze week</h2>
+                <div class="summary" id="summary"></div>
+                <div class="week-grid" id="grid" aria-label="Weekschema"></div>
+
+                <div class="principle">
+                    <strong>Eigen werk in de ochtend.</strong> Vul de opbouw-uren met het werk dat bij de functie hoort &mdash; geen losse hand-en-spandiensten. Dat maakt het herstel duurzaam en de terugkeer betekenisvol.
+                </div>
+
+                <h2>Opbouw naar het doel</h2>
+                <p>Elke week wordt er &eacute;&eacute;n uur toegevoegd. Zo ziet de opbouw eruit:</p>
+                <table class="progression" id="prog">
+                    <thead>
+                        <tr>
+                            <th>Week</th>
+                            <th>Uren</th>
+                            <th>Dagdelen</th>
+                            <th>Verdeling</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <p class="disclaimer">
+                    Dit voorstel is een hulpmiddel voor het gesprek tussen werknemer, werkgever en bedrijfsarts en is geen medisch advies. Een individueel opbouwschema wordt altijd op maat opgesteld, rekening houdend met belastbaarheid, herstel en de aard van het werk.
+                </p>
+            </div>
         </div>
+    </section>
 
-        <h2>Opbouw naar het doel</h2>
-        <p>Elke week wordt er &eacute;&eacute;n uur toegevoegd. Zo ziet de opbouw eruit:</p>
-        <table class="progression" id="prog">
-            <thead>
-                <tr>
-                    <th>Week</th>
-                    <th>Uren</th>
-                    <th>Dagdelen</th>
-                    <th>Verdeling</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <p class="disclaimer">
-            Dit voorstel is een hulpmiddel voor het gesprek tussen werknemer, werkgever en bedrijfsarts en is geen medisch advies. Een individueel opbouwschema wordt altijd op maat opgesteld, rekening houdend met belastbaarheid, herstel en de aard van het werk.
-        </p>
-
-        <a href="index.html" class="btn-back">Terug naar Home</a>
-    </div>
+    <!-- Footer Area -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 de Kunst van Werken B.V. Alle rechten voorbehouden.</p>
+            <div class="footer-links" style="margin-top: 1rem;">
+                <a href="klachten.html">Klachtenregeling</a>
+                <a href="privacybeleid.html">Privacybeleid</a>
+                <a href="voorwaarden.html">Algemene Voorwaarden</a>
+            </div>
+            <p style="font-size: 0.8rem; color: #bdc3c7; margin-top: 1rem;">
+                de Kunst van Werken B.V. | KVK: 94098344
+            </p>
+        </div>
+    </footer>
 
     <script>
+    // Mobile hamburger toggle (same as index.html)
+    (function () {
+        const toggle = document.querySelector('.nav-toggle');
+        const menu = document.getElementById('primary-nav');
+        if (!toggle || !menu) return;
+        const close = () => {
+            menu.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.setAttribute('aria-label', 'Menu openen');
+        };
+        toggle.addEventListener('click', () => {
+            const open = menu.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+        });
+        menu.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') close();
+        });
+    })();
+    </script>
+
+    <script>
+    // Opbouwschema-calculator
     (function () {
         const DAGDEEL = 4;
         // Order favours rest days between workdays:
