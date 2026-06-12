@@ -3,7 +3,7 @@
 This document explains the steps taken to install and design the landing page for dekunstvanwerken.nl. This serves as a guide for future developers or AI assistants.
 
 ## Overview
-The website `dekunstvanwerken.nl` has been transformed from a basic "Hello World" page to a professional, business-oriented landing page. The design focuses on Arbo-services, whitelabel solutions, and lead generation via a contact form.
+The website `dekunstvanwerken.nl` has been transformed from a basic "Hello World" page to a professional, business-oriented landing page. The design focuses on Arbo-services, whitelabel solutions, and lead generation via direct email and phone contact.
 
 ## Directory Structure
 The files for this website are located at:
@@ -22,7 +22,7 @@ The page is built using semantic HTML5 and includes the following sections:
 - **Services:** Detailed overview of Arbo-tasks (Verzuim, RI&E, PAGO, Keuringen, Bedrijfsarts).
 - **Werkwijze:** (New) Explanation of the in-house software methodology to prevent vendor lock-in.
 - **Whitelabel:** Information about B2B partnerships.
-- **Contact Form:** Lead capture for interested parties.
+- **Contact:** Direct email and phone contact for interested parties (no form, see Contact Method below).
 - **Footer:** Copyright and links to legal documents.
 
 ### 2. Styling (`style.css`)
