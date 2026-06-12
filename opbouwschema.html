@@ -270,7 +270,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Opbouwschema-calculator</h2>
-                <p>Een gefaseerde terugkeer naar werk werkt het beste als er voldoende ruimte is voor herstel tussen werkdagen. Geef het aantal uren op dat de werknemer deze week kan werken, dan ziet u meteen hoe de week eruit kan zien en hoe de opbouw richting fulltime loopt (&plus;1 uur per week).</p>
+                <p>Een gefaseerde terugkeer naar werk werkt het beste als er voldoende ruimte is voor herstel tussen werkdagen. Geef het aantal uren op dat de werknemer deze week kan werken, kies hoeveel uur er per week wordt opgebouwd, en zie meteen hoe de week eruit kan zien en hoe de opbouw richting fulltime loopt.</p>
             </div>
 
             <div class="calculator-card">
@@ -278,6 +278,9 @@
                     <div class="form-row">
                         <label>Uren deze week
                             <input type="number" id="huidig" min="1" max="40" step="1" value="8" required>
+                        </label>
+                        <label>Opbouw per week
+                            <input type="number" id="stap" min="1" max="10" step="1" value="1" required>
                         </label>
                         <label>Doel (uren per week)
                             <input type="number" id="doel" min="1" max="60" step="1" value="40" required>
@@ -294,7 +297,7 @@
                 </div>
 
                 <h2>Opbouw naar het doel</h2>
-                <p>Elke week wordt er &eacute;&eacute;n uur toegevoegd. Zo ziet de opbouw eruit:</p>
+                <p id="prog-intro">Elke week wordt er &eacute;&eacute;n uur toegevoegd. Zo ziet de opbouw eruit:</p>
                 <table class="progression" id="prog">
                     <thead>
                         <tr>
@@ -444,13 +447,19 @@
             return wrap;
         }
 
-        function renderProgression(start, target) {
+        function renderProgression(start, target, step) {
             const tbody = document.querySelector('#prog tbody');
             tbody.innerHTML = '';
             const from = Math.min(start, target);
             const to = Math.max(start, target);
+            const stap = Math.max(1, step | 0);
+            // Build the sequence: from, from+stap, ... ; always end exactly on `to`.
+            const values = new Set();
+            for (let h = from; h < to; h += stap) values.add(h);
+            values.add(to);
+            const sorted = [...values].sort((a, b) => a - b);
             let weekNum = 1;
-            for (let h = from; h <= to; h++) {
+            for (const h of sorted) {
                 const plan = planWeek(h);
                 const dagdelen = Object.keys(plan).length;
                 const tr = document.createElement('tr');
@@ -467,14 +476,23 @@
 
         function update() {
             const huidig = clamp(+document.getElementById('huidig').value || 1, 1, 40);
+            const stap   = clamp(+document.getElementById('stap').value   || 1, 1, 10);
             const doel   = clamp(+document.getElementById('doel').value   || 40, 1, 60);
             const plan = planWeek(huidig);
             const dagdelen = Object.keys(plan).length;
             const summary = document.getElementById('summary');
-            const richting = doel >= huidig ? 'opbouw richting fulltime' : 'afbouw richting deeltijd';
+            const richting = doel >= huidig
+                ? `opbouw +${stap}u per week richting ${doel} uur`
+                : `afbouw richting ${doel} uur`;
             summary.innerHTML = `<strong>${huidig} uur</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ochtenden eerst, met rustdagen ertussen &middot; ${richting}.`;
+            const intro = document.getElementById('prog-intro');
+            if (doel >= huidig) {
+                intro.textContent = `Elke week wordt er ${stap} uur toegevoegd; de laatste week eindigt precies op ${doel} uur.`;
+            } else {
+                intro.textContent = `Afbouw van ${huidig} naar ${doel} uur in stappen van ${stap} uur.`;
+            }
             renderGrid(plan);
-            renderProgression(huidig, doel);
+            renderProgression(huidig, doel, stap);
         }
         function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
