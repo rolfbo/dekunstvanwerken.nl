@@ -155,7 +155,7 @@
             border-bottom: 1px solid var(--border-color);
             padding: 0.55rem 0.5rem;
             text-align: left;
-            vertical-align: top;
+            vertical-align: middle;
         }
         .progression th {
             background: var(--bg-light);
@@ -164,6 +164,46 @@
         .progression tr:last-child td {
             border-bottom: none;
             font-weight: bold;
+        }
+        .progression .day-key {
+            display: grid;
+            grid-template-columns: repeat(5, 18px);
+            gap: 2px;
+            margin-top: 4px;
+            font-weight: normal;
+            font-size: 0.65rem;
+            opacity: 0.75;
+            text-align: center;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 18px);
+            grid-template-rows: 18px 18px;
+            gap: 2px;
+            width: max-content;
+        }
+        .mini-grid .mcell {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            font-size: 10px;
+            line-height: 1;
+            color: #b0b6bf;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .mini-grid .mcell.filled {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+        .mini-grid .mcell.partial {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: #fff;
         }
 
         .disclaimer {
@@ -261,7 +301,11 @@
                             <th>Week</th>
                             <th>Uren</th>
                             <th>Dagdelen</th>
-                            <th>Verdeling</th>
+                            <th>Schema
+                                <span class="day-key" aria-hidden="true">
+                                    <span>Ma</span><span>Di</span><span>Wo</span><span>Do</span><span>Vr</span>
+                                </span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -375,6 +419,31 @@
             });
         }
 
+        function makeMiniGrid(plan) {
+            const wrap = document.createElement('div');
+            wrap.className = 'mini-grid';
+            wrap.setAttribute('role', 'img');
+            wrap.setAttribute('aria-label', describe(plan) || 'Geen werk gepland deze week');
+            [['am', 'och'], ['pm', 'mid']].forEach(([half, nlHalf]) => {
+                days.forEach(d => {
+                    const key = `${dayKey[d]}-${half}`;
+                    const h = plan[key];
+                    const c = document.createElement('div');
+                    if (h === undefined) {
+                        c.className = 'mcell';
+                        c.title = `${d}-${nlHalf}: geen werk`;
+                    } else {
+                        const cls = h === DAGDEEL ? 'filled' : 'partial';
+                        c.className = `mcell ${cls}`;
+                        c.textContent = h;
+                        c.title = `${d}-${nlHalf}: ${h} uur`;
+                    }
+                    wrap.appendChild(c);
+                });
+            });
+            return wrap;
+        }
+
         function renderProgression(start, target) {
             const tbody = document.querySelector('#prog tbody');
             tbody.innerHTML = '';
@@ -385,7 +454,11 @@
                 const plan = planWeek(h);
                 const dagdelen = Object.keys(plan).length;
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${weekNum}</td><td>${h} u</td><td>${dagdelen}</td><td>${describe(plan)}</td>`;
+                const cells = [`<td>${weekNum}</td>`, `<td>${h} u</td>`, `<td>${dagdelen}</td>`];
+                tr.innerHTML = cells.join('');
+                const schemaTd = document.createElement('td');
+                schemaTd.appendChild(makeMiniGrid(plan));
+                tr.appendChild(schemaTd);
                 tbody.appendChild(tr);
                 weekNum++;
                 if (weekNum > 60) break;
