@@ -68,6 +68,9 @@
             gap: 1rem;
             margin: 1rem 0 1.5rem;
         }
+        .form-row[hidden] {
+            display: none;
+        }
         .form-row label {
             display: flex;
             flex-direction: column;
@@ -87,6 +90,60 @@
         .form-row input:focus {
             outline: 2px solid var(--secondary-color);
             outline-offset: 2px;
+        }
+
+        .mode-toggle {
+            display: inline-flex;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 0.5rem 0 1rem;
+            background: var(--bg-light);
+        }
+        .mode-toggle input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 0;
+            height: 0;
+        }
+        .mode-toggle label {
+            padding: 0.55rem 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            border-right: 1px solid var(--border-color);
+            transition: background 0.15s, color 0.15s;
+            line-height: 1.2;
+        }
+        .mode-toggle label:last-of-type {
+            border-right: none;
+        }
+        .mode-toggle input[type="radio"]:checked + label {
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .mode-toggle input[type="radio"]:focus-visible + label {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+        .mode-hint {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: normal;
+            opacity: 0.85;
+            margin-top: 2px;
+        }
+        @media (max-width: 480px) {
+            .mode-toggle {
+                display: flex;
+                width: 100%;
+            }
+            .mode-toggle label {
+                flex: 1;
+                text-align: center;
+            }
         }
 
         .summary {
@@ -257,9 +314,16 @@
             <ul class="nav-links" id="primary-nav">
                 <li><a href="index.html#hero">Home</a></li>
                 <li><a href="index.html#services">Diensten</a></li>
-                <li><a href="opbouwschema.html" aria-current="page">Opbouwschema</a></li>
                 <li><a href="index.html#werkwijze">Werkwijze</a></li>
                 <li><a href="index.html#whitelabel">Whitelabel</a></li>
+                <li class="has-dropdown">
+                    <button class="nav-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="tools-menu">
+                        Tools <span class="caret" aria-hidden="true">&#9662;</span>
+                    </button>
+                    <ul class="nav-dropdown" id="tools-menu">
+                        <li><a href="opbouwschema.html" aria-current="page">Opbouwschema</a></li>
+                    </ul>
+                </li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
         </div>
@@ -275,7 +339,14 @@
 
             <div class="calculator-card">
                 <form id="form" onsubmit="return false;">
-                    <div class="form-row">
+                    <div class="mode-toggle" role="radiogroup" aria-label="Verdelingspatroon">
+                        <input type="radio" id="mode-ri" name="mode" value="reintegratie" checked>
+                        <label for="mode-ri">Re-integratie<span class="mode-hint">ochtenden eerst, met rustdagen</span></label>
+                        <input type="radio" id="mode-wp" name="mode" value="werkpatroon">
+                        <label for="mode-wp">Werkpatroon<span class="mode-hint">hele dagen eerst, halve als rest</span></label>
+                    </div>
+
+                    <div class="form-row" id="form-reintegratie">
                         <label>Uren deze week
                             <input type="number" id="huidig" min="1" max="40" step="1" value="8" required>
                         </label>
@@ -284,6 +355,18 @@
                         </label>
                         <label>Doel (uren per week)
                             <input type="number" id="doel" min="1" max="60" step="1" value="40" required>
+                        </label>
+                    </div>
+
+                    <div class="form-row" id="form-werkpatroon" hidden>
+                        <label>Dagen deze week
+                            <input type="number" id="dagen-huidig" min="0.5" max="5" step="0.5" value="2" required>
+                        </label>
+                        <label>Opbouw per week (dagen)
+                            <input type="number" id="dagen-stap" min="0.5" max="5" step="0.5" value="0.5" required>
+                        </label>
+                        <label>Doel (dagen per week)
+                            <input type="number" id="dagen-doel" min="0.5" max="5" step="0.5" value="5" required>
                         </label>
                     </div>
                 </form>
@@ -302,7 +385,7 @@
                     <thead>
                         <tr>
                             <th>Week</th>
-                            <th>Uren</th>
+                            <th><span id="prog-header-unit">Uren</span></th>
                             <th>Dagdelen</th>
                             <th>Schema
                                 <span class="day-key" aria-hidden="true">
@@ -337,24 +420,41 @@
     </footer>
 
     <script>
-    // Mobile hamburger toggle (same as index.html)
+    // Mobile hamburger + Tools dropdown (same as index.html)
     (function () {
         const toggle = document.querySelector('.nav-toggle');
         const menu = document.getElementById('primary-nav');
-        if (!toggle || !menu) return;
-        const close = () => {
-            menu.classList.remove('open');
-            toggle.setAttribute('aria-expanded', 'false');
-            toggle.setAttribute('aria-label', 'Menu openen');
-        };
-        toggle.addEventListener('click', () => {
-            const open = menu.classList.toggle('open');
-            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-            toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
-        });
-        menu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') close();
-        });
+        if (toggle && menu) {
+            const close = () => {
+                menu.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-label', 'Menu openen');
+            };
+            toggle.addEventListener('click', () => {
+                const open = menu.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+            });
+            menu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') close();
+            });
+        }
+
+        const dropTrigger = document.querySelector('.nav-dropdown-trigger');
+        if (dropTrigger) {
+            const closeDrop = () => dropTrigger.setAttribute('aria-expanded', 'false');
+            dropTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const expanded = dropTrigger.getAttribute('aria-expanded') === 'true';
+                dropTrigger.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.has-dropdown')) closeDrop();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeDrop();
+            });
+        }
     })();
     </script>
 
@@ -386,6 +486,35 @@
                 remaining -= h;
             }
             return plan;
+        }
+
+        // Werkpatroon: whole work days first (Ma, Di, Wo, Do, Vr).
+        // A trailing half-day becomes an ochtend on the next day.
+        function planWeekWerkpatroon(dagen) {
+            const plan = {};
+            const dayOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+            const wholeDays = Math.floor(dagen + 1e-9);
+            const hasHalfDay = (dagen - wholeDays) >= 0.5 - 1e-9;
+            for (let i = 0; i < Math.min(wholeDays, 5); i++) {
+                plan[`${dayOrder[i]}-am`] = DAGDEEL;
+                plan[`${dayOrder[i]}-pm`] = DAGDEEL;
+            }
+            if (hasHalfDay && wholeDays < 5) {
+                plan[`${dayOrder[wholeDays]}-am`] = DAGDEEL;
+            }
+            return plan;
+        }
+
+        function roundHalf(v) { return Math.round(v * 2) / 2; }
+        function fmtDag(d) {
+            return Number.isInteger(d) ? `${d}` : d.toString().replace('.', ',');
+        }
+        function dagWord(d) {
+            // 0,5 dag, 1 dag, 1,5 dagen, 2 dagen, ...
+            return d <= 1 ? 'dag' : 'dagen';
+        }
+        function getMode() {
+            return document.querySelector('input[name="mode"]:checked').value;
         }
 
         function describe(plan) {
@@ -447,24 +576,28 @@
             return wrap;
         }
 
-        function renderProgression(start, target, step) {
+        function renderProgression(start, target, step, mode) {
             const tbody = document.querySelector('#prog tbody');
             tbody.innerHTML = '';
             const from = Math.min(start, target);
             const to = Math.max(start, target);
-            const stap = Math.max(1, step | 0);
-            // Build the sequence: from, from+stap, ... ; always end exactly on `to`.
+            // Build sequence using integer arithmetic (in halves for werkpatroon)
+            // so floating-point error never blocks the final-value insertion.
+            const scale = mode === 'werkpatroon' ? 2 : 1;
+            const fromI = Math.round(from * scale);
+            const toI   = Math.round(to   * scale);
+            const stepI = Math.max(1, Math.round(step * scale));
             const values = new Set();
-            for (let h = from; h < to; h += stap) values.add(h);
+            for (let i = fromI; i < toI; i += stepI) values.add(i / scale);
             values.add(to);
             const sorted = [...values].sort((a, b) => a - b);
             let weekNum = 1;
-            for (const h of sorted) {
-                const plan = planWeek(h);
+            for (const v of sorted) {
+                const plan = mode === 'werkpatroon' ? planWeekWerkpatroon(v) : planWeek(v);
                 const dagdelen = Object.keys(plan).length;
+                const unit = mode === 'werkpatroon' ? `${fmtDag(v)} dgn` : `${v} u`;
                 const tr = document.createElement('tr');
-                const cells = [`<td>${weekNum}</td>`, `<td>${h} u</td>`, `<td>${dagdelen}</td>`];
-                tr.innerHTML = cells.join('');
+                tr.innerHTML = `<td>${weekNum}</td><td>${unit}</td><td>${dagdelen}</td>`;
                 const schemaTd = document.createElement('td');
                 schemaTd.appendChild(makeMiniGrid(plan));
                 tr.appendChild(schemaTd);
@@ -475,28 +608,60 @@
         }
 
         function update() {
-            const huidig = clamp(+document.getElementById('huidig').value || 1, 1, 40);
-            const stap   = clamp(+document.getElementById('stap').value   || 1, 1, 10);
-            const doel   = clamp(+document.getElementById('doel').value   || 40, 1, 60);
-            const plan = planWeek(huidig);
-            const dagdelen = Object.keys(plan).length;
+            const mode = getMode();
+            document.getElementById('form-reintegratie').hidden = mode !== 'reintegratie';
+            document.getElementById('form-werkpatroon').hidden = mode !== 'werkpatroon';
+
             const summary = document.getElementById('summary');
-            const richting = doel >= huidig
-                ? `opbouw +${stap}u per week richting ${doel} uur`
-                : `afbouw richting ${doel} uur`;
-            summary.innerHTML = `<strong>${huidig} uur</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ochtenden eerst, met rustdagen ertussen &middot; ${richting}.`;
             const intro = document.getElementById('prog-intro');
-            if (doel >= huidig) {
-                intro.textContent = `Elke week wordt er ${stap} uur toegevoegd; de laatste week eindigt precies op ${doel} uur.`;
+            const progHeaderUnit = document.getElementById('prog-header-unit');
+
+            let plan, huidig, doel, stap;
+
+            if (mode === 'reintegratie') {
+                huidig = clamp(+document.getElementById('huidig').value || 1, 1, 40);
+                stap   = clamp(+document.getElementById('stap').value   || 1, 1, 10);
+                doel   = clamp(+document.getElementById('doel').value   || 40, 1, 60);
+                plan = planWeek(huidig);
+                const dagdelen = Object.keys(plan).length;
+                const richting = doel >= huidig
+                    ? `opbouw +${stap}u per week richting ${doel} uur`
+                    : `afbouw richting ${doel} uur`;
+                summary.innerHTML = `<strong>${huidig} uur</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ochtenden eerst, met rustdagen ertussen &middot; ${richting}.`;
+                intro.textContent = doel >= huidig
+                    ? `Elke week wordt er ${stap} uur toegevoegd; de laatste week eindigt precies op ${doel} uur.`
+                    : `Afbouw van ${huidig} naar ${doel} uur in stappen van ${stap} uur.`;
+                progHeaderUnit.textContent = 'Uren';
             } else {
-                intro.textContent = `Afbouw van ${huidig} naar ${doel} uur in stappen van ${stap} uur.`;
+                // Werkpatroon: snap inputs to half-day increments
+                const dh = roundHalf(clamp(+document.getElementById('dagen-huidig').value || 2, 0.5, 5));
+                const ds = roundHalf(clamp(+document.getElementById('dagen-stap').value   || 0.5, 0.5, 5));
+                const dd = roundHalf(clamp(+document.getElementById('dagen-doel').value   || 5, 0.5, 5));
+                // Reflect snapped values back into the inputs without blocking typing
+                const hi = document.getElementById('dagen-huidig'); if (parseFloat(hi.value) !== dh) hi.value = dh;
+                const si = document.getElementById('dagen-stap');   if (parseFloat(si.value) !== ds) si.value = ds;
+                const di = document.getElementById('dagen-doel');   if (parseFloat(di.value) !== dd) di.value = dd;
+                huidig = dh; stap = ds; doel = dd;
+                plan = planWeekWerkpatroon(dh);
+                const dagdelen = Object.keys(plan).length;
+                const uren = dh * 8;
+                const richting = dd >= dh
+                    ? `opbouw +${fmtDag(ds)} ${dagWord(ds)} per week richting ${fmtDag(dd)} ${dagWord(dd)}`
+                    : `afbouw richting ${fmtDag(dd)} ${dagWord(dd)}`;
+                summary.innerHTML = `<strong>${fmtDag(dh)} ${dagWord(dh)}</strong> (${uren} uur) verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; hele dagen eerst, halve dag als rest &middot; ${richting}.`;
+                intro.textContent = dd >= dh
+                    ? `Elke week wordt er ${fmtDag(ds)} ${dagWord(ds)} toegevoegd; de laatste week eindigt precies op ${fmtDag(dd)} ${dagWord(dd)}.`
+                    : `Afbouw van ${fmtDag(dh)} naar ${fmtDag(dd)} ${dagWord(dd)} in stappen van ${fmtDag(ds)} ${dagWord(ds)}.`;
+                progHeaderUnit.textContent = 'Dagen';
             }
+
             renderGrid(plan);
-            renderProgression(huidig, doel, stap);
+            renderProgression(huidig, doel, stap, mode);
         }
         function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
         document.getElementById('form').addEventListener('input', update);
+        document.getElementById('form').addEventListener('change', update);
         update();
     })();
     </script>
