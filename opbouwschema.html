@@ -277,7 +277,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Opbouwschema-calculator</h2>
-                <p>Een gefaseerde terugkeer naar werk werkt het beste als er voldoende ruimte is voor herstel tussen werkdagen. Geef het aantal uren op dat de werknemer deze week kan werken, hoeveel uur er per week wordt opgebouwd, en naar hoeveel werkdagen er wordt teruggekeerd &mdash; dan zie je meteen het voorstel voor deze week en de opbouw die daarop volgt.</p>
+                <p>Een gefaseerde terugkeer naar werk werkt het beste als er voldoende ruimte is voor herstel tussen werkdagen. Geef het aantal uren op dat de werknemer deze week kan werken, hoeveel uur er per week wordt opgebouwd, en de contract-uren en werkdagen waar de re-integratie naartoe loopt &mdash; dan zie je meteen het voorstel voor deze week en de opbouw die daarop volgt.</p>
             </div>
 
             <div class="calculator-card">
@@ -289,7 +289,10 @@
                         <label>Opbouw per week (uur)
                             <input type="number" id="stap" min="1" max="10" step="1" value="1" required>
                         </label>
-                        <label>Werkdagen per week (doel)
+                        <label>Contract uren per week
+                            <input type="number" id="contract" min="1" max="60" step="1" value="40" required>
+                        </label>
+                        <label>Werkdagen per week
                             <input type="number" id="werkdagen" min="0.5" max="5" step="0.5" value="5" required>
                         </label>
                     </div>
@@ -508,26 +511,27 @@
         function update() {
             const huidig = clamp(+document.getElementById('huidig').value || 1, 1, 40);
             const stap = clamp(+document.getElementById('stap').value || 1, 1, 10);
+            const contract = clamp(+document.getElementById('contract').value || 40, 1, 60);
             const werkdagen = roundHalf(clamp(+document.getElementById('werkdagen').value || 5, 0.5, 5));
-            // Snap input back to the half-day grid if the user typed something off-step
+            // Snap werkdagen input back to the half-day grid
             const wIn = document.getElementById('werkdagen');
             if (parseFloat(wIn.value) !== werkdagen) wIn.value = werkdagen;
-            const doel = werkdagen * 8;
+            const doel = contract;
 
             const plan = planWeek(huidig);
             const dagdelen = Object.keys(plan).length;
-            const targetLabel = `${fmtDag(werkdagen)} ${dagWord(werkdagen)} (${doel} uur)`;
+            const targetSuffix = `${fmtDag(werkdagen)} ${dagWord(werkdagen)}`;
 
             const summary = document.getElementById('summary');
             const richting = doel >= huidig
-                ? `opbouw +${stap}u per week richting ${targetLabel}`
-                : `afbouw richting ${targetLabel}`;
+                ? `opbouw +${stap}u per week richting ${doel} uur (${targetSuffix})`
+                : `afbouw richting ${doel} uur (${targetSuffix})`;
             summary.innerHTML = `<strong>${huidig} uur</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ochtenden eerst, met rustdagen ertussen &middot; ${richting}.`;
 
             const intro = document.getElementById('prog-intro');
             intro.textContent = doel >= huidig
-                ? `Elke week wordt er ${stap} uur toegevoegd; de laatste week eindigt precies op ${doel} uur (${fmtDag(werkdagen)} ${dagWord(werkdagen)}).`
-                : `Afbouw van ${huidig} naar ${doel} uur (${fmtDag(werkdagen)} ${dagWord(werkdagen)}) in stappen van ${stap} uur.`;
+                ? `Elke week wordt er ${stap} uur toegevoegd; de laatste week eindigt precies op ${doel} uur (${targetSuffix}).`
+                : `Afbouw van ${huidig} naar ${doel} uur (${targetSuffix}) in stappen van ${stap} uur.`;
 
             renderGrid(plan);
             renderProgression(huidig, doel, stap);
