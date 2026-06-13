@@ -314,9 +314,16 @@
             <ul class="nav-links" id="primary-nav">
                 <li><a href="index.html#hero">Home</a></li>
                 <li><a href="index.html#services">Diensten</a></li>
-                <li><a href="opbouwschema.html" aria-current="page">Opbouwschema</a></li>
                 <li><a href="index.html#werkwijze">Werkwijze</a></li>
                 <li><a href="index.html#whitelabel">Whitelabel</a></li>
+                <li class="has-dropdown">
+                    <button class="nav-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="tools-menu">
+                        Tools <span class="caret" aria-hidden="true">&#9662;</span>
+                    </button>
+                    <ul class="nav-dropdown" id="tools-menu">
+                        <li><a href="opbouwschema.html" aria-current="page">Opbouwschema</a></li>
+                    </ul>
+                </li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
         </div>
@@ -413,24 +420,41 @@
     </footer>
 
     <script>
-    // Mobile hamburger toggle (same as index.html)
+    // Mobile hamburger + Tools dropdown (same as index.html)
     (function () {
         const toggle = document.querySelector('.nav-toggle');
         const menu = document.getElementById('primary-nav');
-        if (!toggle || !menu) return;
-        const close = () => {
-            menu.classList.remove('open');
-            toggle.setAttribute('aria-expanded', 'false');
-            toggle.setAttribute('aria-label', 'Menu openen');
-        };
-        toggle.addEventListener('click', () => {
-            const open = menu.classList.toggle('open');
-            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-            toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
-        });
-        menu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') close();
-        });
+        if (toggle && menu) {
+            const close = () => {
+                menu.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-label', 'Menu openen');
+            };
+            toggle.addEventListener('click', () => {
+                const open = menu.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+            });
+            menu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') close();
+            });
+        }
+
+        const dropTrigger = document.querySelector('.nav-dropdown-trigger');
+        if (dropTrigger) {
+            const closeDrop = () => dropTrigger.setAttribute('aria-expanded', 'false');
+            dropTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const expanded = dropTrigger.getAttribute('aria-expanded') === 'true';
+                dropTrigger.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.has-dropdown')) closeDrop();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeDrop();
+            });
+        }
     })();
     </script>
 

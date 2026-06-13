@@ -129,6 +129,75 @@ nav .container {
     color: var(--secondary-color);
 }
 
+/* --- Tools dropdown (in primary nav) --- */
+.has-dropdown {
+    position: relative;
+}
+
+.nav-dropdown-trigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: var(--primary-color);
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.nav-dropdown-trigger:hover {
+    color: var(--secondary-color);
+}
+
+.nav-dropdown-trigger .caret {
+    font-size: 0.7em;
+    line-height: 1;
+    transition: transform 0.2s;
+}
+
+.nav-dropdown-trigger[aria-expanded="true"] .caret {
+    transform: rotate(180deg);
+}
+
+.nav-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    min-width: 200px;
+    background: var(--text-light);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    padding: 0.35rem 0;
+    display: none;
+    z-index: 1001;
+    list-style: none;
+}
+
+.has-dropdown:hover .nav-dropdown,
+.has-dropdown:focus-within .nav-dropdown,
+.nav-dropdown-trigger[aria-expanded="true"] + .nav-dropdown {
+    display: block;
+}
+
+.nav-dropdown li {
+    margin: 0 !important;
+}
+
+.nav-dropdown a {
+    display: block;
+    padding: 0.55rem 1rem;
+    color: var(--primary-color);
+    white-space: nowrap;
+}
+
+.nav-dropdown a:hover,
+.nav-dropdown a[aria-current="page"] {
+    background: var(--bg-light);
+    color: var(--secondary-color);
+}
+
 /* --- Mobile menu toggle (hamburger) --- */
 .nav-toggle {
     display: none;
@@ -390,6 +459,40 @@ footer {
 
     .nav-links li:last-child a {
         border-bottom: none;
+    }
+
+    /* Mobile: dropdown opens inline (accordion), not floating */
+    .has-dropdown:hover .nav-dropdown,
+    .has-dropdown:focus-within .nav-dropdown {
+        display: none;
+    }
+
+    .nav-dropdown-trigger[aria-expanded="true"] + .nav-dropdown {
+        display: block;
+    }
+
+    .nav-dropdown {
+        position: static;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        background: var(--bg-light);
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-dropdown a {
+        padding: 0.85rem 3rem;
+    }
+
+    .nav-dropdown-trigger {
+        display: flex;
+        width: 100%;
+        padding: 1rem 2rem;
+        text-align: left;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--primary-color);
     }
 
     #hero h1 {
