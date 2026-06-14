@@ -93,6 +93,53 @@
             outline-offset: 2px;
         }
 
+        .dagen-field {
+            border: none;
+            padding: 0;
+            margin: 0 0 1.5rem;
+        }
+        .dagen-field legend {
+            font-weight: bold;
+            color: var(--text-dark);
+            padding: 0;
+            margin-bottom: 0.5rem;
+        }
+        .dagen-hint {
+            font-weight: normal;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        .dagen-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .dag-chip {
+            flex: 1;
+            min-width: 56px;
+            padding: 0.6rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .dag-chip:hover {
+            border-color: var(--secondary-color);
+        }
+        .dag-chip[aria-pressed="true"] {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+        .dag-chip:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
         .summary {
             background: #e8f4fd;
             border-left: 5px solid var(--secondary-color);
@@ -294,7 +341,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Opbouwschema-calculator</h2>
-                <p>Een gefaseerde terugkeer naar werk werkt het beste als er voldoende ruimte is voor herstel tussen werkdagen. Geef het aantal uren op dat de werknemer deze week kan werken, hoeveel uur er per week wordt opgebouwd, en de contract-uren en werkdagen waar de re-integratie naartoe loopt &mdash; dan zie je meteen het voorstel voor deze week en de opbouw die daarop volgt.</p>
+                <p>Een gefaseerde terugkeer naar werk werkt het beste als er voldoende ruimte is voor herstel. Geef het aantal uren op dat de werknemer deze week kan werken, hoeveel uur er per week wordt opgebouwd en de contract-uren, en kies de dagen waarop gewerkt wordt &mdash; dan zie je meteen het voorstel voor deze week en de opbouw die daarop volgt.</p>
             </div>
 
             <div class="calculator-card">
@@ -309,10 +356,18 @@
                         <label>Contract uren per week
                             <input type="number" id="contract" min="1" max="60" step="1" value="40" required>
                         </label>
-                        <label>Werkdagen per week
-                            <input type="number" id="werkdagen" min="0.5" max="5" step="0.5" value="5" required>
-                        </label>
                     </div>
+
+                    <fieldset class="dagen-field">
+                        <legend>Werkdagen <span class="dagen-hint">— kies de dagen waarop gewerkt wordt</span></legend>
+                        <div class="dagen-chips" id="dagen-chips" role="group" aria-label="Werkdagen">
+                            <button type="button" class="dag-chip" data-day="Mon" aria-pressed="true">Ma</button>
+                            <button type="button" class="dag-chip" data-day="Tue" aria-pressed="true">Di</button>
+                            <button type="button" class="dag-chip" data-day="Wed" aria-pressed="true">Wo</button>
+                            <button type="button" class="dag-chip" data-day="Thu" aria-pressed="true">Do</button>
+                            <button type="button" class="dag-chip" data-day="Fri" aria-pressed="true">Vr</button>
+                        </div>
+                    </fieldset>
                 </form>
 
                 <h2>Voorstel deze week</h2>
@@ -407,13 +462,11 @@
     // Opbouwschema-calculator
     (function () {
         const DAGDEEL = 4;
-        // Preferred day order favours rest days between workdays:
-        // fill Ma, Wo, Vr first, then Di, Do.
-        const dayPref = ['Mon', 'Wed', 'Fri', 'Tue', 'Thu'];
+        const calendarOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
         // Stable display order for describing/labelling a plan.
         const allSlots = [
-            'Mon-am','Wed-am','Fri-am','Tue-am','Thu-am',
-            'Mon-pm','Wed-pm','Fri-pm','Tue-pm','Thu-pm'
+            'Mon-am','Tue-am','Wed-am','Thu-am','Fri-am',
+            'Mon-pm','Tue-pm','Wed-pm','Thu-pm','Fri-pm'
         ];
         const days = ['Ma','Di','Wo','Do','Vr'];
         const dayKey = { Ma:'Mon', Di:'Tue', Wo:'Wed', Do:'Thu', Vr:'Fri' };
@@ -423,45 +476,38 @@
             return nl + (h === 'am' ? '-och' : '-mid');
         };
 
-        // Fill order for a given number of available workdays.
-        // A whole day = ochtend + middag; a trailing half day = ochtend only.
-        // Mornings (incl. the half day) come first, then afternoons, so the
-        // load spreads across the available days before any day is doubled up.
-        function slotOrderFor(werkdagen) {
-            const wholeDays = Math.floor(werkdagen + 1e-9);
-            const hasHalf = (werkdagen - wholeDays) >= 0.5 - 1e-9;
-            const fullDays = dayPref.slice(0, Math.min(wholeDays, 5));
-            const halfDay = (hasHalf && wholeDays < 5) ? dayPref[wholeDays] : null;
-            const mornings = fullDays.map(d => `${d}-am`);
-            if (halfDay) mornings.push(`${halfDay}-am`);
-            const afternoons = fullDays.map(d => `${d}-pm`);
+        // Which days are selected, in calendar order (Ma -> Vr).
+        function selectedDays() {
+            return [...document.querySelectorAll('.dag-chip')]
+                .filter(c => c.getAttribute('aria-pressed') === 'true')
+                .map(c => c.dataset.day)
+                .sort((a, b) => calendarOrder.indexOf(a) - calendarOrder.indexOf(b));
+        }
+
+        // Fill order over the chosen workdays: all mornings first (calendar
+        // order), then all afternoons, so the load spreads across the chosen
+        // days before any single day is doubled up.
+        function slotOrderFor(dayList) {
+            const mornings = dayList.map(d => `${d}-am`);
+            const afternoons = dayList.map(d => `${d}-pm`);
             return [...mornings, ...afternoons];
         }
 
-        // Max hours that fit in the available workdays (4u dagdelen).
-        function capacityFor(werkdagen) {
-            return slotOrderFor(werkdagen).length * DAGDEEL;
+        // Max hours that fit in the chosen workdays (4u dagdelen).
+        function capacityFor(dayList) {
+            return dayList.length * 2 * DAGDEEL;
         }
 
-        function planWeek(hours, werkdagen) {
+        function planWeek(hours, dayList) {
             const plan = {};
             let remaining = Math.max(0, hours);
-            for (const slot of slotOrderFor(werkdagen)) {
+            for (const slot of slotOrderFor(dayList)) {
                 if (remaining <= 0) break;
                 const h = Math.min(DAGDEEL, remaining);
                 plan[slot] = h;
                 remaining -= h;
             }
             return plan;
-        }
-
-        function roundHalf(v) { return Math.round(v * 2) / 2; }
-        function fmtDag(d) {
-            return Number.isInteger(d) ? `${d}` : d.toString().replace('.', ',');
-        }
-        function dagWord(d) {
-            // 0,5 dag, 1 dag, 1,5 dagen, 2 dagen, ...
-            return d <= 1 ? 'werkdag' : 'werkdagen';
         }
 
         function describe(plan) {
@@ -523,7 +569,7 @@
             return wrap;
         }
 
-        function renderProgression(start, target, step, werkdagen) {
+        function renderProgression(start, target, step, dayList) {
             const tbody = document.querySelector('#prog tbody');
             tbody.innerHTML = '';
             const from = Math.min(start, target);
@@ -535,7 +581,7 @@
             const sorted = [...values].sort((a, b) => a - b);
             let weekNum = 1;
             for (const h of sorted) {
-                const plan = planWeek(h, werkdagen);
+                const plan = planWeek(h, dayList);
                 const dagdelen = Object.keys(plan).length;
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td>${weekNum}</td><td>${h} u</td><td>${dagdelen}</td>`;
@@ -552,34 +598,44 @@
             const huidigRaw = clamp(+document.getElementById('huidig').value || 1, 1, 40);
             const stap = clamp(+document.getElementById('stap').value || 1, 1, 10);
             const contract = clamp(+document.getElementById('contract').value || 40, 1, 60);
-            const werkdagen = roundHalf(clamp(+document.getElementById('werkdagen').value || 5, 0.5, 5));
-            // Snap werkdagen input back to the half-day grid
-            const wIn = document.getElementById('werkdagen');
-            if (parseFloat(wIn.value) !== werkdagen) wIn.value = werkdagen;
+            const dayList = selectedDays();
+            const aantal = dayList.length;
 
-            // The available workdays cap how many hours can be placed.
-            const capacity = capacityFor(werkdagen);
+            // The chosen workdays cap how many hours can be placed.
+            const capacity = capacityFor(dayList);
             const doel = Math.min(contract, capacity);
             const huidig = Math.min(huidigRaw, capacity);
 
-            const plan = planWeek(huidig, werkdagen);
-            const dagdelen = Object.keys(plan).length;
-            const targetSuffix = `${fmtDag(werkdagen)} ${dagWord(werkdagen)}`;
+            const dagNamen = dayList.map(d => ({ Mon:'ma', Tue:'di', Wed:'wo', Thu:'do', Fri:'vr' }[d])).join(', ');
+            const targetSuffix = aantal === 1 ? `1 werkdag (${dagNamen})` : `${aantal} werkdagen (${dagNamen})`;
+
+            const summary = document.getElementById('summary');
+            const warning = document.getElementById('warning');
+
+            if (aantal === 0) {
+                warning.hidden = false;
+                warning.textContent = 'Kies ten minste één werkdag om een opbouwschema te maken.';
+                summary.innerHTML = '';
+                renderGrid({});
+                document.querySelector('#prog tbody').innerHTML = '';
+                return;
+            }
 
             // Warn when the contract hours don't fit in the chosen workdays.
-            const warning = document.getElementById('warning');
             if (contract > capacity) {
                 warning.hidden = false;
-                warning.textContent = `Let op: ${contract} uur past niet in ${targetSuffix} (maximaal ${capacity} uur bij dagdelen van ${DAGDEEL} uur). De opbouw stopt op ${capacity} uur.`;
+                warning.textContent = `Let op: ${contract} uur past niet in ${aantal} ${aantal === 1 ? 'werkdag' : 'werkdagen'} (maximaal ${capacity} uur bij dagdelen van ${DAGDEEL} uur). De opbouw stopt op ${capacity} uur.`;
             } else {
                 warning.hidden = true;
             }
 
-            const summary = document.getElementById('summary');
+            const plan = planWeek(huidig, dayList);
+            const dagdelen = Object.keys(plan).length;
+
             const richting = doel >= huidig
                 ? `opbouw +${stap}u per week richting ${doel} uur (${targetSuffix})`
                 : `afbouw richting ${doel} uur (${targetSuffix})`;
-            summary.innerHTML = `<strong>${huidig} uur</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ochtenden eerst, met rustdagen ertussen &middot; ${richting}.`;
+            summary.innerHTML = `<strong>${huidig} uur</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ochtenden eerst &middot; ${richting}.`;
 
             const intro = document.getElementById('prog-intro');
             intro.textContent = doel >= huidig
@@ -587,9 +643,18 @@
                 : `Afbouw van ${huidig} naar ${doel} uur (${targetSuffix}) in stappen van ${stap} uur.`;
 
             renderGrid(plan);
-            renderProgression(huidig, doel, stap, werkdagen);
+            renderProgression(huidig, doel, stap, dayList);
         }
         function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+
+        // Toggle day chips
+        document.getElementById('dagen-chips').addEventListener('click', (e) => {
+            const chip = e.target.closest('.dag-chip');
+            if (!chip) return;
+            const pressed = chip.getAttribute('aria-pressed') === 'true';
+            chip.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+            update();
+        });
 
         document.getElementById('form').addEventListener('input', update);
         document.getElementById('form').addEventListener('change', update);
