@@ -101,6 +101,19 @@
             margin: 1rem 0;
         }
 
+        .form-warning {
+            background: #fdecea;
+            border-left: 5px solid var(--color-error);
+            padding: 0.85rem 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: #922b21;
+        }
+        .form-warning[hidden] {
+            display: none;
+        }
+
         .week-grid {
             display: grid;
             grid-template-columns: 90px repeat(5, 1fr);
@@ -303,6 +316,7 @@
                 </form>
 
                 <h2>Voorstel deze week</h2>
+                <p class="form-warning" id="warning" role="alert" hidden></p>
                 <div class="summary" id="summary"></div>
                 <div class="week-grid" id="grid" aria-label="Weekschema"></div>
 
@@ -393,9 +407,11 @@
     // Opbouwschema-calculator
     (function () {
         const DAGDEEL = 4;
-        // Order favours rest days between workdays:
-        // first all mornings (Ma, Wo, Vr, then Di, Do), then afternoons in the same order.
-        const slotOrder = [
+        // Preferred day order favours rest days between workdays:
+        // fill Ma, Wo, Vr first, then Di, Do.
+        const dayPref = ['Mon', 'Wed', 'Fri', 'Tue', 'Thu'];
+        // Stable display order for describing/labelling a plan.
+        const allSlots = [
             'Mon-am','Wed-am','Fri-am','Tue-am','Thu-am',
             'Mon-pm','Wed-pm','Fri-pm','Tue-pm','Thu-pm'
         ];
@@ -407,10 +423,30 @@
             return nl + (h === 'am' ? '-och' : '-mid');
         };
 
-        function planWeek(hours) {
+        // Fill order for a given number of available workdays.
+        // A whole day = ochtend + middag; a trailing half day = ochtend only.
+        // Mornings (incl. the half day) come first, then afternoons, so the
+        // load spreads across the available days before any day is doubled up.
+        function slotOrderFor(werkdagen) {
+            const wholeDays = Math.floor(werkdagen + 1e-9);
+            const hasHalf = (werkdagen - wholeDays) >= 0.5 - 1e-9;
+            const fullDays = dayPref.slice(0, Math.min(wholeDays, 5));
+            const halfDay = (hasHalf && wholeDays < 5) ? dayPref[wholeDays] : null;
+            const mornings = fullDays.map(d => `${d}-am`);
+            if (halfDay) mornings.push(`${halfDay}-am`);
+            const afternoons = fullDays.map(d => `${d}-pm`);
+            return [...mornings, ...afternoons];
+        }
+
+        // Max hours that fit in the available workdays (4u dagdelen).
+        function capacityFor(werkdagen) {
+            return slotOrderFor(werkdagen).length * DAGDEEL;
+        }
+
+        function planWeek(hours, werkdagen) {
             const plan = {};
             let remaining = Math.max(0, hours);
-            for (const slot of slotOrder) {
+            for (const slot of slotOrderFor(werkdagen)) {
                 if (remaining <= 0) break;
                 const h = Math.min(DAGDEEL, remaining);
                 plan[slot] = h;
@@ -429,7 +465,7 @@
         }
 
         function describe(plan) {
-            return slotOrder
+            return allSlots
                 .filter(s => s in plan)
                 .map(s => `${slotLabel(s)} (${plan[s]}u)`)
                 .join(', ');
@@ -487,7 +523,7 @@
             return wrap;
         }
 
-        function renderProgression(start, target, step) {
+        function renderProgression(start, target, step, werkdagen) {
             const tbody = document.querySelector('#prog tbody');
             tbody.innerHTML = '';
             const from = Math.min(start, target);
@@ -499,7 +535,7 @@
             const sorted = [...values].sort((a, b) => a - b);
             let weekNum = 1;
             for (const h of sorted) {
-                const plan = planWeek(h);
+                const plan = planWeek(h, werkdagen);
                 const dagdelen = Object.keys(plan).length;
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td>${weekNum}</td><td>${h} u</td><td>${dagdelen}</td>`;
@@ -513,18 +549,31 @@
         }
 
         function update() {
-            const huidig = clamp(+document.getElementById('huidig').value || 1, 1, 40);
+            const huidigRaw = clamp(+document.getElementById('huidig').value || 1, 1, 40);
             const stap = clamp(+document.getElementById('stap').value || 1, 1, 10);
             const contract = clamp(+document.getElementById('contract').value || 40, 1, 60);
             const werkdagen = roundHalf(clamp(+document.getElementById('werkdagen').value || 5, 0.5, 5));
             // Snap werkdagen input back to the half-day grid
             const wIn = document.getElementById('werkdagen');
             if (parseFloat(wIn.value) !== werkdagen) wIn.value = werkdagen;
-            const doel = contract;
 
-            const plan = planWeek(huidig);
+            // The available workdays cap how many hours can be placed.
+            const capacity = capacityFor(werkdagen);
+            const doel = Math.min(contract, capacity);
+            const huidig = Math.min(huidigRaw, capacity);
+
+            const plan = planWeek(huidig, werkdagen);
             const dagdelen = Object.keys(plan).length;
             const targetSuffix = `${fmtDag(werkdagen)} ${dagWord(werkdagen)}`;
+
+            // Warn when the contract hours don't fit in the chosen workdays.
+            const warning = document.getElementById('warning');
+            if (contract > capacity) {
+                warning.hidden = false;
+                warning.textContent = `Let op: ${contract} uur past niet in ${targetSuffix} (maximaal ${capacity} uur bij dagdelen van ${DAGDEEL} uur). De opbouw stopt op ${capacity} uur.`;
+            } else {
+                warning.hidden = true;
+            }
 
             const summary = document.getElementById('summary');
             const richting = doel >= huidig
@@ -538,7 +587,7 @@
                 : `Afbouw van ${huidig} naar ${doel} uur (${targetSuffix}) in stappen van ${stap} uur.`;
 
             renderGrid(plan);
-            renderProgression(huidig, doel, stap);
+            renderProgression(huidig, doel, stap, werkdagen);
         }
         function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
