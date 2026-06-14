@@ -68,9 +68,13 @@
             gap: 1rem;
             margin: 1rem 0 1.5rem;
         }
+        /* Grid layout reserves a consistent height for the label text
+           (at least two lines), so inputs align on one row even when
+           some labels wrap to two lines and others don't. */
         .form-row label {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-rows: minmax(2.6em, auto) auto;
+            gap: 0.35rem;
             flex: 1;
             min-width: 160px;
             font-weight: bold;
@@ -81,8 +85,8 @@
             border: 1px solid var(--border-color);
             border-radius: 5px;
             font-size: 1rem;
-            margin-top: 0.35rem;
             font-family: inherit;
+            align-self: end;
         }
         .form-row input:focus {
             outline: 2px solid var(--secondary-color);
