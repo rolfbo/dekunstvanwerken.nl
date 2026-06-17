@@ -181,6 +181,22 @@ nav .container {
     display: block;
 }
 
+/* Invisible bridge: keeps the :hover state active while the cursor
+   crosses the visual gap between the Tools trigger and the dropdown
+   panel. Without this the dropdown closes before the cursor reaches it. */
+.has-dropdown::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 0.6rem;
+    pointer-events: none;
+}
+.has-dropdown:hover::after {
+    pointer-events: auto;
+}
+
 .nav-dropdown li {
     margin: 0 !important;
 }
