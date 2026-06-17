@@ -308,12 +308,67 @@
             opacity: 1;
         }
 
+        .print-only { display: none; }
+        .print-meta { font-size: 0.8rem; color: #7f8c8d; margin-top: 1rem; }
+
         .disclaimer {
             font-size: 0.85rem;
             color: #7f8c8d;
             margin-top: 2rem;
             padding-top: 1rem;
             border-top: 1px solid var(--border-color);
+        }
+
+        @media print {
+            /* Hide chrome and interactive controls */
+            nav, footer, .actions, form, .principle { display: none !important; }
+
+            /* Show print-only metadata */
+            .print-only { display: block !important; }
+
+            body { background: #fff; color: #000; }
+
+            #opbouwschema { background: #fff; padding: 0; }
+            .calculator-card {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+                background: #fff;
+            }
+
+            .section-title { text-align: left; margin-bottom: 0.75rem; }
+            .section-title h2 { font-size: 1.6rem; }
+            .section-title p { display: none; }
+
+            .calculator-card h2 {
+                font-size: 1.15rem;
+                margin-top: 1rem;
+            }
+
+            .summary {
+                background: #f0f4ff;
+                border-left-color: #000;
+            }
+
+            /* Keep filled grid cells coloured on print */
+            .week-grid .cell.filled,
+            .week-grid .cell.partial,
+            .mini-grid .mcell.filled,
+            .mini-grid .mcell.partial {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .disclaimer {
+                font-size: 0.75rem;
+                margin-top: 1rem;
+                page-break-inside: avoid;
+            }
+
+            /* Avoid splitting key blocks across pages */
+            .summary, .week-grid { page-break-inside: avoid; }
+
+            a[href]::after { content: ''; }  /* Don't append URLs after links */
         }
 
         @media (max-width: 600px) {
@@ -439,7 +494,14 @@
                     <button type="button" class="btn-action" id="btn-share">
                         <span aria-hidden="true">&#128279;</span> Deel link
                     </button>
+                    <button type="button" class="btn-action" id="btn-print">
+                        <span aria-hidden="true">&#128424;</span> Print
+                    </button>
                     <span class="action-feedback" id="share-feedback" role="status" aria-live="polite"></span>
+                </div>
+
+                <div class="print-only print-meta">
+                    Opbouwschema &middot; geprint op <span id="print-date"></span><span id="print-url-wrap"> &middot; <span id="print-url"></span></span>
                 </div>
 
                 <p class="disclaimer">
@@ -767,15 +829,25 @@
 
         // Keep URL in sync after each update
         const _origUpdate = update;
-        // Wrap via re-assigning the form listener so we don't recurse:
         function updateAndSync() { _origUpdate(); writeStateToUrl(); }
         document.getElementById('form').removeEventListener('input', update);
         document.getElementById('form').removeEventListener('change', update);
         document.getElementById('form').addEventListener('input', updateAndSync);
         document.getElementById('form').addEventListener('change', updateAndSync);
         document.getElementById('dagen-chips').addEventListener('click', writeStateToUrl);
-        // Write initial state to URL
         writeStateToUrl();
+
+        // Print: refresh metadata + open print dialog
+        function refreshPrintMeta() {
+            document.getElementById('print-date').textContent =
+                new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('print-url').textContent = location.href;
+        }
+        window.addEventListener('beforeprint', refreshPrintMeta);
+        document.getElementById('btn-print').addEventListener('click', () => {
+            refreshPrintMeta();
+            window.print();
+        });
     })();
     </script>
 </body>
