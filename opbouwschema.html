@@ -270,6 +270,44 @@
             color: #fff;
         }
 
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1rem;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-action:hover {
+            background: var(--secondary-color);
+        }
+        .btn-action:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+        .action-feedback {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .action-feedback.show {
+            opacity: 1;
+        }
+
         .disclaimer {
             font-size: 0.85rem;
             color: #7f8c8d;
@@ -396,6 +434,13 @@
                     </thead>
                     <tbody></tbody>
                 </table>
+
+                <div class="actions">
+                    <button type="button" class="btn-action" id="btn-share">
+                        <span aria-hidden="true">&#128279;</span> Deel link
+                    </button>
+                    <span class="action-feedback" id="share-feedback" role="status" aria-live="polite"></span>
+                </div>
 
                 <p class="disclaimer">
                     Dit voorstel is een hulpmiddel voor het gesprek tussen werknemer, werkgever en bedrijfsarts en is geen medisch advies. Een individueel opbouwschema wordt altijd op maat opgesteld, rekening houdend met belastbaarheid, herstel en de aard van het werk.
@@ -605,7 +650,6 @@
             const capacity = capacityFor(dayList);
             const doel = Math.min(contract, capacity);
             const huidig = Math.min(huidigRaw, capacity);
-
             const dagNamen = dayList.map(d => ({ Mon:'ma', Tue:'di', Wed:'wo', Thu:'do', Fri:'vr' }[d])).join(', ');
             const targetSuffix = aantal === 1 ? `1 werkdag (${dagNamen})` : `${aantal} werkdagen (${dagNamen})`;
 
@@ -647,6 +691,64 @@
         }
         function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
+        // --- URL state ---
+        // Single-letter day codes: m=Mon, d=Tue (di), w=Wed, t=Thu (do), v=Fri
+        const dayCode = { Mon:'m', Tue:'d', Wed:'w', Thu:'t', Fri:'v' };
+        const codeToDay = Object.fromEntries(Object.entries(dayCode).map(([k,v]) => [v,k]));
+
+        function writeStateToUrl() {
+            const huidig = document.getElementById('huidig').value;
+            const stap = document.getElementById('stap').value;
+            const contract = document.getElementById('contract').value;
+            const dagen = selectedDays().map(d => dayCode[d]).join('');
+            const params = new URLSearchParams({ h: huidig, s: stap, c: contract, d: dagen });
+            const hash = '#' + params.toString();
+            if (location.hash !== hash) {
+                history.replaceState(null, '', location.pathname + location.search + hash);
+            }
+        }
+
+        function applyStateFromUrl() {
+            if (!location.hash || location.hash.length < 2) return;
+            const params = new URLSearchParams(location.hash.slice(1));
+            const setIfPresent = (id, key) => {
+                const v = params.get(key);
+                if (v !== null && v !== '') document.getElementById(id).value = v;
+            };
+            setIfPresent('huidig', 'h');
+            setIfPresent('stap', 's');
+            setIfPresent('contract', 'c');
+            const dParam = params.get('d');
+            if (dParam !== null) {
+                const wantedDays = new Set([...dParam].map(c => codeToDay[c]).filter(Boolean));
+                document.querySelectorAll('.dag-chip').forEach(chip => {
+                    const want = wantedDays.has(chip.dataset.day);
+                    chip.setAttribute('aria-pressed', want ? 'true' : 'false');
+                });
+            }
+        }
+
+        // --- Share button: copy current URL to clipboard ---
+        function showFeedback(text) {
+            const fb = document.getElementById('share-feedback');
+            fb.textContent = text;
+            fb.classList.add('show');
+            clearTimeout(showFeedback._t);
+            showFeedback._t = setTimeout(() => fb.classList.remove('show'), 2500);
+        }
+
+        document.getElementById('btn-share').addEventListener('click', async () => {
+            writeStateToUrl();
+            const url = location.href;
+            try {
+                await navigator.clipboard.writeText(url);
+                showFeedback('Gekopieerd naar klembord');
+            } catch {
+                // Fallback: select-and-prompt (some browsers / non-secure contexts)
+                showFeedback('Kopiëren niet beschikbaar — kopieer de URL handmatig');
+            }
+        });
+
         // Toggle day chips
         document.getElementById('dagen-chips').addEventListener('click', (e) => {
             const chip = e.target.closest('.dag-chip');
@@ -658,7 +760,22 @@
 
         document.getElementById('form').addEventListener('input', update);
         document.getElementById('form').addEventListener('change', update);
+
+        // Initialise from URL hash, then render
+        applyStateFromUrl();
         update();
+
+        // Keep URL in sync after each update
+        const _origUpdate = update;
+        // Wrap via re-assigning the form listener so we don't recurse:
+        function updateAndSync() { _origUpdate(); writeStateToUrl(); }
+        document.getElementById('form').removeEventListener('input', update);
+        document.getElementById('form').removeEventListener('change', update);
+        document.getElementById('form').addEventListener('input', updateAndSync);
+        document.getElementById('form').addEventListener('change', updateAndSync);
+        document.getElementById('dagen-chips').addEventListener('click', writeStateToUrl);
+        // Write initial state to URL
+        writeStateToUrl();
     })();
     </script>
 </body>
