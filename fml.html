@@ -1,0 +1,823 @@
+<!--
+   FML concept-tool for de Kunst van Werken B.V.
+   Volgt de 6-rubrieken-structuur van de UWV Functionele Mogelijkheden Lijst
+   en is bedoeld als concept/voorbereidingstool. Een formele FML-beoordeling
+   kan uitsluitend door een verzekeringsarts worden opgemaakt.
+   Location: /var/www/dekunstvanwerken.nl/fml.html
+-->
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FML concept-tool | De Kunst van Werken</title>
+    <meta name="description" content="Concept-overzicht volgens de 6-rubrieken-structuur van de Functionele Mogelijkheden Lijst (FML). Een hulpmiddel ter voorbereiding van het gesprek met de bedrijfsarts.">
+    <meta name="author" content="de Kunst van Werken B.V.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://dekunstvanwerken.nl/fml.html">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#004a99">
+
+    <link rel="stylesheet" href="brand-variables.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        #fml-tool { background: var(--bg-light); }
+
+        .tool-card {
+            max-width: 920px;
+            margin: 0 auto;
+            background: var(--text-light);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .tool-card h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tool-card h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .tool-card p {
+            margin-bottom: 1rem;
+        }
+
+        .disclaimer-top {
+            background: #fff5ec;
+            border-left: 5px solid var(--accent-color);
+            padding: 0.85rem 1rem;
+            border-radius: 4px;
+            margin: 1rem 0 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0 1.5rem;
+        }
+        .form-row label {
+            display: grid;
+            grid-template-rows: auto auto;
+            gap: 0.35rem;
+            flex: 1;
+            min-width: 200px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+        .form-row input {
+            padding: 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+            align-self: end;
+        }
+        .form-row input:focus {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        /* Rubriek-block */
+        .rubriek {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .rubriek > summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 0.85rem 1.2rem;
+            background: var(--bg-light);
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .rubriek > summary::-webkit-details-marker { display: none; }
+
+        .rubriek > summary::after {
+            content: '▾';
+            font-size: 0.8rem;
+            transition: transform 0.15s;
+        }
+
+        .rubriek[open] > summary::after { transform: rotate(180deg); }
+
+        .rubriek > summary .rubriek-meta {
+            font-weight: normal;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            opacity: 0.7;
+            margin-left: auto;
+            margin-right: 0.5rem;
+        }
+
+        .rubriek-body {
+            padding: 0.5rem 1.2rem 1.2rem;
+        }
+
+        .fml-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem 1rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .fml-item:last-child { border-bottom: none; }
+
+        .fml-item .item-label {
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .fml-item .item-hint {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 0.15rem;
+        }
+
+        .score-group {
+            display: flex;
+            gap: 0.35rem;
+            flex-wrap: nowrap;
+            align-self: start;
+        }
+
+        .number-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            align-self: start;
+        }
+        .number-input {
+            width: 4.5rem;
+            padding: 0.4rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font: inherit;
+            font-size: 0.95rem;
+        }
+        .number-input:focus {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+        .number-unit {
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            opacity: 0.7;
+        }
+
+        .score-btn {
+            border: 1px solid var(--border-color);
+            background: var(--text-light);
+            color: var(--text-dark);
+            padding: 0.4rem 0.7rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: background 0.12s, color 0.12s, border-color 0.12s;
+        }
+
+        .score-btn:hover { border-color: var(--secondary-color); }
+
+        .score-btn[aria-pressed="true"][data-score="1"] {
+            background: #d6f5d6; color: #1f7a1f; border-color: #1f7a1f;
+        }
+        .score-btn[aria-pressed="true"][data-score="2"] {
+            background: #fff3cd; color: #8a6d00; border-color: #8a6d00;
+        }
+        .score-btn[aria-pressed="true"][data-score="3"] {
+            background: #fdecea; color: #922b21; border-color: #922b21;
+        }
+        .score-btn:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        .notes {
+            grid-column: 1 / -1;
+            width: 100%;
+            min-height: 0;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.45rem 0.6rem;
+            font: inherit;
+            font-size: 0.9rem;
+            resize: vertical;
+            background: var(--bg-light);
+        }
+        .notes:focus {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+            background: var(--text-light);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1rem;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-action:hover { background: var(--secondary-color); }
+        .btn-action--ghost {
+            background: var(--text-light);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+        .btn-action--ghost:hover { background: var(--bg-light); }
+        .btn-action:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+        .action-feedback {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .action-feedback.show { opacity: 1; }
+
+        .print-only { display: none; }
+        .print-meta {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 1rem;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 640px) {
+            .tool-card { padding: 1.5rem; }
+            .fml-item {
+                grid-template-columns: 1fr;
+            }
+            .score-group { flex-wrap: wrap; }
+        }
+
+        @media print {
+            nav, footer, .actions, .disclaimer-top { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: #fff; color: #000; }
+            #fml-tool { background: #fff; padding: 0; }
+            .tool-card {
+                box-shadow: none; padding: 0; max-width: 100%; background: #fff;
+            }
+            .section-title { text-align: left; margin-bottom: 0.75rem; }
+            .section-title h2 { font-size: 1.4rem; }
+            .section-title p { display: none; }
+            .rubriek { break-inside: avoid; border: 1px solid #aaa; margin-bottom: 0.5rem; }
+            .rubriek > summary { background: #f0f0f0; }
+            details[open] .rubriek-body, .rubriek-body { display: block; }
+            .rubriek:not([open]) > summary::after { display: none; }
+            /* Expand all rubrieken in print */
+            details { display: block; }
+            details > summary { list-style: none; }
+            .score-btn { display: none; }
+            /* Show only the chosen score */
+            .score-btn[aria-pressed="true"] {
+                display: inline-block !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .fml-item {
+                grid-template-columns: 1fr auto;
+                page-break-inside: avoid;
+            }
+            .notes:placeholder-shown { display: none; }
+            .notes {
+                background: #fff;
+                border: none;
+                border-left: 2px solid #ddd;
+                padding-left: 0.5rem;
+                font-size: 0.85rem;
+            }
+            .notes:empty { display: none; }
+            .form-row { display: none; }  /* werktijden shown separately in summary */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav>
+        <div class="container">
+            <a href="index.html#hero" class="logo" aria-label="de Kunst van Werken — home">
+                <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+                    <rect width="40" height="40" rx="8" fill="var(--color-primary)"/>
+                    <path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M10 33 Q20 35.5 30 33" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                </svg>
+                <span class="logo-text">de Kunst van Werken</span>
+            </a>
+            <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu openen">
+                <span class="nav-toggle-bar"></span>
+            </button>
+            <ul class="nav-links" id="primary-nav">
+                <li><a href="index.html#hero">Home</a></li>
+                <li><a href="index.html#services">Diensten</a></li>
+                <li><a href="index.html#werkwijze">Werkwijze</a></li>
+                <li><a href="index.html#whitelabel">Whitelabel</a></li>
+                <li class="has-dropdown">
+                    <button class="nav-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="tools-menu">
+                        Tools <span class="caret" aria-hidden="true">&#9662;</span>
+                    </button>
+                    <ul class="nav-dropdown" id="tools-menu">
+                        <li><a href="opbouwschema.html">Opbouwschema</a></li>
+                        <li><a href="fml.html" aria-current="page">FML concept</a></li>
+                    </ul>
+                </li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="fml-tool">
+        <div class="container">
+            <div class="section-title">
+                <h2>FML concept-tool</h2>
+                <p>Een overzicht van mogelijkheden en beperkingen volgens de zes rubrieken van de Functionele Mogelijkheden Lijst &mdash; als hulp bij het gesprek met de bedrijfsarts.</p>
+            </div>
+
+            <div class="tool-card">
+                <div class="disclaimer-top">
+                    <strong>Concept-tool, geen formele beoordeling.</strong> Deze tool volgt de zes rubrieken van de FML, maar is geen vervanging van een formele FML. Een formele FML kan uitsluitend door een verzekeringsarts (UWV) worden opgemaakt; een formeel inzetbaarheidsprofiel uitsluitend door de bedrijfsarts. Gebruik dit overzicht als concept ter voorbereiding van het gesprek of als interne notitie.
+                </div>
+
+                <form id="fml-form" onsubmit="return false;">
+                    <div id="rubrieken"></div>
+                </form>
+
+                <div class="actions">
+                    <button type="button" class="btn-action" id="btn-share">
+                        <span aria-hidden="true">&#128279;</span> Deel link
+                    </button>
+                    <button type="button" class="btn-action" id="btn-print">
+                        <span aria-hidden="true">&#128424;</span> Print
+                    </button>
+                    <button type="button" class="btn-action btn-action--ghost" id="btn-reset">
+                        Leegmaken
+                    </button>
+                    <span class="action-feedback" id="share-feedback" role="status" aria-live="polite"></span>
+                </div>
+
+                <div class="print-only print-meta">
+                    FML concept &middot; opgemaakt op <span id="print-date"></span><span id="print-url-wrap"> &middot; <span id="print-url"></span></span>
+                </div>
+
+                <p class="disclaimer">
+                    Dit is een hulpmiddel voor het gesprek tussen werknemer, werkgever en bedrijfsarts. Voor een formele beoordeling van uw arbeidsmogelijkheden in het kader van de WIA neemt u contact op met de verzekeringsarts van het UWV; voor een inzetbaarheidsprofiel met uw bedrijfsarts.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 de Kunst van Werken B.V. Alle rechten voorbehouden.</p>
+            <div class="footer-links" style="margin-top: 1rem;">
+                <a href="klachten.html">Klachtenregeling</a>
+                <a href="privacybeleid.html">Privacybeleid</a>
+                <a href="voorwaarden.html">Algemene Voorwaarden</a>
+            </div>
+            <p style="font-size: 0.8rem; color: #bdc3c7; margin-top: 1rem;">
+                de Kunst van Werken B.V. | KVK: 94098344
+            </p>
+        </div>
+    </footer>
+
+    <script>
+    // Mobile hamburger + Tools dropdown
+    (function () {
+        const toggle = document.querySelector('.nav-toggle');
+        const menu = document.getElementById('primary-nav');
+        if (toggle && menu) {
+            const close = () => {
+                menu.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-label', 'Menu openen');
+            };
+            toggle.addEventListener('click', () => {
+                const open = menu.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+            });
+            menu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') close();
+            });
+        }
+        const dropTrigger = document.querySelector('.nav-dropdown-trigger');
+        if (dropTrigger) {
+            const closeDrop = () => dropTrigger.setAttribute('aria-expanded', 'false');
+            dropTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const expanded = dropTrigger.getAttribute('aria-expanded') === 'true';
+                dropTrigger.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.has-dropdown')) closeDrop();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeDrop();
+            });
+        }
+    })();
+    </script>
+
+    <script>
+    // FML concept-tool
+    (function () {
+        /* Item-data: zelf geschreven labels gebaseerd op de publiek bekende
+           zes-rubrieken-structuur van de FML. */
+        const RUBRIEKEN = [
+            {
+                id: 'I',
+                titel: 'Persoonlijk functioneren',
+                items: [
+                    { id: 'a', label: 'Vasthouden van aandacht', hint: 'Geconcentreerd blijven op één taak.' },
+                    { id: 'b', label: 'Verdelen van aandacht', hint: 'Meerdere taken tegelijk doen.' },
+                    { id: 'c', label: 'Onthouden / inprenten', hint: 'Nieuwe informatie onthouden.' },
+                    { id: 'd', label: 'Inzicht in eigen kunnen', hint: 'Realistisch inschatten wat wel/niet lukt.' },
+                    { id: 'e', label: 'Doelgericht en planmatig handelen', hint: 'Een werkdag plannen en de planning volgen.' },
+                    { id: 'f', label: 'Handelingstempo', hint: 'In gangbaar werktempo functioneren.' },
+                    { id: 'g', label: 'Zelfstandig handelen', hint: 'Zonder voortdurende aansturing werken.' },
+                    { id: 'h', label: 'Werken zonder verhoogd persoonlijk risico', hint: 'Functies zonder onevenredige veiligheidsrisico’s.' },
+                ],
+            },
+            {
+                id: 'II',
+                titel: 'Sociaal functioneren',
+                items: [
+                    { id: 'a', label: 'Zien', hint: 'Visueel waarnemen voor het werk.' },
+                    { id: 'b', label: 'Horen', hint: 'Gehoor voor instructies, alarm, gesprekken.' },
+                    { id: 'c', label: 'Spreken', hint: 'Mondeling communiceren.' },
+                    { id: 'd', label: 'Eigen gevoelens uiten', hint: 'Aangeven wat nodig is of niet lukt.' },
+                    { id: 'e', label: 'Omgaan met conflicten', hint: 'Niet uit balans raken bij wrijving.' },
+                    { id: 'f', label: 'Samenwerken met collega’s', hint: 'Functioneren in een team.' },
+                    { id: 'g', label: 'Klantcontact / contact met derden', hint: 'Werken met klanten, patiënten, leveranciers.' },
+                    { id: 'h', label: 'Werken met leiding en hiërarchie', hint: 'Aanwijzingen accepteren en opvolgen.' },
+                    { id: 'i', label: 'Vervoer naar werk', hint: 'Zelfstandig reizen naar de werkplek.' },
+                ],
+            },
+            {
+                id: 'III',
+                titel: 'Aanpassing aan fysieke omgevingseisen',
+                items: [
+                    { id: 'a', label: 'Werken in hitte', hint: 'Hoge temperaturen of warmtebelasting.' },
+                    { id: 'b', label: 'Werken in koude', hint: 'Lage temperaturen of koudebelasting.' },
+                    { id: 'c', label: 'Werken in tocht of wind', hint: 'Buiten of in tochtige ruimtes.' },
+                    { id: 'd', label: 'Huidcontact met irriterende stoffen', hint: 'Reinigingsmiddelen, oliën, etc.' },
+                    { id: 'e', label: 'Werken met beschermingsmiddelen', hint: 'Mondkapje, handschoenen, gehoorbescherming.' },
+                    { id: 'f', label: 'Stof, rook, gassen of dampen', hint: 'Werken in ruimtes met luchtbelasting.' },
+                    { id: 'g', label: 'Werken in lawaai', hint: 'Continu of piekgeluid in de werkomgeving.' },
+                    { id: 'h', label: 'Werken met trillingen', hint: 'Bv. hand-arm of lichaamstrillingen.' },
+                ],
+            },
+            {
+                id: 'IV',
+                titel: 'Dynamische handelingen',
+                items: [
+                    { id: 'a', label: 'Hand- en vingergebruik', hint: 'Fijne motoriek, grijpen.' },
+                    { id: 'b', label: 'Repeterende handelingen', hint: 'Telkens dezelfde beweging maken.' },
+                    { id: 'c', label: 'Reiken', hint: 'Armen naar voren of opzij strekken.' },
+                    { id: 'd', label: 'Frequent buigen', hint: 'Voorover buigen tijdens werk.' },
+                    { id: 'e', label: 'Tillen (incidenteel)', hint: 'Eenmaal iets zwaars optillen.' },
+                    { id: 'f', label: 'Tillen of dragen (frequent)', hint: 'Regelmatig zware lasten verplaatsen.' },
+                    { id: 'g', label: 'Lopen', hint: 'Algemeen kunnen lopen.' },
+                    { id: 'h', label: 'Lopen tijdens het werk', hint: 'Lange perioden of grote afstanden.' },
+                    { id: 'i', label: 'Trappenlopen', hint: 'Traploop tijdens werk.' },
+                    { id: 'j', label: 'Klimmen', hint: 'Ladders, steigers, etc.' },
+                    { id: 'k', label: 'Knielen of hurken', hint: 'In knielende of hurkende houding werken.' },
+                    { id: 'l', label: 'Hoofd- en nekbewegingen', hint: 'Veel draaien of buigen van de nek.' },
+                    { id: 'm', label: 'Werken met toetsenbord en muis', hint: 'Beeldschermwerk.' },
+                    { id: 'n', label: 'Autorijden in het werk', hint: 'Rijden als onderdeel van de functie.' },
+                    { id: 'o', label: 'Fietsen', hint: 'Naar het werk of in het werk.' },
+                    { id: 'p', label: 'Openbaar vervoer gebruiken', hint: 'Reizen met OV naar of in het werk.' },
+                ],
+            },
+            {
+                id: 'V',
+                titel: 'Statische houdingen',
+                items: [
+                    { id: 'a', label: 'Zitten', hint: 'Algemeen kunnen zitten.' },
+                    { id: 'b', label: 'Langdurig zitten tijdens werk', hint: 'Hele werkdag aan een tafel.' },
+                    { id: 'c', label: 'Staan', hint: 'Algemeen kunnen staan.' },
+                    { id: 'd', label: 'Langdurig staan tijdens werk', hint: 'Hele werkdag staand werk.' },
+                    { id: 'e', label: 'Geknield of gehurkt actief zijn', hint: 'Lang werken in lage houding.' },
+                    { id: 'f', label: 'Gebogen of gedraaid werken', hint: 'Niet-rechte rughouding.' },
+                    { id: 'g', label: 'Boven schouderhoogte werken', hint: 'Armen omhoog houden.' },
+                    { id: 'h', label: 'Hoofd in een bepaalde stand houden', hint: 'Lange tijd in vaste nekhouding.' },
+                ],
+            },
+            {
+                id: 'VI',
+                titel: 'Werktijden',
+                items: [
+                    { id: 'a', type: 'number', max: 12, label: 'Maximaal aantal uren per dag', hint: 'Laat leeg of 0 als er geen beperking is.' },
+                    { id: 'b', type: 'number', max: 60, label: 'Maximaal aantal uren per week', hint: 'Laat leeg of 0 als er geen beperking is.' },
+                    { id: 'c', label: 'Bijzonderheden in werktijden', hint: 'Nachtdienst, ploegendienst, onregelmatig werk.' },
+                ],
+            },
+        ];
+
+        const SCORE_LABELS = ['—', 'Niet beperkt', 'Beperkt', 'Sterk beperkt'];
+        const TOTAL_ITEMS = RUBRIEKEN.reduce((n, r) => n + r.items.length, 0);
+
+        // --- Local notes store (per item-key) — not encoded in URL ---
+        const NOTES_KEY = 'fml-notes-v1';
+        function loadNotes() {
+            try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); }
+            catch { return {}; }
+        }
+        function saveNotes(notes) {
+            try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); } catch {}
+        }
+        const notes = loadNotes();
+
+        function itemKey(rubriek, item) { return `${rubriek}.${item}`; }
+
+        // --- State: scores keyed by itemKey, 0..3 ---
+        const scores = {};
+
+        function render() {
+            const wrap = document.getElementById('rubrieken');
+            wrap.innerHTML = '';
+            for (const r of RUBRIEKEN) {
+                const det = document.createElement('details');
+                det.className = 'rubriek';
+                det.open = true;
+                det.dataset.rubriek = r.id;
+
+                const sum = document.createElement('summary');
+                const counter = document.createElement('span');
+                counter.className = 'rubriek-counter';
+                counter.textContent = `Rubriek ${r.id}: ${r.titel}`;
+                const meta = document.createElement('span');
+                meta.className = 'rubriek-meta';
+                meta.dataset.rubriekMeta = r.id;
+                sum.appendChild(counter);
+                sum.appendChild(meta);
+                det.appendChild(sum);
+
+                const body = document.createElement('div');
+                body.className = 'rubriek-body';
+                for (const it of r.items) {
+                    const key = itemKey(r.id, it.id);
+                    const row = document.createElement('div');
+                    row.className = 'fml-item';
+                    row.dataset.key = key;
+                    row.dataset.type = it.type || 'score';
+
+                    const left = document.createElement('div');
+                    const lbl = document.createElement('div');
+                    lbl.className = 'item-label';
+                    lbl.textContent = it.label;
+                    left.appendChild(lbl);
+                    if (it.hint) {
+                        const hint = document.createElement('div');
+                        hint.className = 'item-hint';
+                        hint.textContent = it.hint;
+                        left.appendChild(hint);
+                    }
+                    row.appendChild(left);
+
+                    if (it.type === 'number') {
+                        const wrap = document.createElement('div');
+                        wrap.className = 'number-group';
+                        const num = document.createElement('input');
+                        num.type = 'number';
+                        num.min = '0';
+                        num.max = String(it.max || 99);
+                        num.step = '1';
+                        num.className = 'number-input';
+                        num.dataset.itemKey = key;
+                        num.placeholder = '—';
+                        const stored = scores[key];
+                        if (typeof stored === 'number' && stored > 0) num.value = stored;
+                        num.addEventListener('input', () => {
+                            const v = parseInt(num.value, 10);
+                            if (Number.isFinite(v) && v > 0) scores[key] = v;
+                            else delete scores[key];
+                            updateMeta();
+                            writeStateToUrl();
+                        });
+                        const unit = document.createElement('span');
+                        unit.className = 'number-unit';
+                        unit.textContent = 'uur';
+                        wrap.appendChild(num);
+                        wrap.appendChild(unit);
+                        row.appendChild(wrap);
+                    } else {
+                        const group = document.createElement('div');
+                        group.className = 'score-group';
+                        group.setAttribute('role', 'radiogroup');
+                        group.setAttribute('aria-label', `Score voor ${it.label}`);
+                        for (let s = 1; s <= 3; s++) {
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'score-btn';
+                            btn.dataset.score = String(s);
+                            btn.setAttribute('aria-pressed', 'false');
+                            btn.textContent = SCORE_LABELS[s];
+                            btn.addEventListener('click', () => {
+                                const current = scores[key] || 0;
+                                scores[key] = (current === s) ? 0 : s;
+                                applyScoresToButtons();
+                                updateMeta();
+                                writeStateToUrl();
+                            });
+                            group.appendChild(btn);
+                        }
+                        row.appendChild(group);
+                    }
+
+                    const ta = document.createElement('textarea');
+                    ta.className = 'notes';
+                    ta.rows = 1;
+                    ta.placeholder = 'Toelichting (optioneel, blijft lokaal)…';
+                    ta.value = notes[key] || '';
+                    ta.addEventListener('input', () => {
+                        const v = ta.value;
+                        if (v) notes[key] = v; else delete notes[key];
+                        saveNotes(notes);
+                    });
+                    row.appendChild(ta);
+
+                    body.appendChild(row);
+                }
+                det.appendChild(body);
+                wrap.appendChild(det);
+            }
+            applyScoresToButtons();
+            updateMeta();
+        }
+
+        function applyScoresToButtons() {
+            document.querySelectorAll('.fml-item').forEach(row => {
+                const key = row.dataset.key;
+                const sel = scores[key] || 0;
+                row.querySelectorAll('.score-btn').forEach(btn => {
+                    btn.setAttribute('aria-pressed',
+                        Number(btn.dataset.score) === sel ? 'true' : 'false');
+                });
+            });
+        }
+
+        function updateMeta() {
+            for (const r of RUBRIEKEN) {
+                const total = r.items.length;
+                let limited = 0, scoreItems = 0;
+                for (const it of r.items) {
+                    if (it.type === 'number') continue;
+                    scoreItems++;
+                    const s = scores[itemKey(r.id, it.id)] || 0;
+                    if (s >= 2) limited++;
+                }
+                const el = document.querySelector(`[data-rubriek-meta="${r.id}"]`);
+                if (el) {
+                    if (r.id === 'VI') {
+                        const ud = scores[itemKey('VI', 'a')] || 0;
+                        const uw = scores[itemKey('VI', 'b')] || 0;
+                        const parts = [];
+                        if (ud) parts.push(`max ${ud}u/dag`);
+                        if (uw) parts.push(`max ${uw}u/week`);
+                        el.textContent = parts.length ? parts.join(', ') : 'geen beperking';
+                    } else {
+                        el.textContent = limited ? `${limited} van ${scoreItems} beperkt` : `${total} items`;
+                    }
+                }
+            }
+        }
+
+        // --- URL state ---
+        // Each item writes its own chunk: 1 digit for score items (0..3),
+        // 2 digits for number items (00..99). Order matches data order.
+        const FLAT = [];
+        for (const r of RUBRIEKEN) for (const it of r.items)
+            FLAT.push({ key: itemKey(r.id, it.id), type: it.type || 'score' });
+
+        function writeStateToUrl() {
+            const s = FLAT.map(({ key, type }) => {
+                const v = scores[key];
+                if (type === 'number') {
+                    const n = (typeof v === 'number' && v > 0) ? Math.min(99, v|0) : 0;
+                    return String(n).padStart(2, '0');
+                }
+                return String((v >= 1 && v <= 3) ? v : 0);
+            }).join('');
+            const params = new URLSearchParams({ v: '1', s });
+            const hash = '#' + params.toString();
+            if (location.hash !== hash) {
+                history.replaceState(null, '', location.pathname + location.search + hash);
+            }
+        }
+
+        function applyStateFromUrl() {
+            if (!location.hash || location.hash.length < 2) return;
+            const params = new URLSearchParams(location.hash.slice(1));
+            const s = params.get('s') || '';
+            let i = 0;
+            for (const { key, type } of FLAT) {
+                if (type === 'number') {
+                    const chunk = s.slice(i, i + 2);
+                    const n = parseInt(chunk, 10);
+                    if (Number.isFinite(n) && n > 0) scores[key] = n;
+                    i += 2;
+                } else {
+                    const d = parseInt(s[i] || '0', 10);
+                    if (d >= 1 && d <= 3) scores[key] = d;
+                    i += 1;
+                }
+                if (i >= s.length) break;
+            }
+        }
+
+        // --- Share / print / reset ---
+        function showFeedback(text) {
+            const fb = document.getElementById('share-feedback');
+            fb.textContent = text;
+            fb.classList.add('show');
+            clearTimeout(showFeedback._t);
+            showFeedback._t = setTimeout(() => fb.classList.remove('show'), 2500);
+        }
+
+        function refreshPrintMeta() {
+            document.getElementById('print-date').textContent =
+                new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('print-url').textContent = location.href;
+        }
+
+        document.getElementById('btn-share').addEventListener('click', async () => {
+            writeStateToUrl();
+            try {
+                await navigator.clipboard.writeText(location.href);
+                showFeedback('Gekopieerd naar klembord');
+            } catch {
+                showFeedback('Kopiëren niet beschikbaar — kopieer de URL handmatig');
+            }
+        });
+
+        document.getElementById('btn-print').addEventListener('click', () => {
+            refreshPrintMeta();
+            window.print();
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            if (!confirm('Alle scores en notities leegmaken?')) return;
+            for (const k of Object.keys(scores)) delete scores[k];
+            for (const k of Object.keys(notes)) delete notes[k];
+            saveNotes(notes);
+            applyScoresToButtons();
+            updateMeta();
+            document.querySelectorAll('.notes').forEach(t => { t.value = ''; });
+            writeStateToUrl();
+        });
+
+        window.addEventListener('beforeprint', refreshPrintMeta);
+
+        // --- Init ---
+        applyStateFromUrl();
+        render();
+        writeStateToUrl();
+    })();
+    </script>
+</body>
+</html>
