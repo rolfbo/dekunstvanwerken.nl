@@ -1,0 +1,691 @@
+<!--
+   IZP concept-tool for de Kunst van Werken B.V.
+   Volgt de 6-rubrieken-structuur van het Inzetbaarheidsprofiel (IZP) en is
+   bedoeld als concept/voorbereidingstool. Een formeel IZP kan uitsluitend
+   door de bedrijfsarts worden opgemaakt.
+   Location: /var/www/dekunstvanwerken.nl/izp.html
+-->
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IZP concept-tool | De Kunst van Werken</title>
+    <meta name="description" content="Concept-overzicht volgens de 6-rubrieken-structuur van het Inzetbaarheidsprofiel (IZP). Een hulpmiddel ter voorbereiding van het gesprek met de bedrijfsarts of als interne notitie.">
+    <meta name="author" content="de Kunst van Werken B.V.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://dekunstvanwerken.nl/izp.html">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#004a99">
+
+    <link rel="stylesheet" href="brand-variables.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        #izp-tool { background: var(--bg-light); }
+
+        .tool-card {
+            max-width: 920px;
+            margin: 0 auto;
+            background: var(--text-light);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .tool-card h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tool-card h2:first-of-type { margin-top: 0; }
+        .tool-card p { margin-bottom: 1rem; }
+
+        .disclaimer-top {
+            background: #fff5ec;
+            border-left: 5px solid var(--accent-color);
+            padding: 0.85rem 1rem;
+            border-radius: 4px;
+            margin: 1rem 0 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* Personalia block at top */
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .meta-row label {
+            display: grid;
+            grid-template-rows: auto auto;
+            gap: 0.3rem;
+            flex: 1;
+            min-width: 180px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+        .meta-row input {
+            padding: 0.55rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font: inherit;
+            font-size: 0.95rem;
+        }
+        .meta-row input:focus {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        /* Rubriek-block */
+        .rubriek {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .rubriek > summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 0.85rem 1.2rem;
+            background: var(--bg-light);
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .rubriek > summary::-webkit-details-marker { display: none; }
+        .rubriek > summary::after {
+            content: '▾';
+            font-size: 0.8rem;
+            transition: transform 0.15s;
+        }
+        .rubriek[open] > summary::after { transform: rotate(180deg); }
+
+        .rubriek > summary .rubriek-meta {
+            font-weight: normal;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            opacity: 0.7;
+            margin-left: auto;
+            margin-right: 0.5rem;
+        }
+
+        .rubriek-body { padding: 1rem 1.2rem 1.2rem; }
+
+        .rubriek-hint {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 0.6rem;
+            font-style: italic;
+        }
+
+        .rubriek-textarea {
+            width: 100%;
+            min-height: 110px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 0.7rem 0.85rem;
+            font: inherit;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            resize: vertical;
+            background: var(--text-light);
+        }
+        .rubriek-textarea:focus {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+        .rubriek-textarea::placeholder { color: #b0b6bf; }
+
+        /* Werktijden block — number inputs + textarea */
+        .werktijden-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 0.85rem;
+        }
+        .werktijden-numbers label {
+            display: grid;
+            grid-template-rows: auto auto;
+            gap: 0.3rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+        .werktijden-numbers input {
+            width: 5rem;
+            padding: 0.45rem 0.55rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font: inherit;
+            font-size: 0.95rem;
+        }
+        .werktijden-numbers input:focus {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+        .werktijden-numbers .unit {
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: var(--text-dark);
+            opacity: 0.7;
+            margin-left: 0.3rem;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1rem;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-action:hover { background: var(--secondary-color); }
+        .btn-action--ghost {
+            background: var(--text-light);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+        .btn-action--ghost:hover { background: var(--bg-light); }
+        .btn-action:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+        .action-feedback {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .action-feedback.show { opacity: 1; }
+
+        .print-only { display: none; }
+        .print-meta {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 1rem;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 640px) {
+            .tool-card { padding: 1.5rem; }
+        }
+
+        @media print {
+            nav, footer, .actions, .disclaimer-top { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: #fff; color: #000; }
+            #izp-tool { background: #fff; padding: 0; }
+            .tool-card {
+                box-shadow: none; padding: 0; max-width: 100%; background: #fff;
+            }
+            .section-title { text-align: left; margin-bottom: 0.75rem; }
+            .section-title h2 { font-size: 1.4rem; }
+            .section-title p { display: none; }
+            .meta-row label { font-size: 0.9rem; }
+            .meta-row input { border: none; border-bottom: 1px solid #ccc; padding: 0.2rem 0; }
+            .rubriek { border: 1px solid #aaa; margin-bottom: 0.6rem; page-break-inside: avoid; }
+            .rubriek > summary { background: #f0f0f0; }
+            details > summary { list-style: none; }
+            .rubriek > summary::after { display: none; }
+            .rubriek-hint { display: none; }
+            .rubriek-textarea {
+                border: none;
+                resize: none;
+                min-height: 0;
+                padding: 0;
+                background: transparent;
+                white-space: pre-wrap;
+            }
+            .rubriek-textarea:empty { display: none; }
+            .werktijden-numbers input {
+                border: none;
+                border-bottom: 1px solid #ccc;
+                padding: 0;
+                width: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav>
+        <div class="container">
+            <a href="index.html#hero" class="logo" aria-label="de Kunst van Werken — home">
+                <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+                    <rect width="40" height="40" rx="8" fill="var(--color-primary)"/>
+                    <path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M10 33 Q20 35.5 30 33" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                </svg>
+                <span class="logo-text">de Kunst van Werken</span>
+            </a>
+            <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu openen">
+                <span class="nav-toggle-bar"></span>
+            </button>
+            <ul class="nav-links" id="primary-nav">
+                <li><a href="index.html#hero">Home</a></li>
+                <li><a href="index.html#services">Diensten</a></li>
+                <li><a href="index.html#werkwijze">Werkwijze</a></li>
+                <li><a href="index.html#whitelabel">Whitelabel</a></li>
+                <li class="has-dropdown">
+                    <button class="nav-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="tools-menu">
+                        Tools <span class="caret" aria-hidden="true">&#9662;</span>
+                    </button>
+                    <ul class="nav-dropdown" id="tools-menu">
+                        <li><a href="opbouwschema.html">Opbouwschema</a></li>
+                        <li><a href="fml.html">FML concept</a></li>
+                        <li><a href="izp.html" aria-current="page">IZP concept</a></li>
+                    </ul>
+                </li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="izp-tool">
+        <div class="container">
+            <div class="section-title">
+                <h2>IZP concept-tool</h2>
+                <p>Een beschrijvend overzicht van mogelijkheden en beperkingen volgens de zes rubrieken van het Inzetbaarheidsprofiel &mdash; als hulp bij het gesprek met de bedrijfsarts.</p>
+            </div>
+
+            <div class="tool-card">
+                <div class="disclaimer-top">
+                    <strong>Concept-tool, geen formeel IZP.</strong> Een formeel inzetbaarheidsprofiel kan uitsluitend door de bedrijfsarts worden opgemaakt; een formele FML uitsluitend door een verzekeringsarts. Deze tool helpt om de mogelijkheden en beperkingen alvast op een rij te zetten als voorbereiding op het gesprek of als interne notitie.
+                </div>
+
+                <form id="izp-form" onsubmit="return false;">
+                    <h3 style="margin-bottom:0.5rem; color:var(--text-dark); font-size:1rem;">Algemene gegevens (optioneel)</h3>
+                    <div class="meta-row">
+                        <label>Naam werknemer (initialen)
+                            <input type="text" id="meta-naam" placeholder="bv. R.B." maxlength="32" autocomplete="off">
+                        </label>
+                        <label>Functie
+                            <input type="text" id="meta-functie" placeholder="bv. Administratief medewerker" maxlength="80" autocomplete="off">
+                        </label>
+                        <label>Datum
+                            <input type="date" id="meta-datum">
+                        </label>
+                    </div>
+
+                    <div id="rubrieken"></div>
+                </form>
+
+                <div class="actions">
+                    <button type="button" class="btn-action" id="btn-share">
+                        <span aria-hidden="true">&#128279;</span> Deel link
+                    </button>
+                    <button type="button" class="btn-action" id="btn-print">
+                        <span aria-hidden="true">&#128424;</span> Print
+                    </button>
+                    <button type="button" class="btn-action btn-action--ghost" id="btn-reset">
+                        Leegmaken
+                    </button>
+                    <span class="action-feedback" id="share-feedback" role="status" aria-live="polite"></span>
+                </div>
+
+                <div class="print-only print-meta">
+                    IZP concept &middot; opgemaakt op <span id="print-date"></span><span id="print-url-wrap"> &middot; <span id="print-url"></span></span>
+                </div>
+
+                <p class="disclaimer">
+                    Dit is een hulpmiddel voor het gesprek tussen werknemer, werkgever en bedrijfsarts. Voor een formele beoordeling van uw arbeidsmogelijkheden in het kader van de WIA neemt u contact op met de verzekeringsarts van het UWV; voor een formeel inzetbaarheidsprofiel met uw bedrijfsarts.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 de Kunst van Werken B.V. Alle rechten voorbehouden.</p>
+            <div class="footer-links" style="margin-top: 1rem;">
+                <a href="klachten.html">Klachtenregeling</a>
+                <a href="privacybeleid.html">Privacybeleid</a>
+                <a href="voorwaarden.html">Algemene Voorwaarden</a>
+            </div>
+            <p style="font-size: 0.8rem; color: #bdc3c7; margin-top: 1rem;">
+                de Kunst van Werken B.V. | KVK: 94098344
+            </p>
+        </div>
+    </footer>
+
+    <script>
+    // Mobile hamburger + Tools dropdown
+    (function () {
+        const toggle = document.querySelector('.nav-toggle');
+        const menu = document.getElementById('primary-nav');
+        if (toggle && menu) {
+            const close = () => {
+                menu.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-label', 'Menu openen');
+            };
+            toggle.addEventListener('click', () => {
+                const open = menu.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+            });
+            menu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') close();
+            });
+        }
+        const dropTrigger = document.querySelector('.nav-dropdown-trigger');
+        if (dropTrigger) {
+            const closeDrop = () => dropTrigger.setAttribute('aria-expanded', 'false');
+            dropTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const expanded = dropTrigger.getAttribute('aria-expanded') === 'true';
+                dropTrigger.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.has-dropdown')) closeDrop();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeDrop();
+            });
+        }
+    })();
+    </script>
+
+    <script>
+    // IZP concept-tool
+    (function () {
+        /* Each rubriek collects one descriptive free-text block. Hints describe
+           the kinds of observations the bedrijfsarts typically captures. */
+        const RUBRIEKEN = [
+            {
+                id: 'I',
+                titel: 'Persoonlijk functioneren',
+                hint: 'Concentratie, aandacht verdelen, geheugen, inzicht in eigen kunnen, werktempo, zelfstandig werken.',
+                placeholder: 'Beschrijf wat de werknemer wel/niet kan op het gebied van persoonlijk functioneren.\nVoorbeeld: kan op rustige momenten 1 tot 2 uur achtereen geconcentreerd werken; bij hoge werkdruk fouten en vermoeidheid.',
+            },
+            {
+                id: 'II',
+                titel: 'Sociaal functioneren',
+                hint: 'Zien, horen, spreken, omgaan met conflicten, samenwerken, klantcontact, hiërarchie, vervoer.',
+                placeholder: 'Beschrijf het sociale functioneren in arbeid.\nVoorbeeld: 1-op-1 contact gaat goed; groepsoverleg geeft spanning. Conflicten kan momenteel niet aan.',
+            },
+            {
+                id: 'III',
+                titel: 'Aanpassing aan fysieke omgevingseisen',
+                hint: 'Hitte, koude, tocht, stof, lawaai, trillingen, irriterende stoffen, beschermingsmiddelen.',
+                placeholder: 'Beschrijf welke fysieke omgevingsfactoren bezwaarlijk zijn.\nVoorbeeld: rumoerige werkomgeving versterkt de hoofdpijnklachten; kantoor met deur dicht is geen probleem.',
+            },
+            {
+                id: 'IV',
+                titel: 'Dynamische handelingen',
+                hint: 'Hand- en fijne motoriek, reiken, tillen, dragen, lopen, klimmen, knielen, beeldschermwerk, autorijden.',
+                placeholder: 'Beschrijf wat de werknemer wel/niet kan op het gebied van dynamische handelingen.\nVoorbeeld: lichte administratieve handelingen mogelijk; tillen boven 5 kg niet mogelijk; trappenlopen 1x per dag.',
+            },
+            {
+                id: 'V',
+                titel: 'Statische houdingen',
+                hint: 'Lang zitten, staan, geknield/gehurkt werken, gebogen/getordeerd werken, boven schouderhoogte.',
+                placeholder: 'Beschrijf welke houdingen problematisch zijn.\nVoorbeeld: zitten max 30 min achtereen met afwisseling staand werk; boven schouderhoogte werken is niet mogelijk.',
+            },
+            {
+                id: 'VI',
+                titel: 'Werktijden',
+                hint: 'Maximale belasting per dag en per week, eventuele beperkingen rond nachtdienst, ploegendienst of onregelmatig werken.',
+                placeholder: 'Beschrijf de werktijden-beperkingen (nachtdienst, ploegen, onregelmatig werk, etc.).\nVoorbeeld: alleen overdag, geen avond- of nachtdienst, geen wisselende roosters.',
+                special: 'werktijden',
+            },
+        ];
+
+        // --- State ---
+        const state = {
+            meta: { naam: '', functie: '', datum: '' },
+            rubrieken: {},        // { 'I': 'tekst...', ... }
+            werktijden: { ud: '', uw: '' },
+        };
+
+        // --- Render ---
+        function render() {
+            const wrap = document.getElementById('rubrieken');
+            wrap.innerHTML = '';
+            for (const r of RUBRIEKEN) {
+                const det = document.createElement('details');
+                det.className = 'rubriek';
+                det.open = true;
+                det.dataset.rubriek = r.id;
+
+                const sum = document.createElement('summary');
+                const titel = document.createElement('span');
+                titel.className = 'rubriek-counter';
+                titel.textContent = `Rubriek ${r.id}: ${r.titel}`;
+                const meta = document.createElement('span');
+                meta.className = 'rubriek-meta';
+                meta.dataset.rubriekMeta = r.id;
+                sum.appendChild(titel);
+                sum.appendChild(meta);
+                det.appendChild(sum);
+
+                const body = document.createElement('div');
+                body.className = 'rubriek-body';
+
+                const hint = document.createElement('div');
+                hint.className = 'rubriek-hint';
+                hint.textContent = r.hint;
+                body.appendChild(hint);
+
+                if (r.special === 'werktijden') {
+                    const numbers = document.createElement('div');
+                    numbers.className = 'werktijden-numbers';
+                    const mkNum = (id, label, max, key) => {
+                        const lbl = document.createElement('label');
+                        lbl.textContent = label;
+                        const inp = document.createElement('input');
+                        inp.type = 'number';
+                        inp.id = id;
+                        inp.min = '0';
+                        inp.max = String(max);
+                        inp.step = '1';
+                        inp.placeholder = '—';
+                        inp.value = state.werktijden[key] || '';
+                        inp.addEventListener('input', () => {
+                            const v = parseInt(inp.value, 10);
+                            state.werktijden[key] = (Number.isFinite(v) && v > 0) ? v : '';
+                            updateMeta();
+                            writeStateToUrl();
+                        });
+                        const unit = document.createElement('span');
+                        unit.className = 'unit';
+                        unit.textContent = 'uur';
+                        lbl.appendChild(inp);
+                        lbl.appendChild(unit);
+                        return lbl;
+                    };
+                    numbers.appendChild(mkNum('wt-ud', 'Max uren per dag', 12, 'ud'));
+                    numbers.appendChild(mkNum('wt-uw', 'Max uren per week', 60, 'uw'));
+                    body.appendChild(numbers);
+                }
+
+                const ta = document.createElement('textarea');
+                ta.className = 'rubriek-textarea';
+                ta.dataset.rubriek = r.id;
+                ta.placeholder = r.placeholder;
+                ta.maxLength = 1500;
+                ta.value = state.rubrieken[r.id] || '';
+                ta.addEventListener('input', () => {
+                    const v = ta.value;
+                    if (v) state.rubrieken[r.id] = v;
+                    else delete state.rubrieken[r.id];
+                    updateMeta();
+                    writeStateToUrl();
+                });
+                body.appendChild(ta);
+
+                det.appendChild(body);
+                wrap.appendChild(det);
+            }
+
+            // Meta inputs
+            document.getElementById('meta-naam').value = state.meta.naam || '';
+            document.getElementById('meta-functie').value = state.meta.functie || '';
+            document.getElementById('meta-datum').value = state.meta.datum || '';
+
+            updateMeta();
+        }
+
+        function updateMeta() {
+            for (const r of RUBRIEKEN) {
+                const el = document.querySelector(`[data-rubriek-meta="${r.id}"]`);
+                if (!el) continue;
+                if (r.special === 'werktijden') {
+                    const parts = [];
+                    if (state.werktijden.ud) parts.push(`max ${state.werktijden.ud}u/dag`);
+                    if (state.werktijden.uw) parts.push(`max ${state.werktijden.uw}u/week`);
+                    el.textContent = parts.length ? parts.join(', ') : 'leeg';
+                } else {
+                    const text = (state.rubrieken[r.id] || '').trim();
+                    if (!text) {
+                        el.textContent = 'leeg';
+                    } else {
+                        const words = text.split(/\s+/).filter(Boolean).length;
+                        el.textContent = `${words} woord${words === 1 ? '' : 'en'}`;
+                    }
+                }
+            }
+        }
+
+        // --- URL state: base64-encoded compact JSON in hash ---
+        function utf8ToBase64(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+        function base64ToUtf8(str) {
+            return decodeURIComponent(escape(atob(str)));
+        }
+
+        function snapshotState() {
+            return {
+                m: state.meta,
+                r: state.rubrieken,
+                w: state.werktijden,
+            };
+        }
+
+        function loadSnapshot(snap) {
+            if (snap.m) Object.assign(state.meta, snap.m);
+            if (snap.r) Object.assign(state.rubrieken, snap.r);
+            if (snap.w) Object.assign(state.werktijden, snap.w);
+        }
+
+        function writeStateToUrl() {
+            const snap = snapshotState();
+            // Skip URL if everything is empty
+            const empty = !snap.m.naam && !snap.m.functie && !snap.m.datum &&
+                Object.keys(snap.r).length === 0 && !snap.w.ud && !snap.w.uw;
+            const json = JSON.stringify(snap);
+            const hash = empty ? '' : '#v=1&d=' + encodeURIComponent(utf8ToBase64(json));
+            if (location.hash !== hash) {
+                history.replaceState(null, '', location.pathname + location.search + (hash || ''));
+            }
+        }
+
+        function applyStateFromUrl() {
+            if (!location.hash || location.hash.length < 2) return;
+            const params = new URLSearchParams(location.hash.slice(1));
+            const d = params.get('d');
+            if (!d) return;
+            try {
+                const snap = JSON.parse(base64ToUtf8(d));
+                loadSnapshot(snap);
+            } catch (e) {
+                console.warn('Could not decode IZP state from URL:', e);
+            }
+        }
+
+        // --- Personalia listeners ---
+        function wireMeta() {
+            const wire = (id, key) => {
+                document.getElementById(id).addEventListener('input', (e) => {
+                    state.meta[key] = e.target.value || '';
+                    writeStateToUrl();
+                });
+            };
+            wire('meta-naam', 'naam');
+            wire('meta-functie', 'functie');
+            wire('meta-datum', 'datum');
+        }
+
+        // --- Share / print / reset ---
+        function showFeedback(text) {
+            const fb = document.getElementById('share-feedback');
+            fb.textContent = text;
+            fb.classList.add('show');
+            clearTimeout(showFeedback._t);
+            showFeedback._t = setTimeout(() => fb.classList.remove('show'), 2500);
+        }
+
+        function refreshPrintMeta() {
+            document.getElementById('print-date').textContent =
+                new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('print-url').textContent = location.href;
+        }
+
+        document.getElementById('btn-share').addEventListener('click', async () => {
+            writeStateToUrl();
+            try {
+                await navigator.clipboard.writeText(location.href);
+                showFeedback('Gekopieerd naar klembord');
+            } catch {
+                showFeedback('Kopiëren niet beschikbaar — kopieer de URL handmatig');
+            }
+        });
+
+        document.getElementById('btn-print').addEventListener('click', () => {
+            refreshPrintMeta();
+            window.print();
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            if (!confirm('Alle gegevens leegmaken?')) return;
+            state.meta = { naam: '', functie: '', datum: '' };
+            state.rubrieken = {};
+            state.werktijden = { ud: '', uw: '' };
+            render();
+            writeStateToUrl();
+        });
+
+        window.addEventListener('beforeprint', refreshPrintMeta);
+
+        // --- Init ---
+        applyStateFromUrl();
+        wireMeta();
+        render();
+        writeStateToUrl();
+    })();
+    </script>
+</body>
+</html>
