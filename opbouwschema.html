@@ -183,21 +183,39 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             min-height: 64px;
+            position: relative;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 2px;
+            padding: 4px;
+        }
+        .week-grid .cell .uur {
+            flex: 1;
+            background: transparent;
+            border-radius: 2px;
+            transition: background 0.12s;
+        }
+        .week-grid .cell .uur.on {
+            background: var(--primary-color);
+        }
+        .week-grid .cell.partial .uur.on {
+            background: var(--secondary-color);
+        }
+        .week-grid .cell .label {
+            position: absolute;
+            inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            color: #b0b6bf;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            pointer-events: none;
         }
-        .week-grid .cell.filled {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
+        .week-grid .cell.filled .label,
+        .week-grid .cell.partial .label {
             color: #fff;
-        }
-        .week-grid .cell.partial {
-            background: var(--secondary-color);
-            border-color: var(--secondary-color);
-            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
         }
 
         .principle {
@@ -251,23 +269,21 @@
             background: var(--bg-light);
             border: 1px solid var(--border-color);
             border-radius: 2px;
-            font-size: 10px;
-            line-height: 1;
-            color: #b0b6bf;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            flex-direction: column-reverse;
+            gap: 1px;
+            padding: 1px;
         }
-        .mini-grid .mcell.filled {
+        .mini-grid .mcell .uur {
+            flex: 1;
+            background: transparent;
+            border-radius: 1px;
+        }
+        .mini-grid .mcell .uur.on {
             background: var(--primary-color);
-            border-color: var(--primary-color);
-            color: #fff;
         }
-        .mini-grid .mcell.partial {
+        .mini-grid .mcell.partial .uur.on {
             background: var(--secondary-color);
-            border-color: var(--secondary-color);
-            color: #fff;
         }
 
         .actions {
@@ -350,13 +366,17 @@
                 border-left-color: #000;
             }
 
-            /* Keep filled grid cells coloured on print */
-            .week-grid .cell.filled,
-            .week-grid .cell.partial,
-            .mini-grid .mcell.filled,
-            .mini-grid .mcell.partial {
+            /* Keep battery stripes coloured on print */
+            .week-grid .cell .uur.on,
+            .mini-grid .mcell .uur.on {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+            }
+            .week-grid .cell .label,
+            .week-grid .cell.filled .label,
+            .week-grid .cell.partial .label {
+                color: var(--text-dark);
+                text-shadow: none;
             }
 
             .disclaimer {
@@ -633,22 +653,49 @@
             return el;
         }
 
+        // Build a "battery" cell: DAGDEEL stripes stacked, N lit (bottom-up).
+        // hours: undefined | 0 | 1..DAGDEEL.
+        function makeBatteryCell(hours, baseClass, opts) {
+            const cell = document.createElement('div');
+            const h = (typeof hours === 'number') ? Math.max(0, Math.min(DAGDEEL, hours)) : -1;
+            const classes = [baseClass];
+            if (h === DAGDEEL) classes.push('filled');
+            else if (h > 0) classes.push('partial');
+            cell.className = classes.join(' ');
+            // Stripes (column-reverse in CSS, so first appended = bottom)
+            for (let i = 1; i <= DAGDEEL; i++) {
+                const stripe = document.createElement('span');
+                stripe.className = 'uur' + (i <= h ? ' on' : '');
+                cell.appendChild(stripe);
+            }
+            if (opts && opts.label && h > 0) {
+                const lbl = document.createElement('span');
+                lbl.className = 'label';
+                lbl.textContent = opts.label;
+                cell.appendChild(lbl);
+            }
+            if (opts && opts.title) cell.title = opts.title;
+            return cell;
+        }
+
         function renderGrid(plan) {
             const grid = document.getElementById('grid');
             grid.innerHTML = '';
             grid.appendChild(makeCell('', 'head'));
             days.forEach(d => grid.appendChild(makeCell(d, 'head')));
-            [['Ochtend', 'am'], ['Middag', 'pm']].forEach(([label, half]) => {
+            [['Ochtend', 'am', 'och'], ['Middag', 'pm', 'mid']].forEach(([label, half, nlHalf]) => {
                 grid.appendChild(makeCell(label, 'row-label'));
                 days.forEach(d => {
                     const key = `${dayKey[d]}-${half}`;
                     const h = plan[key];
-                    if (h === undefined) {
-                        grid.appendChild(makeCell('', 'cell'));
-                    } else {
-                        const cls = h === DAGDEEL ? 'cell filled' : 'cell partial';
-                        grid.appendChild(makeCell(`${h}u`, cls));
-                    }
+                    const title = (h === undefined)
+                        ? `${d}-${nlHalf}: geen werk`
+                        : `${d}-${nlHalf}: ${h} uur`;
+                    grid.appendChild(makeBatteryCell(
+                        h === undefined ? -1 : h,
+                        'cell',
+                        { label: h ? `${h}u` : null, title }
+                    ));
                 });
             });
         }
@@ -662,17 +709,14 @@
                 days.forEach(d => {
                     const key = `${dayKey[d]}-${half}`;
                     const h = plan[key];
-                    const c = document.createElement('div');
-                    if (h === undefined) {
-                        c.className = 'mcell';
-                        c.title = `${d}-${nlHalf}: geen werk`;
-                    } else {
-                        const cls = h === DAGDEEL ? 'filled' : 'partial';
-                        c.className = `mcell ${cls}`;
-                        c.textContent = h;
-                        c.title = `${d}-${nlHalf}: ${h} uur`;
-                    }
-                    wrap.appendChild(c);
+                    const title = (h === undefined)
+                        ? `${d}-${nlHalf}: geen werk`
+                        : `${d}-${nlHalf}: ${h} uur`;
+                    wrap.appendChild(makeBatteryCell(
+                        h === undefined ? -1 : h,
+                        'mcell',
+                        { title }
+                    ));
                 });
             });
             return wrap;
