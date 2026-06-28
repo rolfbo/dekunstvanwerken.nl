@@ -139,6 +139,73 @@
             outline: 2px solid var(--secondary-color);
             outline-offset: 2px;
         }
+        .dag-chip .dag-pos {
+            display: none;
+            margin-left: 0.35rem;
+            font-size: 0.7rem;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 999px;
+            padding: 0 0.4rem;
+            line-height: 1.4;
+        }
+        .dag-chip[aria-pressed="true"] .dag-pos { display: inline-block; }
+
+        /* Opbouwstijl block */
+        .strategie-field {
+            border: none;
+            padding: 0;
+            margin: 0 0 1.5rem;
+        }
+        .strategie-field legend {
+            font-weight: bold;
+            color: var(--text-dark);
+            padding: 0;
+            margin-bottom: 0.5rem;
+        }
+        .strat-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem 1rem;
+            margin-bottom: 0.6rem;
+        }
+        .strat-label {
+            flex: 0 0 130px;
+            font-weight: bold;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+        .seg {
+            display: inline-flex;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .seg button {
+            border: none;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            font: inherit;
+            font-size: 0.9rem;
+            padding: 0.45rem 0.85rem;
+            cursor: pointer;
+            border-right: 1px solid var(--border-color);
+            transition: background 0.12s, color 0.12s;
+        }
+        .seg button:last-child { border-right: none; }
+        .seg button[aria-pressed="true"] {
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .seg button:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: -2px;
+        }
+        .strat-hint {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin: 0.2rem 0 0;
+        }
 
         .summary {
             background: #e8f4fd;
@@ -463,10 +530,10 @@
                 <form id="form" onsubmit="return false;">
                     <div class="form-row">
                         <label>Uren deze week
-                            <input type="number" id="huidig" min="1" max="40" step="1" value="8" required>
+                            <input type="number" id="huidig" min="1" max="40" step="0.5" value="8" required>
                         </label>
-                        <label>Opbouw per week (uur)
-                            <input type="number" id="stap" min="1" max="10" step="1" value="1" required>
+                        <label>Opbouw per stap (uur)
+                            <input type="number" id="stap" min="0.5" max="4" step="0.5" value="1" required>
                         </label>
                         <label>Contract uren per week
                             <input type="number" id="contract" min="1" max="60" step="1" value="40" required>
@@ -474,14 +541,40 @@
                     </div>
 
                     <fieldset class="dagen-field">
-                        <legend>Werkdagen <span class="dagen-hint">— kies de dagen waarop gewerkt wordt</span></legend>
+                        <legend>Werkdagen <span class="dagen-hint">— klik in de gewenste opbouwvolgorde</span></legend>
                         <div class="dagen-chips" id="dagen-chips" role="group" aria-label="Werkdagen">
-                            <button type="button" class="dag-chip" data-day="Mon" aria-pressed="true">Ma</button>
-                            <button type="button" class="dag-chip" data-day="Tue" aria-pressed="true">Di</button>
-                            <button type="button" class="dag-chip" data-day="Wed" aria-pressed="true">Wo</button>
-                            <button type="button" class="dag-chip" data-day="Thu" aria-pressed="true">Do</button>
-                            <button type="button" class="dag-chip" data-day="Fri" aria-pressed="true">Vr</button>
+                            <button type="button" class="dag-chip" data-day="Mon" aria-pressed="true">Ma<span class="dag-pos"></span></button>
+                            <button type="button" class="dag-chip" data-day="Tue" aria-pressed="true">Di<span class="dag-pos"></span></button>
+                            <button type="button" class="dag-chip" data-day="Wed" aria-pressed="true">Wo<span class="dag-pos"></span></button>
+                            <button type="button" class="dag-chip" data-day="Thu" aria-pressed="true">Do<span class="dag-pos"></span></button>
+                            <button type="button" class="dag-chip" data-day="Fri" aria-pressed="true">Vr<span class="dag-pos"></span></button>
                         </div>
+                    </fieldset>
+
+                    <fieldset class="strategie-field">
+                        <legend>Opbouwstijl</legend>
+                        <div class="strat-row">
+                            <span class="strat-label">Volgorde</span>
+                            <div class="seg" id="seg-order" role="group" aria-label="Dagdeel-volgorde">
+                                <button type="button" data-val="am" aria-pressed="true">Ochtend eerst</button>
+                                <button type="button" data-val="pm" aria-pressed="false">Middag eerst</button>
+                            </div>
+                        </div>
+                        <div class="strat-row">
+                            <span class="strat-label">Ochtend opbouwen</span>
+                            <div class="seg" id="seg-am" role="group" aria-label="Opbouw ochtend">
+                                <button type="button" data-val="s" aria-pressed="true">Dag voor dag</button>
+                                <button type="button" data-val="g" aria-pressed="false">Gelaagd</button>
+                            </div>
+                        </div>
+                        <div class="strat-row">
+                            <span class="strat-label">Middag opbouwen</span>
+                            <div class="seg" id="seg-pm" role="group" aria-label="Opbouw middag">
+                                <button type="button" data-val="s" aria-pressed="true">Dag voor dag</button>
+                                <button type="button" data-val="g" aria-pressed="false">Gelaagd</button>
+                            </div>
+                        </div>
+                        <p class="strat-hint"><strong>Gelaagd</strong> = elke stap een uur erbij op álle werkdagen tegelijk. <strong>Dag voor dag</strong> = eerst de ene dag vol, dan de volgende.</p>
                     </fieldset>
                 </form>
 
@@ -592,83 +685,147 @@
     (function () {
         const DAGDEEL = 4;
         const calendarOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-        // Stable display order for describing/labelling a plan.
         const allSlots = [
             'Mon-am','Tue-am','Wed-am','Thu-am','Fri-am',
             'Mon-pm','Tue-pm','Wed-pm','Thu-pm','Fri-pm'
         ];
         const days = ['Ma','Di','Wo','Do','Vr'];
         const dayKey = { Ma:'Mon', Di:'Tue', Wo:'Wed', Do:'Thu', Vr:'Fri' };
+        const dayNl = { Mon:'Ma', Tue:'Di', Wed:'Wo', Thu:'Do', Fri:'Vr' };
+        const dayNlLong = { Mon:'ma', Tue:'di', Wed:'wo', Thu:'do', Fri:'vr' };
         const slotLabel = (slot) => {
             const [d, h] = slot.split('-');
-            const nl = { Mon:'Ma', Tue:'Di', Wed:'Wo', Thu:'Do', Fri:'Vr' }[d];
-            return nl + (h === 'am' ? '-och' : '-mid');
+            return dayNl[d] + (h === 'am' ? '-och' : '-mid');
         };
+        const r1 = (x) => Math.round(x * 10) / 10;
+        const fmtU = (x) => (Number.isInteger(x) ? `${x}` : x.toString().replace('.', ',')) + 'u';
 
-        // Which days are selected, in calendar order (Ma -> Vr).
-        function selectedDays() {
-            return [...document.querySelectorAll('.dag-chip')]
-                .filter(c => c.getAttribute('aria-pressed') === 'true')
-                .map(c => c.dataset.day)
-                .sort((a, b) => calendarOrder.indexOf(a) - calendarOrder.indexOf(b));
+        // dayOrder is the source of truth for which days are selected AND in
+        // which order they build up. Initialised to calendar order (all on).
+        let dayOrder = [...calendarOrder];
+
+        function syncChips() {
+            document.querySelectorAll('.dag-chip').forEach(chip => {
+                const idx = dayOrder.indexOf(chip.dataset.day);
+                const on = idx !== -1;
+                chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+                const badge = chip.querySelector('.dag-pos');
+                if (badge) badge.textContent = on ? String(idx + 1) : '';
+            });
         }
 
-        // Fill order over the chosen workdays: all mornings first (calendar
-        // order), then all afternoons, so the load spreads across the chosen
-        // days before any single day is doubled up.
-        function slotOrderFor(dayList) {
-            const mornings = dayList.map(d => `${d}-am`);
-            const afternoons = dayList.map(d => `${d}-pm`);
-            return [...mornings, ...afternoons];
+        // --- Strategy readers ---
+        function segValue(id) {
+            const el = document.querySelector(`#${id} button[aria-pressed="true"]`);
+            return el ? el.dataset.val : null;
+        }
+        function getConfig() {
+            return {
+                order: segValue('seg-order') === 'pm' ? ['pm', 'am'] : ['am', 'pm'],
+                modes: {
+                    am: segValue('seg-am') === 'g' ? 'gelaagd' : 'sequentieel',
+                    pm: segValue('seg-pm') === 'g' ? 'gelaagd' : 'sequentieel',
+                },
+            };
         }
 
-        // Max hours that fit in the chosen workdays (4u dagdelen).
         function capacityFor(dayList) {
             return dayList.length * 2 * DAGDEEL;
         }
 
-        function planWeek(hours, dayList) {
-            const plan = {};
-            let remaining = Math.max(0, hours);
-            for (const slot of slotOrderFor(dayList)) {
-                if (remaining <= 0) break;
-                const h = Math.min(DAGDEEL, remaining);
-                plan[slot] = h;
-                remaining -= h;
+        // --- Core simulation ---
+        // Produces weekly snapshots: snaps[0] totals to `huidig`, each next adds
+        // one strategy step, last totals to `doel`. A "step":
+        //   - find the first dagdeel (in config.order) not yet full on all days
+        //   - gelaagd  : add `stap` to that dagdeel on every not-full day
+        //   - sequentieel: add `stap` to the first not-full day of that dagdeel
+        // `limit` clamps the hours added in a step so a snapshot lands exactly
+        // on huidig / doel.
+        function simulate(dayList, stap, huidig, doel, config) {
+            const state = {};
+            dayList.forEach(d => { state[`${d}-am`] = 0; state[`${d}-pm`] = 0; });
+
+            function stepOnce(limit) {
+                let dd = null;
+                for (const part of config.order) {
+                    if (dayList.some(d => state[`${d}-${part}`] < DAGDEEL - 1e-9)) { dd = part; break; }
+                }
+                if (!dd) return 0;
+                const mode = config.modes[dd];
+                const targets = (mode === 'gelaagd')
+                    ? dayList.filter(d => state[`${d}-${dd}`] < DAGDEEL - 1e-9)
+                    : [dayList.find(d => state[`${d}-${dd}`] < DAGDEEL - 1e-9)];
+                let added = 0;
+                for (const d of targets) {
+                    if (limit !== undefined && added >= limit - 1e-9) break;
+                    const k = `${d}-${dd}`;
+                    let add = Math.min(stap, DAGDEEL - state[k]);
+                    if (limit !== undefined) add = Math.min(add, limit - added);
+                    if (add <= 1e-9) continue;
+                    state[k] = r1(state[k] + add);
+                    added = r1(added + add);
+                }
+                return added;
             }
-            return plan;
+
+            function snapshot() {
+                const o = {};
+                for (const k in state) if (state[k] > 1e-9) o[k] = r1(state[k]);
+                return o;
+            }
+
+            let total = 0;
+            // Pre-roll to the current week (huidig)
+            let guard = 0;
+            while (total < huidig - 1e-9 && guard++ < 400) {
+                const added = stepOnce(huidig - total);
+                if (added <= 1e-9) break;
+                total = r1(total + added);
+            }
+            const snaps = [snapshot()];
+            // Build up to the target
+            guard = 0;
+            while (total < doel - 1e-9 && guard++ < 400) {
+                const added = stepOnce(doel - total);
+                if (added <= 1e-9) break;
+                total = r1(total + added);
+                snaps.push(snapshot());
+            }
+            return snaps;
         }
 
+        function totalOf(plan) {
+            let t = 0;
+            for (const k in plan) t = r1(t + plan[k]);
+            return t;
+        }
+
+        // --- Rendering helpers ---
         function describe(plan) {
-            return allSlots
-                .filter(s => s in plan)
-                .map(s => `${slotLabel(s)} (${plan[s]}u)`)
-                .join(', ');
+            return allSlots.filter(s => s in plan)
+                .map(s => `${slotLabel(s)} (${fmtU(plan[s])})`).join(', ');
         }
-
         function makeCell(text, cls) {
             const el = document.createElement('div');
             el.className = cls;
             el.textContent = text;
             return el;
         }
-
-        // Build a "battery" cell: DAGDEEL stripes stacked, N lit (bottom-up).
-        // hours: undefined | 0 | 1..DAGDEEL.
+        // Battery cell: DAGDEEL stripes, lit bottom-up. h may be fractional.
         function makeBatteryCell(hours, baseClass, opts) {
             const cell = document.createElement('div');
             const h = (typeof hours === 'number') ? Math.max(0, Math.min(DAGDEEL, hours)) : -1;
             const classes = [baseClass];
-            if (h === DAGDEEL) classes.push('filled');
-            else if (h > 0) classes.push('partial');
+            if (h >= DAGDEEL - 1e-9) classes.push('filled');
+            else if (h > 1e-9) classes.push('partial');
             cell.className = classes.join(' ');
-            // Stripes (column-reverse in CSS, so first appended = bottom)
+            const onCount = h > 1e-9 ? Math.min(DAGDEEL, Math.max(1, Math.round(h))) : 0;
             for (let i = 1; i <= DAGDEEL; i++) {
                 const stripe = document.createElement('span');
-                stripe.className = 'uur' + (i <= h ? ' on' : '');
+                stripe.className = 'uur' + (i <= onCount ? ' on' : '');
                 cell.appendChild(stripe);
             }
-            if (opts && opts.label && h > 0) {
+            if (opts && opts.label && h > 1e-9) {
                 const lbl = document.createElement('span');
                 lbl.className = 'label';
                 lbl.textContent = opts.label;
@@ -690,11 +847,10 @@
                     const h = plan[key];
                     const title = (h === undefined)
                         ? `${d}-${nlHalf}: geen werk`
-                        : `${d}-${nlHalf}: ${h} uur`;
+                        : `${d}-${nlHalf}: ${fmtU(h)}`;
                     grid.appendChild(makeBatteryCell(
-                        h === undefined ? -1 : h,
-                        'cell',
-                        { label: h ? `${h}u` : null, title }
+                        h === undefined ? -1 : h, 'cell',
+                        { label: h ? fmtU(h) : null, title }
                     ));
                 });
             });
@@ -711,58 +867,43 @@
                     const h = plan[key];
                     const title = (h === undefined)
                         ? `${d}-${nlHalf}: geen werk`
-                        : `${d}-${nlHalf}: ${h} uur`;
-                    wrap.appendChild(makeBatteryCell(
-                        h === undefined ? -1 : h,
-                        'mcell',
-                        { title }
-                    ));
+                        : `${d}-${nlHalf}: ${fmtU(h)}`;
+                    wrap.appendChild(makeBatteryCell(h === undefined ? -1 : h, 'mcell', { title }));
                 });
             });
             return wrap;
         }
 
-        function renderProgression(start, target, step, dayList) {
+        function renderProgression(snaps) {
             const tbody = document.querySelector('#prog tbody');
             tbody.innerHTML = '';
-            const from = Math.min(start, target);
-            const to = Math.max(start, target);
-            const stap = Math.max(1, step | 0);
-            const values = new Set();
-            for (let h = from; h < to; h += stap) values.add(h);
-            values.add(to);
-            const sorted = [...values].sort((a, b) => a - b);
             let weekNum = 1;
-            for (const h of sorted) {
-                const plan = planWeek(h, dayList);
+            for (const plan of snaps) {
                 const dagdelen = Object.keys(plan).length;
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${weekNum}</td><td>${h} u</td><td>${dagdelen}</td>`;
+                tr.innerHTML = `<td>${weekNum}</td><td>${fmtU(totalOf(plan))}</td><td>${dagdelen}</td>`;
                 const schemaTd = document.createElement('td');
                 schemaTd.appendChild(makeMiniGrid(plan));
                 tr.appendChild(schemaTd);
                 tbody.appendChild(tr);
                 weekNum++;
-                if (weekNum > 60) break;
+                if (weekNum > 80) break;
             }
         }
 
-        function update() {
-            const huidigRaw = clamp(+document.getElementById('huidig').value || 1, 1, 40);
-            const stap = clamp(+document.getElementById('stap').value || 1, 1, 10);
-            const contract = clamp(+document.getElementById('contract').value || 40, 1, 60);
-            const dayList = selectedDays();
-            const aantal = dayList.length;
+        function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
-            // The chosen workdays cap how many hours can be placed.
-            const capacity = capacityFor(dayList);
-            const doel = Math.min(contract, capacity);
-            const huidig = Math.min(huidigRaw, capacity);
-            const dagNamen = dayList.map(d => ({ Mon:'ma', Tue:'di', Wed:'wo', Thu:'do', Fri:'vr' }[d])).join(', ');
-            const targetSuffix = aantal === 1 ? `1 werkdag (${dagNamen})` : `${aantal} werkdagen (${dagNamen})`;
+        // --- Main update ---
+        function update() {
+            const huidigRaw = clamp(+document.getElementById('huidig').value || 1, 0.5, 40);
+            const stap = clamp(+document.getElementById('stap').value || 1, 0.5, 4);
+            const contract = clamp(+document.getElementById('contract').value || 40, 1, 60);
+            const dayList = [...dayOrder];
+            const aantal = dayList.length;
 
             const summary = document.getElementById('summary');
             const warning = document.getElementById('warning');
+            const intro = document.getElementById('prog-intro');
 
             if (aantal === 0) {
                 warning.hidden = false;
@@ -773,7 +914,10 @@
                 return;
             }
 
-            // Warn when the contract hours don't fit in the chosen workdays.
+            const capacity = capacityFor(dayList);
+            const doel = Math.min(contract, capacity);
+            const huidig = Math.min(huidigRaw, doel);
+
             if (contract > capacity) {
                 warning.hidden = false;
                 warning.textContent = `Let op: ${contract} uur past niet in ${aantal} ${aantal === 1 ? 'werkdag' : 'werkdagen'} (maximaal ${capacity} uur bij dagdelen van ${DAGDEEL} uur). De opbouw stopt op ${capacity} uur.`;
@@ -781,35 +925,40 @@
                 warning.hidden = true;
             }
 
-            const plan = planWeek(huidig, dayList);
-            const dagdelen = Object.keys(plan).length;
+            const config = getConfig();
+            const snaps = simulate(dayList, stap, huidig, doel, config);
 
-            const richting = doel >= huidig
-                ? `opbouw +${stap}u per week richting ${doel} uur (${targetSuffix})`
-                : `afbouw richting ${doel} uur (${targetSuffix})`;
-            summary.innerHTML = `<strong>${huidig} uur</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ochtenden eerst &middot; ${richting}.`;
+            const dagNamen = dayList.map(d => dayNlLong[d]).join(', ');
+            const targetSuffix = `${aantal} ${aantal === 1 ? 'werkdag' : 'werkdagen'} (${dagNamen})`;
 
-            const intro = document.getElementById('prog-intro');
-            intro.textContent = doel >= huidig
-                ? `Elke week wordt er ${stap} uur toegevoegd; de laatste week eindigt precies op ${doel} uur (${targetSuffix}).`
-                : `Afbouw van ${huidig} naar ${doel} uur (${targetSuffix}) in stappen van ${stap} uur.`;
+            const first = snaps[0] || {};
+            const dagdelen = Object.keys(first).length;
+            const ddVolgorde = config.order[0] === 'am' ? 'ochtend eerst' : 'middag eerst';
+            const modeText = (m) => m === 'gelaagd' ? 'gelaagd' : 'dag voor dag';
+            const stijl = `${ddVolgorde} · ochtend ${modeText(config.modes.am)}, middag ${modeText(config.modes.pm)}`;
 
-            renderGrid(plan);
-            renderProgression(huidig, doel, stap, dayList);
+            summary.innerHTML = `<strong>${fmtU(huidig)}</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ${stijl} &middot; richting ${fmtU(doel)} (${targetSuffix}).`;
+
+            intro.textContent = `Opbouw met stappen van ${fmtU(stap)} per ${stijl.includes('gelaagd') ? 'gelaagde ' : ''}stap; de laatste week eindigt op ${fmtU(doel)} (${targetSuffix}).`;
+
+            renderGrid(first);
+            renderProgression(snaps);
         }
-        function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
         // --- URL state ---
-        // Single-letter day codes: m=Mon, d=Tue (di), w=Wed, t=Thu (do), v=Fri
         const dayCode = { Mon:'m', Tue:'d', Wed:'w', Thu:'t', Fri:'v' };
-        const codeToDay = Object.fromEntries(Object.entries(dayCode).map(([k,v]) => [v,k]));
+        const codeToDay = Object.fromEntries(Object.entries(dayCode).map(([k, v]) => [v, k]));
 
         function writeStateToUrl() {
-            const huidig = document.getElementById('huidig').value;
-            const stap = document.getElementById('stap').value;
-            const contract = document.getElementById('contract').value;
-            const dagen = selectedDays().map(d => dayCode[d]).join('');
-            const params = new URLSearchParams({ h: huidig, s: stap, c: contract, d: dagen });
+            const params = new URLSearchParams({
+                h: document.getElementById('huidig').value,
+                s: document.getElementById('stap').value,
+                c: document.getElementById('contract').value,
+                d: dayOrder.map(d => dayCode[d]).join(''),
+                o: segValue('seg-order'),
+                am: segValue('seg-am'),
+                pm: segValue('seg-pm'),
+            });
             const hash = '#' + params.toString();
             if (location.hash !== hash) {
                 history.replaceState(null, '', location.pathname + location.search + hash);
@@ -819,24 +968,28 @@
         function applyStateFromUrl() {
             if (!location.hash || location.hash.length < 2) return;
             const params = new URLSearchParams(location.hash.slice(1));
-            const setIfPresent = (id, key) => {
+            const setIf = (id, key) => {
                 const v = params.get(key);
                 if (v !== null && v !== '') document.getElementById(id).value = v;
             };
-            setIfPresent('huidig', 'h');
-            setIfPresent('stap', 's');
-            setIfPresent('contract', 'c');
-            const dParam = params.get('d');
-            if (dParam !== null) {
-                const wantedDays = new Set([...dParam].map(c => codeToDay[c]).filter(Boolean));
-                document.querySelectorAll('.dag-chip').forEach(chip => {
-                    const want = wantedDays.has(chip.dataset.day);
-                    chip.setAttribute('aria-pressed', want ? 'true' : 'false');
-                });
+            setIf('huidig', 'h');
+            setIf('stap', 's');
+            setIf('contract', 'c');
+            const d = params.get('d');
+            if (d !== null) {
+                dayOrder = [...d].map(c => codeToDay[c]).filter(Boolean);
             }
+            const setSeg = (id, val) => {
+                if (!val) return;
+                document.querySelectorAll(`#${id} button`).forEach(b =>
+                    b.setAttribute('aria-pressed', b.dataset.val === val ? 'true' : 'false'));
+            };
+            setSeg('seg-order', params.get('o'));
+            setSeg('seg-am', params.get('am'));
+            setSeg('seg-pm', params.get('pm'));
         }
 
-        // --- Share button: copy current URL to clipboard ---
+        // --- Share / print ---
         function showFeedback(text) {
             const fb = document.getElementById('share-feedback');
             fb.textContent = text;
@@ -844,46 +997,15 @@
             clearTimeout(showFeedback._t);
             showFeedback._t = setTimeout(() => fb.classList.remove('show'), 2500);
         }
-
         document.getElementById('btn-share').addEventListener('click', async () => {
             writeStateToUrl();
-            const url = location.href;
             try {
-                await navigator.clipboard.writeText(url);
+                await navigator.clipboard.writeText(location.href);
                 showFeedback('Gekopieerd naar klembord');
             } catch {
-                // Fallback: select-and-prompt (some browsers / non-secure contexts)
                 showFeedback('Kopiëren niet beschikbaar — kopieer de URL handmatig');
             }
         });
-
-        // Toggle day chips
-        document.getElementById('dagen-chips').addEventListener('click', (e) => {
-            const chip = e.target.closest('.dag-chip');
-            if (!chip) return;
-            const pressed = chip.getAttribute('aria-pressed') === 'true';
-            chip.setAttribute('aria-pressed', pressed ? 'false' : 'true');
-            update();
-        });
-
-        document.getElementById('form').addEventListener('input', update);
-        document.getElementById('form').addEventListener('change', update);
-
-        // Initialise from URL hash, then render
-        applyStateFromUrl();
-        update();
-
-        // Keep URL in sync after each update
-        const _origUpdate = update;
-        function updateAndSync() { _origUpdate(); writeStateToUrl(); }
-        document.getElementById('form').removeEventListener('input', update);
-        document.getElementById('form').removeEventListener('change', update);
-        document.getElementById('form').addEventListener('input', updateAndSync);
-        document.getElementById('form').addEventListener('change', updateAndSync);
-        document.getElementById('dagen-chips').addEventListener('click', writeStateToUrl);
-        writeStateToUrl();
-
-        // Print: refresh metadata + open print dialog
         function refreshPrintMeta() {
             document.getElementById('print-date').textContent =
                 new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -894,6 +1016,40 @@
             refreshPrintMeta();
             window.print();
         });
+
+        function updateAndSync() { update(); writeStateToUrl(); }
+
+        // Day chips: clicking toggles membership; turning on appends to the
+        // order (so click sequence sets the build order).
+        document.getElementById('dagen-chips').addEventListener('click', (e) => {
+            const chip = e.target.closest('.dag-chip');
+            if (!chip) return;
+            const day = chip.dataset.day;
+            const idx = dayOrder.indexOf(day);
+            if (idx === -1) dayOrder.push(day);
+            else dayOrder.splice(idx, 1);
+            syncChips();
+            updateAndSync();
+        });
+
+        // Segmented controls
+        document.querySelectorAll('.seg').forEach(seg => {
+            seg.addEventListener('click', (e) => {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                seg.querySelectorAll('button').forEach(b =>
+                    b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+                updateAndSync();
+            });
+        });
+
+        document.getElementById('form').addEventListener('input', updateAndSync);
+
+        // Init
+        applyStateFromUrl();
+        syncChips();
+        update();
+        writeStateToUrl();
     })();
     </script>
 </body>
