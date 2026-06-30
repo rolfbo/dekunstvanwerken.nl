@@ -169,6 +169,7 @@
             gap: 0.5rem 1rem;
             margin-bottom: 0.6rem;
         }
+        .strat-row[hidden] { display: none; }
         .strat-label {
             flex: 0 0 130px;
             font-weight: bold;
@@ -533,7 +534,7 @@
                             <input type="number" id="huidig" min="1" max="40" step="0.5" value="8" required>
                         </label>
                         <label>Opbouw per stap (uur)
-                            <input type="number" id="stap" min="0.5" max="4" step="0.5" value="1" required>
+                            <input type="number" id="stap" min="0.5" max="8" step="0.5" value="1" required>
                         </label>
                         <label>Contract uren per week
                             <input type="number" id="contract" min="1" max="60" step="1" value="40" required>
@@ -554,27 +555,41 @@
                     <fieldset class="strategie-field">
                         <legend>Opbouwstijl</legend>
                         <div class="strat-row">
+                            <span class="strat-label">Opbouwen per</span>
+                            <div class="seg" id="seg-unit" role="group" aria-label="Opbouwen per dagdeel of hele dag">
+                                <button type="button" data-val="p" aria-pressed="true">Dagdeel</button>
+                                <button type="button" data-val="d" aria-pressed="false">Hele dag</button>
+                            </div>
+                        </div>
+                        <div class="strat-row strat-dagdeel">
                             <span class="strat-label">Volgorde</span>
                             <div class="seg" id="seg-order" role="group" aria-label="Dagdeel-volgorde">
                                 <button type="button" data-val="am" aria-pressed="true">Ochtend eerst</button>
                                 <button type="button" data-val="pm" aria-pressed="false">Middag eerst</button>
                             </div>
                         </div>
-                        <div class="strat-row">
+                        <div class="strat-row strat-dagdeel">
                             <span class="strat-label">Ochtend opbouwen</span>
                             <div class="seg" id="seg-am" role="group" aria-label="Opbouw ochtend">
                                 <button type="button" data-val="s" aria-pressed="true">Dag voor dag</button>
                                 <button type="button" data-val="g" aria-pressed="false">Gelaagd</button>
                             </div>
                         </div>
-                        <div class="strat-row">
+                        <div class="strat-row strat-dagdeel">
                             <span class="strat-label">Middag opbouwen</span>
                             <div class="seg" id="seg-pm" role="group" aria-label="Opbouw middag">
                                 <button type="button" data-val="s" aria-pressed="true">Dag voor dag</button>
                                 <button type="button" data-val="g" aria-pressed="false">Gelaagd</button>
                             </div>
                         </div>
-                        <p class="strat-hint"><strong>Gelaagd</strong> = elke stap een uur erbij op álle werkdagen tegelijk. <strong>Dag voor dag</strong> = eerst de ene dag vol, dan de volgende.</p>
+                        <div class="strat-row strat-dag" hidden>
+                            <span class="strat-label">Hele dag opbouwen</span>
+                            <div class="seg" id="seg-dag" role="group" aria-label="Opbouw hele dag">
+                                <button type="button" data-val="s" aria-pressed="true">Dag voor dag</button>
+                                <button type="button" data-val="g" aria-pressed="false">Gelaagd</button>
+                            </div>
+                        </div>
+                        <p class="strat-hint"><strong>Gelaagd</strong> = elke stap een uur erbij op álle werkdagen tegelijk. <strong>Dag voor dag</strong> = eerst de ene (dag)deel vol, dan de volgende. Bij <strong>hele dag</strong> wordt per dag ochtend én middag samen opgebouwd.</p>
                     </fieldset>
                 </form>
 
@@ -721,12 +736,21 @@
         }
         function getConfig() {
             return {
+                unit: segValue('seg-unit') === 'd' ? 'dag' : 'dagdeel',
                 order: segValue('seg-order') === 'pm' ? ['pm', 'am'] : ['am', 'pm'],
                 modes: {
                     am: segValue('seg-am') === 'g' ? 'gelaagd' : 'sequentieel',
                     pm: segValue('seg-pm') === 'g' ? 'gelaagd' : 'sequentieel',
                 },
+                dagMode: segValue('seg-dag') === 'g' ? 'gelaagd' : 'sequentieel',
             };
+        }
+
+        // Show dagdeel rows or the hele-dag row depending on the unit toggle.
+        function syncStrategyVisibility() {
+            const perDag = segValue('seg-unit') === 'd';
+            document.querySelectorAll('.strat-dagdeel').forEach(el => { el.hidden = perDag; });
+            document.querySelectorAll('.strat-dag').forEach(el => { el.hidden = !perDag; });
         }
 
         function capacityFor(dayList) {
@@ -745,7 +769,38 @@
             const state = {};
             dayList.forEach(d => { state[`${d}-am`] = 0; state[`${d}-pm`] = 0; });
 
+            const dayHours = (d) => r1(state[`${d}-am`] + state[`${d}-pm`]);
+
+            // Add up to `budget` uren to one day, filling am to 4 first, then pm.
+            function fillDay(d, budget) {
+                let added = 0;
+                for (const part of ['am', 'pm']) {
+                    if (added >= budget - 1e-9) break;
+                    const k = `${d}-${part}`;
+                    const add = Math.min(budget - added, DAGDEEL - state[k]);
+                    if (add <= 1e-9) continue;
+                    state[k] = r1(state[k] + add);
+                    added = r1(added + add);
+                }
+                return added;
+            }
+
             function stepOnce(limit) {
+                if (config.unit === 'dag') {
+                    // Whole-day unit: each day fills am-then-pm to 8u.
+                    const notFull = dayList.filter(d => dayHours(d) < 2 * DAGDEEL - 1e-9);
+                    if (notFull.length === 0) return 0;
+                    const targets = (config.dagMode === 'gelaagd') ? notFull : [notFull[0]];
+                    let added = 0;
+                    for (const d of targets) {
+                        if (limit !== undefined && added >= limit - 1e-9) break;
+                        let budget = stap;
+                        if (limit !== undefined) budget = Math.min(budget, limit - added);
+                        added = r1(added + fillDay(d, budget));
+                    }
+                    return added;
+                }
+                // Dagdeel unit (default): fill one dagdeel (in order) before the next.
                 let dd = null;
                 for (const part of config.order) {
                     if (dayList.some(d => state[`${d}-${part}`] < DAGDEEL - 1e-9)) { dd = part; break; }
@@ -896,7 +951,7 @@
         // --- Main update ---
         function update() {
             const huidigRaw = clamp(+document.getElementById('huidig').value || 1, 0.5, 40);
-            const stap = clamp(+document.getElementById('stap').value || 1, 0.5, 4);
+            const stap = clamp(+document.getElementById('stap').value || 1, 0.5, 8);
             const contract = clamp(+document.getElementById('contract').value || 40, 1, 60);
             const dayList = [...dayOrder];
             const aantal = dayList.length;
@@ -933,13 +988,15 @@
 
             const first = snaps[0] || {};
             const dagdelen = Object.keys(first).length;
-            const ddVolgorde = config.order[0] === 'am' ? 'ochtend eerst' : 'middag eerst';
             const modeText = (m) => m === 'gelaagd' ? 'gelaagd' : 'dag voor dag';
-            const stijl = `${ddVolgorde} · ochtend ${modeText(config.modes.am)}, middag ${modeText(config.modes.pm)}`;
+            const stijl = (config.unit === 'dag')
+                ? `per hele dag, ${modeText(config.dagMode)}`
+                : `${config.order[0] === 'am' ? 'ochtend eerst' : 'middag eerst'} · ochtend ${modeText(config.modes.am)}, middag ${modeText(config.modes.pm)}`;
+            const isGelaagd = (config.unit === 'dag') ? config.dagMode === 'gelaagd' : stijl.includes('gelaagd');
 
             summary.innerHTML = `<strong>${fmtU(huidig)}</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ${stijl} &middot; richting ${fmtU(doel)} (${targetSuffix}).`;
 
-            intro.textContent = `Opbouw met stappen van ${fmtU(stap)} per ${stijl.includes('gelaagd') ? 'gelaagde ' : ''}stap; de laatste week eindigt op ${fmtU(doel)} (${targetSuffix}).`;
+            intro.textContent = `Opbouw met stappen van ${fmtU(stap)} per ${isGelaagd ? 'gelaagde ' : ''}stap; de laatste week eindigt op ${fmtU(doel)} (${targetSuffix}).`;
 
             renderGrid(first);
             renderProgression(snaps);
@@ -955,9 +1012,11 @@
                 s: document.getElementById('stap').value,
                 c: document.getElementById('contract').value,
                 d: dayOrder.map(d => dayCode[d]).join(''),
+                u: segValue('seg-unit'),
                 o: segValue('seg-order'),
                 am: segValue('seg-am'),
                 pm: segValue('seg-pm'),
+                dg: segValue('seg-dag'),
             });
             const hash = '#' + params.toString();
             if (location.hash !== hash) {
@@ -984,9 +1043,11 @@
                 document.querySelectorAll(`#${id} button`).forEach(b =>
                     b.setAttribute('aria-pressed', b.dataset.val === val ? 'true' : 'false'));
             };
+            setSeg('seg-unit', params.get('u'));
             setSeg('seg-order', params.get('o'));
             setSeg('seg-am', params.get('am'));
             setSeg('seg-pm', params.get('pm'));
+            setSeg('seg-dag', params.get('dg'));
         }
 
         // --- Share / print ---
@@ -1017,7 +1078,7 @@
             window.print();
         });
 
-        function updateAndSync() { update(); writeStateToUrl(); }
+        function updateAndSync() { syncStrategyVisibility(); update(); writeStateToUrl(); }
 
         // Day chips: clicking toggles membership; turning on appends to the
         // order (so click sequence sets the build order).
@@ -1048,6 +1109,7 @@
         // Init
         applyStateFromUrl();
         syncChips();
+        syncStrategyVisibility();
         update();
         writeStateToUrl();
     })();
