@@ -1073,19 +1073,19 @@
             const aantal = dayList.length;
             const middagEerst = config.unit === 'dagdeel' && config.order[0] === 'pm';
             const volgordeNote = middagEerst ? "'s middags eerst opgebouwd" : 'ochtenden eerst opgebouwd';
+            const cadans = weken === 1 ? 'per week' : weken === 2 ? 'per twee weken' : `per ${weken} weken`;
             const lines = [];
             lines.push('OPBOUWSCHEMA RE-INTEGRATIE');
             lines.push('');
-            lines.push(`Werkdagen: ${dayList.map(d => dayNlLong[d]).join(', ')} (${aantal} ${aantal === 1 ? 'dag' : 'dagen'})`);
+            lines.push(`We bouwen ${cadans} op, telkens ${fmtU(stap)} per stap.`);
+            lines.push('Elke stap hieronder is een volgende opbouwronde, geteld');
+            lines.push('vanaf het consult; dit zijn geen ziekteweken.');
+            lines.push('');
+            lines.push(`Werkdagen: ${dayList.map(d => dayNlLong[d]).join(', ')}`);
             lines.push(`Doel: ${fmtU(doel)} per week`);
-            lines.push(`Opbouw: ${fmtU(stap)} per stap, elke stap ${weken === 1 ? '1 week' : weken + ' weken'}`);
-            lines.push('Stappen tellen vanaf het consult (geen ziekteweken).');
-            lines.push(`Getal = werkuren per dag (${volgordeNote}).`);
+            lines.push(`Getal = werkuren per dag, ${volgordeNote}.`);
             lines.push('');
             snaps.forEach((plan, i) => {
-                const wkStart = i * weken + 1;
-                const wkEnd = wkStart + weken - 1;
-                const wk = weken === 1 ? `wk ${wkStart}` : `wk ${wkStart}-${wkEnd}`;
                 const perDag = dayList.map(d => ({ d, u: dagUren(plan, d) })).filter(x => x.u > 0);
                 let body;
                 if (perDag.length === aantal && perDag.every(x => x.u === perDag[0].u)) {
@@ -1093,7 +1093,7 @@
                 } else {
                     body = perDag.map(x => `${dayNlLong[x.d]} ${fmtN(x.u)}u`).join(', ');
                 }
-                lines.push(`Stap ${i + 1} (${wk}): ${body}`);
+                lines.push(`Stap ${i + 1}: ${body}`);
             });
             lines.push('');
             lines.push('Concept ter voorbereiding van het bedrijfsartsgesprek.');
