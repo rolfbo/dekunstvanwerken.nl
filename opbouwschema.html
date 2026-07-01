@@ -1059,40 +1059,45 @@
                 buildReport(snaps, { dayList, stap, weken, huidig, doel, config, stijl, targetSuffix });
         }
 
-        // --- Plain-text report (no tables), report/e-mail friendly ---
-        function dayLineText(plan, d) {
-            const am = plan[`${d}-am`] || 0;
-            const pm = plan[`${d}-pm`] || 0;
-            if (am <= 0 && pm <= 0) return null;
-            const naam = dayNl[d];
-            if (am >= DAGDEEL - 1e-9 && pm >= DAGDEEL - 1e-9) return `${naam}: hele dag (${fmtU(am + pm)})`;
-            const parts = [];
-            if (am > 0) parts.push(`ochtend ${fmtU(am)}`);
-            if (pm > 0) parts.push(`middag ${fmtU(pm)}`);
-            return `${naam}: ${parts.join(' + ')}`;
+        // --- Plain-text report (no tables), compact & A4-friendly ---
+        const fmtN = (x) => Number.isInteger(x) ? `${x}` : x.toString().replace('.', ',');
+
+        // Total working hours on a day (mornings fill before afternoons in
+        // every strategy except per-dagdeel + middag-eerst, hence the note).
+        function dagUren(plan, d) {
+            return r1((plan[`${d}-am`] || 0) + (plan[`${d}-pm`] || 0));
         }
 
         function buildReport(snaps, ctx) {
-            const { dayList, stap, weken, doel, stijl, targetSuffix } = ctx;
-            const duurTekst = weken === 1 ? '1 week' : `${weken} weken`;
+            const { dayList, stap, weken, doel, config } = ctx;
+            const aantal = dayList.length;
+            const middagEerst = config.unit === 'dagdeel' && config.order[0] === 'pm';
+            const volgordeNote = middagEerst ? "'s middags eerst opgebouwd" : 'ochtenden eerst opgebouwd';
+            const cadans = weken === 1 ? 'per week' : weken === 2 ? 'per twee weken' : `per ${weken} weken`;
             const lines = [];
             lines.push('OPBOUWSCHEMA RE-INTEGRATIE');
             lines.push('');
+            lines.push(`We bouwen ${cadans} op, telkens ${fmtU(stap)} per stap.`);
+            lines.push('Elke stap hieronder is een volgende opbouwronde, geteld');
+            lines.push('vanaf het consult; dit zijn geen ziekteweken.');
+            lines.push('');
             lines.push(`Werkdagen: ${dayList.map(d => dayNlLong[d]).join(', ')}`);
-            lines.push(`Doel: ${fmtU(doel)} per week (${targetSuffix})`);
-            lines.push(`Opbouwstijl: ${stijl}`);
-            lines.push(`Opbouw: ${fmtU(stap)} per stap, elke stap ${duurTekst}`);
-            lines.push('De stappen tellen vanaf het consult (dit zijn geen ziekteweken).');
+            lines.push(`Doel: ${fmtU(doel)} per week`);
+            lines.push(`Getal = werkuren per dag, ${volgordeNote}.`);
             lines.push('');
             snaps.forEach((plan, i) => {
-                const totaal = totalOf(plan);
-                const dagen = dayList.map(d => dayLineText(plan, d)).filter(Boolean);
-                lines.push(`Stap ${i + 1} (${duurTekst}) (${fmtU(totaal)}): ${dagen.join('; ')}`);
+                const perDag = dayList.map(d => ({ d, u: dagUren(plan, d) })).filter(x => x.u > 0);
+                let body;
+                if (perDag.length === aantal && perDag.every(x => x.u === perDag[0].u)) {
+                    body = `elke dag ${fmtN(perDag[0].u)}u`;
+                } else {
+                    body = perDag.map(x => `${dayNlLong[x.d]} ${fmtN(x.u)}u`).join(', ');
+                }
+                lines.push(`Stap ${i + 1}: ${body}`);
             });
             lines.push('');
-            lines.push('Let op: dit is een concept ter voorbereiding van het gesprek met werknemer,');
-            lines.push('werkgever en bedrijfsarts en is geen medisch advies. Een individueel');
-            lines.push('opbouwschema wordt altijd op maat opgesteld.');
+            lines.push('Concept ter voorbereiding van het bedrijfsartsgesprek.');
+            lines.push('Geen medisch advies; schema altijd op maat.');
             return lines.join('\n');
         }
 
