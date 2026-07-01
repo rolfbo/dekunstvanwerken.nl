@@ -341,6 +341,11 @@
             border-bottom: none;
             font-weight: bold;
         }
+        .progression .prog-week {
+            font-size: 0.75rem;
+            font-weight: normal;
+            color: #7f8c8d;
+        }
         .progression .day-key {
             display: grid;
             grid-template-columns: repeat(5, 18px);
@@ -562,6 +567,9 @@
                         <label>Opbouw per stap (uur)
                             <input type="number" id="stap" min="0.5" max="8" step="0.5" value="1" required>
                         </label>
+                        <label>Weken per stap
+                            <input type="number" id="weken" min="1" max="8" step="1" value="1" required>
+                        </label>
                         <label>Contract uren per week
                             <input type="number" id="contract" min="1" max="60" step="1" value="40" required>
                         </label>
@@ -633,7 +641,7 @@
                 <table class="progression" id="prog">
                     <thead>
                         <tr>
-                            <th>Week</th>
+                            <th>Stap</th>
                             <th>Uren</th>
                             <th>Dagdelen</th>
                             <th>Schema
@@ -967,21 +975,27 @@
             return wrap;
         }
 
-        function renderProgression(snaps) {
+        // Week range for a step (weeks counted from the consult).
+        function stepWeekLabel(stepIndex, wekenPerStap) {
+            const start = stepIndex * wekenPerStap + 1;
+            const end = start + wekenPerStap - 1;
+            return wekenPerStap === 1 ? `week ${start}` : `week ${start}–${end}`;
+        }
+
+        function renderProgression(snaps, wekenPerStap) {
             const tbody = document.querySelector('#prog tbody');
             tbody.innerHTML = '';
-            let weekNum = 1;
-            for (const plan of snaps) {
+            snaps.forEach((plan, i) => {
+                if (i >= 80) return;
                 const dagdelen = Object.keys(plan).length;
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${weekNum}</td><td>${fmtU(totalOf(plan))}</td><td>${dagdelen}</td>`;
+                tr.innerHTML = `<td><strong>Stap ${i + 1}</strong><br><span class="prog-week">${stepWeekLabel(i, wekenPerStap)}</span></td>`
+                    + `<td>${fmtU(totalOf(plan))}</td><td>${dagdelen}</td>`;
                 const schemaTd = document.createElement('td');
                 schemaTd.appendChild(makeMiniGrid(plan));
                 tr.appendChild(schemaTd);
                 tbody.appendChild(tr);
-                weekNum++;
-                if (weekNum > 80) break;
-            }
+            });
         }
 
         function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
@@ -990,6 +1004,7 @@
         function update() {
             const huidigRaw = clamp(+document.getElementById('huidig').value || 1, 0.5, 40);
             const stap = clamp(+document.getElementById('stap').value || 1, 0.5, 8);
+            const weken = clamp(Math.round(+document.getElementById('weken').value || 1), 1, 8);
             const contract = clamp(+document.getElementById('contract').value || 40, 1, 60);
             const dayList = [...dayOrder];
             const aantal = dayList.length;
@@ -1035,12 +1050,13 @@
 
             summary.innerHTML = `<strong>${fmtU(huidig)}</strong> verdeeld over <strong>${dagdelen} ${dagdelen === 1 ? 'dagdeel' : 'dagdelen'}</strong> &middot; ${stijl} &middot; richting ${fmtU(doel)} (${targetSuffix}).`;
 
-            intro.textContent = `Opbouw met stappen van ${fmtU(stap)} per ${isGelaagd ? 'gelaagde ' : ''}stap; de laatste week eindigt op ${fmtU(doel)} (${targetSuffix}).`;
+            const wekenTekst = weken === 1 ? 'elke stap 1 week' : `elke stap ${weken} weken`;
+            intro.textContent = `Elke stap voegt ${fmtU(stap)} toe (${isGelaagd ? 'gelaagd, ' : ''}${wekenTekst}); de weken tellen vanaf het consult, niet vanaf de ziekmelding. De laatste stap eindigt op ${fmtU(doel)} (${targetSuffix}).`;
 
             renderGrid(first);
-            renderProgression(snaps);
+            renderProgression(snaps, weken);
             document.getElementById('report-text').value =
-                buildReport(snaps, { dayList, stap, huidig, doel, config, stijl, targetSuffix });
+                buildReport(snaps, { dayList, stap, weken, huidig, doel, config, stijl, targetSuffix });
         }
 
         // --- Plain-text report (no tables), report/e-mail friendly ---
@@ -1057,19 +1073,21 @@
         }
 
         function buildReport(snaps, ctx) {
-            const { dayList, stap, doel, stijl, targetSuffix } = ctx;
+            const { dayList, stap, weken, doel, stijl, targetSuffix } = ctx;
+            const duurTekst = weken === 1 ? '1 week' : `${weken} weken`;
             const lines = [];
             lines.push('OPBOUWSCHEMA RE-INTEGRATIE');
             lines.push('');
             lines.push(`Werkdagen: ${dayList.map(d => dayNlLong[d]).join(', ')}`);
             lines.push(`Doel: ${fmtU(doel)} per week (${targetSuffix})`);
             lines.push(`Opbouwstijl: ${stijl}`);
-            lines.push(`Opbouw per stap: ${fmtU(stap)}`);
+            lines.push(`Opbouw: ${fmtU(stap)} per stap, elke stap ${duurTekst}`);
+            lines.push('De stappen tellen vanaf het consult (dit zijn geen ziekteweken).');
             lines.push('');
             snaps.forEach((plan, i) => {
                 const totaal = totalOf(plan);
                 const dagen = dayList.map(d => dayLineText(plan, d)).filter(Boolean);
-                lines.push(`Week ${i + 1} (${fmtU(totaal)}): ${dagen.join('; ')}`);
+                lines.push(`Stap ${i + 1} (${duurTekst}) (${fmtU(totaal)}): ${dagen.join('; ')}`);
             });
             lines.push('');
             lines.push('Let op: dit is een concept ter voorbereiding van het gesprek met werknemer,');
@@ -1086,6 +1104,7 @@
             const params = new URLSearchParams({
                 h: document.getElementById('huidig').value,
                 s: document.getElementById('stap').value,
+                w: document.getElementById('weken').value,
                 c: document.getElementById('contract').value,
                 d: dayOrder.map(d => dayCode[d]).join(''),
                 u: segValue('seg-unit'),
@@ -1109,6 +1128,7 @@
             };
             setIf('huidig', 'h');
             setIf('stap', 's');
+            setIf('weken', 'w');
             setIf('contract', 'c');
             const d = params.get('d');
             if (d !== null) {
