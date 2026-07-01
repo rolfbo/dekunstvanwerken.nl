@@ -294,6 +294,32 @@
             margin: 1.5rem 0;
         }
 
+        .report-block { margin-top: 2rem; }
+        .report-block h2 { margin-bottom: 0.25rem; }
+        .report-hint {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin: 0 0 0.6rem;
+        }
+        .report-text {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.85rem 1rem;
+            font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            resize: vertical;
+        }
+        .report-text:focus {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+            background: var(--text-light);
+        }
+        .report-block .actions { margin-top: 0.75rem; }
+
         .progression {
             width: 100%;
             border-collapse: collapse;
@@ -405,7 +431,7 @@
 
         @media print {
             /* Hide chrome and interactive controls */
-            nav, footer, .actions, form, .principle { display: none !important; }
+            nav, footer, .actions, form, .principle, .report-block { display: none !important; }
 
             /* Show print-only metadata */
             .print-only { display: block !important; }
@@ -628,6 +654,18 @@
                         <span aria-hidden="true">&#128424;</span> Print
                     </button>
                     <span class="action-feedback" id="share-feedback" role="status" aria-live="polite"></span>
+                </div>
+
+                <div class="report-block">
+                    <h2>Voor in een rapport</h2>
+                    <p class="report-hint">Platte tekst zonder tabel &mdash; kopieer en plak in een verslag of e-mail.</p>
+                    <textarea id="report-text" class="report-text" rows="10" readonly aria-label="Opbouwschema als platte tekst"></textarea>
+                    <div class="actions">
+                        <button type="button" class="btn-action" id="btn-copy-report">
+                            <span aria-hidden="true">&#128203;</span> Kopieer tekst
+                        </button>
+                        <span class="action-feedback" id="report-feedback" role="status" aria-live="polite"></span>
+                    </div>
                 </div>
 
                 <div class="print-only print-meta">
@@ -966,6 +1004,7 @@
                 summary.innerHTML = '';
                 renderGrid({});
                 document.querySelector('#prog tbody').innerHTML = '';
+                document.getElementById('report-text').value = '';
                 return;
             }
 
@@ -1000,6 +1039,43 @@
 
             renderGrid(first);
             renderProgression(snaps);
+            document.getElementById('report-text').value =
+                buildReport(snaps, { dayList, stap, huidig, doel, config, stijl, targetSuffix });
+        }
+
+        // --- Plain-text report (no tables), report/e-mail friendly ---
+        function dayLineText(plan, d) {
+            const am = plan[`${d}-am`] || 0;
+            const pm = plan[`${d}-pm`] || 0;
+            if (am <= 0 && pm <= 0) return null;
+            const naam = dayNl[d];
+            if (am >= DAGDEEL - 1e-9 && pm >= DAGDEEL - 1e-9) return `${naam}: hele dag (${fmtU(am + pm)})`;
+            const parts = [];
+            if (am > 0) parts.push(`ochtend ${fmtU(am)}`);
+            if (pm > 0) parts.push(`middag ${fmtU(pm)}`);
+            return `${naam}: ${parts.join(' + ')}`;
+        }
+
+        function buildReport(snaps, ctx) {
+            const { dayList, stap, doel, stijl, targetSuffix } = ctx;
+            const lines = [];
+            lines.push('OPBOUWSCHEMA RE-INTEGRATIE');
+            lines.push('');
+            lines.push(`Werkdagen: ${dayList.map(d => dayNlLong[d]).join(', ')}`);
+            lines.push(`Doel: ${fmtU(doel)} per week (${targetSuffix})`);
+            lines.push(`Opbouwstijl: ${stijl}`);
+            lines.push(`Opbouw per stap: ${fmtU(stap)}`);
+            lines.push('');
+            snaps.forEach((plan, i) => {
+                const totaal = totalOf(plan);
+                const dagen = dayList.map(d => dayLineText(plan, d)).filter(Boolean);
+                lines.push(`Week ${i + 1} (${fmtU(totaal)}): ${dagen.join('; ')}`);
+            });
+            lines.push('');
+            lines.push('Let op: dit is een concept ter voorbereiding van het gesprek met werknemer,');
+            lines.push('werkgever en bedrijfsarts en is geen medisch advies. Een individueel');
+            lines.push('opbouwschema wordt altijd op maat opgesteld.');
+            return lines.join('\n');
         }
 
         // --- URL state ---
@@ -1076,6 +1152,26 @@
         document.getElementById('btn-print').addEventListener('click', () => {
             refreshPrintMeta();
             window.print();
+        });
+
+        // Copy the plain-text report
+        function showReportFeedback(text) {
+            const fb = document.getElementById('report-feedback');
+            fb.textContent = text;
+            fb.classList.add('show');
+            clearTimeout(showReportFeedback._t);
+            showReportFeedback._t = setTimeout(() => fb.classList.remove('show'), 2500);
+        }
+        document.getElementById('btn-copy-report').addEventListener('click', async () => {
+            const ta = document.getElementById('report-text');
+            try {
+                await navigator.clipboard.writeText(ta.value);
+                showReportFeedback('Tekst gekopieerd naar klembord');
+            } catch {
+                ta.focus();
+                ta.select();
+                showReportFeedback('Selecteer en kopieer de tekst handmatig');
+            }
         });
 
         function updateAndSync() { syncStrategyVisibility(); update(); writeStateToUrl(); }
