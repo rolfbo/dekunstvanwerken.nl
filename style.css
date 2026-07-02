@@ -269,8 +269,12 @@ nav .container {
 
 /* --- Hero Section --- */
 #hero {
-    background: linear-gradient(rgba(0, 74, 153, 0.8), rgba(0, 74, 153, 0.8)), 
-                url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200') no-repeat center center/cover;
+    /* Pure-CSS hero: no external image request (better LCP, no third-party
+       dependency). Layered gradients give the flat brand blue some depth. */
+    background:
+        radial-gradient(ellipse at 80% 15%, rgba(230, 126, 34, 0.18), transparent 45%),
+        radial-gradient(ellipse at 15% 85%, rgba(52, 152, 219, 0.35), transparent 55%),
+        linear-gradient(135deg, #003a7a 0%, #004a99 55%, #0057b8 100%);
     height: 70vh;
     display: flex;
     align-items: center;
@@ -301,9 +305,12 @@ nav .container {
     margin-bottom: 3rem;
 }
 
+.section-title h1,
 .section-title h2 {
     font-size: 2.5rem;
     color: var(--primary-color);
+    margin-bottom: 1rem;
+    line-height: 1.2;
 }
 
 .services-grid {
