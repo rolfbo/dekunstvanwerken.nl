@@ -19,6 +19,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Build knowledge base
+        run: node kb-build.mjs
+
       - name: Sanity-check required secrets
         run: |
           missing=0
@@ -51,7 +54,8 @@ jobs:
             --exclude='.gitignore' \
             --exclude='instructions' \
             --exclude='node_modules' \
-            --exclude='*.md' \
+            --exclude='kb-build.mjs' \
+            --exclude='/*.md' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts" \
             ./ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}/"
 
