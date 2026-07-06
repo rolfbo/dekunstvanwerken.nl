@@ -17,8 +17,59 @@
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://dekunstvanwerken.nl/izp.html">
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="de Kunst van Werken">
+    <meta property="og:locale" content="nl_NL">
+    <meta property="og:url" content="https://dekunstvanwerken.nl/izp.html">
+    <meta property="og:title" content="IZP concept-tool | De Kunst van Werken">
+    <meta property="og:description" content="Beschrijf mogelijkheden en beperkingen volgens de 6 rubrieken van het Inzetbaarheidsprofiel (IZP) — als voorbereiding op het gesprek met de bedrijfsarts.">
+    <meta property="og:image" content="https://dekunstvanwerken.nl/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="de Kunst van Werken — professionele arbodienstverlening">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="IZP concept-tool | De Kunst van Werken">
+    <meta name="twitter:description" content="Beschrijf mogelijkheden en beperkingen volgens de 6 rubrieken van het Inzetbaarheidsprofiel (IZP) — als voorbereiding op het gesprek met de bedrijfsarts.">
+    <meta name="twitter:image" content="https://dekunstvanwerken.nl/og-image.png">
+
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta name="theme-color" content="#004a99">
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "IZP concept-tool",
+          "url": "https://dekunstvanwerken.nl/izp.html",
+          "applicationCategory": "HealthApplication",
+          "operatingSystem": "Web",
+          "inLanguage": "nl",
+          "isAccessibleForFree": true,
+          "description": "Concept-overzicht volgens de 6-rubrieken-structuur van het Inzetbaarheidsprofiel (IZP), ter voorbereiding van het gesprek met de bedrijfsarts.",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+          "provider": {
+            "@type": "Organization",
+            "name": "de Kunst van Werken B.V.",
+            "url": "https://dekunstvanwerken.nl/"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://dekunstvanwerken.nl/" },
+            { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://dekunstvanwerken.nl/izp.html" },
+            { "@type": "ListItem", "position": 3, "name": "IZP concept-tool" }
+          ]
+        }
+      ]
+    }
+    </script>
 
     <link rel="stylesheet" href="brand-variables.css">
     <link rel="stylesheet" href="style.css">
@@ -316,7 +367,7 @@
     <section id="izp-tool">
         <div class="container">
             <div class="section-title">
-                <h2>IZP concept-tool</h2>
+                <h1>IZP concept-tool</h1>
                 <p>Een beschrijvend overzicht van mogelijkheden en beperkingen volgens de zes rubrieken van het Inzetbaarheidsprofiel &mdash; als hulp bij het gesprek met de bedrijfsarts.</p>
             </div>
 
@@ -326,7 +377,7 @@
                 </div>
 
                 <form id="izp-form" onsubmit="return false;">
-                    <h3 style="margin-bottom:0.5rem; color:var(--text-dark); font-size:1rem;">Algemene gegevens (optioneel)</h3>
+                    <h2 style="margin-bottom:0.5rem; color:var(--text-dark); font-size:1rem;">Algemene gegevens (optioneel)</h2>
                     <div class="meta-row">
                         <label>Naam werknemer (initialen)
                             <input type="text" id="meta-naam" placeholder="bv. R.B." maxlength="32" autocomplete="off">
