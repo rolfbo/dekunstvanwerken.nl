@@ -2,3 +2,6 @@ User-agent: *
 Allow: /
 
 Sitemap: https://dekunstvanwerken.nl/sitemap.xml
+
+# Machine-readable knowledge base for LLMs
+# See https://dekunstvanwerken.nl/llms.txt

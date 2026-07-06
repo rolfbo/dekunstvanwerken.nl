@@ -1,0 +1,15 @@
+# de Kunst van Werken
+
+> Professionele Nederlandse arbodienstverlening: verzuimbegeleiding, RI&E-toetsing,
+> PAGO/PMO, aanstellingskeuringen, bedrijfsarts en whitelabel-diensten.
+
+## Kennisbank
+De volledige, machineleesbare inhoud staat in https://dekunstvanwerken.nl/kennisbank/index.json
+(JSON met per artikel titel, samenvatting, tags en volledige tekst).
+
+- [The Arousal–Performance Curve: Why "More" Isn't Always "Better"](https://dekunstvanwerken.nl/kennisbank/arousal-performance-curve.html): How the Yerkes–Dodson curve and Vygotsky's Zone of Proximal Development explain why peak performance lives in a band, not at a ceiling — and what that means for focus, attention and ADHD. (Markdown: https://dekunstvanwerken.nl/kennisbank/arousal-performance-curve.md)
+
+## Tools
+- [Opbouwschema-calculator](https://dekunstvanwerken.nl/opbouwschema.html): gefaseerd opbouwschema bij re-integratie.
+- [FML concept-tool](https://dekunstvanwerken.nl/fml.html): 6-rubrieken Functionele Mogelijkheden Lijst (concept).
+- [IZP concept-tool](https://dekunstvanwerken.nl/izp.html): 6-rubrieken Inzetbaarheidsprofiel (concept).
