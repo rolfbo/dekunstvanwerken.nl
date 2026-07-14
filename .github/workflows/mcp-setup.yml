@@ -1,0 +1,108 @@
+name: MCP server setup (dkvw)
+
+# One-time / re-runnable server-side setup for mcp.dekunstvanwerken.nl.
+# Idempotent: safe to run again (e.g. after the DNS record is added, to
+# let the certbot step complete). Requires the same secrets as deploy.yml.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  setup:
+    name: Configure MCP service on server
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Run server-side setup
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
+              -o UserKnownHostsFile=~/.ssh/known_hosts \
+              "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+              "WEBROOT='${{ secrets.SSH_PATH }}' bash -s" <<'REMOTE'
+          set -u
+          say() { echo "== $*"; }
+          WEBROOT="${WEBROOT%/}"
+
+          say "Node version"
+          if ! command -v node >/dev/null; then
+            echo "FATAL: node is not installed on the server"; exit 1
+          fi
+          node --version
+
+          say "MCP files present?"
+          ls -la "$WEBROOT/mcp/" || { echo "FATAL: $WEBROOT/mcp missing — run the deploy workflow first"; exit 1; }
+
+          say "sudo available?"
+          if sudo -n true 2>/dev/null; then SUDO=1; echo "yes (passwordless)"; else SUDO=0; echo "NO — will print manual commands instead"; fi
+
+          if [ "$SUDO" = 1 ]; then
+            say "Install/refresh systemd unit"
+            sudo -n cp "$WEBROOT/mcp/dkvw-mcp.service" /etc/systemd/system/dkvw-mcp.service
+            # Point the unit at the actual webroot and a user that can read it
+            sudo -n sed -i "s|/var/www/dekunstvanwerken.nl|$WEBROOT|g" /etc/systemd/system/dkvw-mcp.service
+            sudo -n systemctl daemon-reload
+            sudo -n systemctl enable --now dkvw-mcp
+            sleep 1
+            sudo -n systemctl restart dkvw-mcp
+            sleep 1
+            sudo -n systemctl --no-pager --lines=5 status dkvw-mcp || true
+
+            say "Local health check"
+            curl -fsS http://127.0.0.1:8321/healthz && echo || { echo "FATAL: healthz failed"; exit 1; }
+
+            say "Install nginx site"
+            if command -v nginx >/dev/null; then
+              sudo -n cp "$WEBROOT/mcp/nginx-mcp.conf" /etc/nginx/sites-available/mcp.dekunstvanwerken.nl
+              sudo -n ln -sf /etc/nginx/sites-available/mcp.dekunstvanwerken.nl /etc/nginx/sites-enabled/mcp.dekunstvanwerken.nl
+              sudo -n nginx -t && sudo -n systemctl reload nginx
+            else
+              echo "WARN: nginx not found; skipping reverse proxy setup"
+            fi
+
+            say "DNS check for mcp.dekunstvanwerken.nl"
+            MYIP=$(curl -fsS -4 https://ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
+            MCPIP=$(getent hosts mcp.dekunstvanwerken.nl | awk '{print $1}' | head -1 || true)
+            echo "server IP: $MYIP — mcp record: ${MCPIP:-none}"
+            if [ -n "${MCPIP:-}" ]; then
+              say "Run certbot (idempotent)"
+              if command -v certbot >/dev/null; then
+                sudo -n certbot --nginx -d mcp.dekunstvanwerken.nl \
+                  --non-interactive --agree-tos --register-unsafely-without-email \
+                  --keep-until-expiring || echo "WARN: certbot failed; check output above"
+              else
+                echo "WARN: certbot not installed (apt install certbot python3-certbot-nginx)"
+              fi
+            else
+              echo "SKIP certbot: no DNS record yet for mcp.dekunstvanwerken.nl."
+              echo "Add an A record ->$MYIP at your DNS provider, then re-run this workflow."
+            fi
+          else
+            echo ""
+            echo "Run these manually on the server (needs root):"
+            echo "  sudo cp $WEBROOT/mcp/dkvw-mcp.service /etc/systemd/system/"
+            echo "  sudo systemctl daemon-reload && sudo systemctl enable --now dkvw-mcp"
+            echo "  sudo cp $WEBROOT/mcp/nginx-mcp.conf /etc/nginx/sites-available/mcp.dekunstvanwerken.nl"
+            echo "  sudo ln -s /etc/nginx/sites-available/mcp.dekunstvanwerken.nl /etc/nginx/sites-enabled/"
+            echo "  sudo nginx -t && sudo systemctl reload nginx"
+            echo "  sudo certbot --nginx -d mcp.dekunstvanwerken.nl"
+            exit 2
+          fi
+
+          say "Done"
+          REMOTE
+
+      - name: Wipe SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
