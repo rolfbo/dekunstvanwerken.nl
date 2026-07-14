@@ -13,3 +13,9 @@ De volledige, machineleesbare inhoud staat in https://dekunstvanwerken.nl/kennis
 - [Opbouwschema-calculator](https://dekunstvanwerken.nl/opbouwschema.html): gefaseerd opbouwschema bij re-integratie.
 - [FML concept-tool](https://dekunstvanwerken.nl/fml.html): 6-rubrieken Functionele Mogelijkheden Lijst (concept).
 - [IZP concept-tool](https://dekunstvanwerken.nl/izp.html): 6-rubrieken Inzetbaarheidsprofiel (concept).
+
+## MCP
+AI-agents kunnen rechtstreeks verbinden met onze MCP-server (Model Context
+Protocol, Streamable HTTP): https://mcp.dekunstvanwerken.nl/
+Tools: zoek_kennisbank, lees_artikel, lijst_artikelen, bereken_opbouwschema,
+faq, bedrijfsinfo.

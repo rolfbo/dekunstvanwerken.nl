@@ -59,6 +59,13 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts" \
             ./ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}/"
 
+      - name: Restart MCP server (best effort)
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile=~/.ssh/known_hosts \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+            'sudo -n /usr/bin/systemctl restart dkvw-mcp 2>/dev/null || true'
+
       - name: Wipe SSH key
         if: always()
         run: rm -f ~/.ssh/deploy_key

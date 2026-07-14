@@ -1,0 +1,30 @@
+# systemd unit for the de Kunst van Werken MCP server
+# Install: see instructions/mcp_setup.md
+#
+#   sudo cp mcp/dkvw-mcp.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now dkvw-mcp
+[Unit]
+Description=de Kunst van Werken MCP server (mcp.dekunstvanwerken.nl)
+After=network.target
+
+[Service]
+Type=simple
+# Adjust User/WorkingDirectory to the deploy user and web root.
+User=www-data
+WorkingDirectory=/var/www/dekunstvanwerken.nl
+ExecStart=/usr/bin/node /var/www/dekunstvanwerken.nl/mcp/server.mjs
+Environment=MCP_PORT=8321
+Environment=MCP_HOST=127.0.0.1
+Restart=on-failure
+RestartSec=3
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/var/www/dekunstvanwerken.nl
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
