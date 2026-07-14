@@ -88,11 +88,13 @@ jobs:
 
             say "Reverse proxy setup"
             PROXY=""
-            if command -v nginx >/dev/null; then
+            # /usr/sbin is often missing from a non-login SSH PATH, so probe
+            # the config dir too; sudo's secure_path finds the binary.
+            if command -v nginx >/dev/null || [ -d /etc/nginx ]; then
               PROXY=nginx
               sudo -n cp "$WEBROOT/mcp/nginx-mcp.conf" /etc/nginx/sites-available/mcp.dekunstvanwerken.nl
               sudo -n ln -sf /etc/nginx/sites-available/mcp.dekunstvanwerken.nl /etc/nginx/sites-enabled/mcp.dekunstvanwerken.nl
-              sudo -n nginx -t && sudo -n systemctl reload nginx
+              sudo -n nginx -t && sudo -n systemctl reload nginx && echo "nginx site installed + reloaded"
             elif command -v apache2ctl >/dev/null || [ -d /etc/apache2 ]; then
               PROXY=apache
               sudo -n a2enmod proxy proxy_http >/dev/null
