@@ -78,27 +78,43 @@ jobs:
             say "Local health check"
             curl -fsS http://127.0.0.1:8321/healthz && echo || { echo "FATAL: healthz failed"; exit 1; }
 
-            say "Install nginx site"
+            say "Reverse proxy setup"
+            PROXY=""
             if command -v nginx >/dev/null; then
+              PROXY=nginx
               sudo -n cp "$WEBROOT/mcp/nginx-mcp.conf" /etc/nginx/sites-available/mcp.dekunstvanwerken.nl
               sudo -n ln -sf /etc/nginx/sites-available/mcp.dekunstvanwerken.nl /etc/nginx/sites-enabled/mcp.dekunstvanwerken.nl
               sudo -n nginx -t && sudo -n systemctl reload nginx
+            elif command -v apache2ctl >/dev/null || [ -d /etc/apache2 ]; then
+              PROXY=apache
+              sudo -n a2enmod proxy proxy_http >/dev/null
+              sudo -n cp "$WEBROOT/mcp/apache-mcp.conf" /etc/apache2/sites-available/mcp.dekunstvanwerken.nl.conf
+              sudo -n a2ensite mcp.dekunstvanwerken.nl >/dev/null
+              sudo -n apache2ctl configtest && sudo -n systemctl reload apache2
+              echo "apache vhost installed + reloaded"
             else
-              echo "WARN: nginx not found; skipping reverse proxy setup"
+              echo "WARN: neither nginx nor apache found; MCP is only reachable on 127.0.0.1:8321"
             fi
 
             say "DNS check for mcp.dekunstvanwerken.nl"
             MYIP=$(curl -fsS -4 https://ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
             MCPIP=$(getent hosts mcp.dekunstvanwerken.nl | awk '{print $1}' | head -1 || true)
             echo "server IP: $MYIP — mcp record: ${MCPIP:-none}"
-            if [ -n "${MCPIP:-}" ]; then
+            if [ -n "${MCPIP:-}" ] && [ -n "$PROXY" ]; then
               say "Run certbot (idempotent)"
               if command -v certbot >/dev/null; then
-                sudo -n certbot --nginx -d mcp.dekunstvanwerken.nl \
+                if [ "$PROXY" = nginx ]; then CERTPLUG=--nginx; else CERTPLUG=--apache; fi
+                sudo -n certbot $CERTPLUG -d mcp.dekunstvanwerken.nl \
                   --non-interactive --agree-tos --register-unsafely-without-email \
                   --keep-until-expiring || echo "WARN: certbot failed; check output above"
               else
-                echo "WARN: certbot not installed (apt install certbot python3-certbot-nginx)"
+                echo "WARN: certbot not installed; installing"
+                if [ "$PROXY" = nginx ]; then PKG=python3-certbot-nginx; else PKG=python3-certbot-apache; fi
+                sudo -n apt-get install -y -qq certbot "$PKG" || true
+                if [ "$PROXY" = nginx ]; then CERTPLUG=--nginx; else CERTPLUG=--apache; fi
+                sudo -n certbot $CERTPLUG -d mcp.dekunstvanwerken.nl \
+                  --non-interactive --agree-tos --register-unsafely-without-email \
+                  --keep-until-expiring || echo "WARN: certbot failed; check output above"
               fi
             else
               echo "SKIP certbot: no DNS record yet for mcp.dekunstvanwerken.nl."
