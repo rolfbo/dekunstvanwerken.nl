@@ -35,23 +35,39 @@ jobs:
           say() { echo "== $*"; }
           WEBROOT="${WEBROOT%/}"
 
-          say "Node version"
-          if ! command -v node >/dev/null; then
-            echo "FATAL: node is not installed on the server"; exit 1
-          fi
-          node --version
-
           say "MCP files present?"
           ls -la "$WEBROOT/mcp/" || { echo "FATAL: $WEBROOT/mcp missing — run the deploy workflow first"; exit 1; }
 
           say "sudo available?"
           if sudo -n true 2>/dev/null; then SUDO=1; echo "yes (passwordless)"; else SUDO=0; echo "NO — will print manual commands instead"; fi
 
+          say "Node available?"
+          # Non-login SSH shells miss nvm-style installs; check common spots.
+          NODE_BIN="$(command -v node || true)"
+          for cand in /usr/bin/node /usr/local/bin/node /opt/node*/bin/node; do
+            [ -z "$NODE_BIN" ] && [ -x "$cand" ] && NODE_BIN="$cand"
+          done
+          if [ -z "$NODE_BIN" ] && [ "$SUDO" = 1 ]; then
+            say "Installing Node.js via apt"
+            sudo -n apt-get update -qq && sudo -n apt-get install -y -qq nodejs || true
+            NODE_BIN="$(command -v node || true)"
+            [ -z "$NODE_BIN" ] && [ -x /usr/bin/node ] && NODE_BIN=/usr/bin/node
+          fi
+          if [ -z "$NODE_BIN" ]; then
+            echo "FATAL: node is not installed and could not be installed automatically."
+            echo "Install manually: sudo apt install nodejs   (Node >= 18 required)"
+            exit 1
+          fi
+          echo "node: $NODE_BIN ($("$NODE_BIN" --version))"
+          case "$("$NODE_BIN" --version)" in
+            v1[0-7].*|v[0-9].*) echo "FATAL: Node >= 18 required"; exit 1;;
+          esac
+
           if [ "$SUDO" = 1 ]; then
             say "Install/refresh systemd unit"
             sudo -n cp "$WEBROOT/mcp/dkvw-mcp.service" /etc/systemd/system/dkvw-mcp.service
-            # Point the unit at the actual webroot and a user that can read it
-            sudo -n sed -i "s|/var/www/dekunstvanwerken.nl|$WEBROOT|g" /etc/systemd/system/dkvw-mcp.service
+            # Point the unit at the actual webroot and node binary
+            sudo -n sed -i "s|/var/www/dekunstvanwerken.nl|$WEBROOT|g; s|/usr/bin/node|$NODE_BIN|g" /etc/systemd/system/dkvw-mcp.service
             sudo -n systemctl daemon-reload
             sudo -n systemctl enable --now dkvw-mcp
             sleep 1
