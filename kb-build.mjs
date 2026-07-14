@@ -344,7 +344,7 @@ ${NAV}
             <ul class="kb-cards" id="kb-cards">${cards}
             </ul>
             <p class="kb-empty" id="kb-empty" hidden>Geen artikelen gevonden.</p>
-            <p class="kb-api">Voor ontwikkelaars &amp; AI: de volledige inhoud is machineleesbaar beschikbaar als <a href="index.json">index.json</a>; elk artikel ook als Markdown (<code>.md</code>).</p>
+            <p class="kb-api">Voor ontwikkelaars &amp; AI: de volledige inhoud is machineleesbaar beschikbaar als <a href="index.json">index.json</a>; elk artikel ook als Markdown (<code>.md</code>). AI-agents kunnen ook rechtstreeks verbinden via onze <a href="https://mcp.dekunstvanwerken.nl/">MCP-server</a>.</p>
         </div>
     </section>
 ${FOOTER}
@@ -421,6 +421,12 @@ ${articles.map((a) => `- [${a.title}](${SITE}/kennisbank/${a.slug}.html): ${a.su
 - [Opbouwschema-calculator](${SITE}/opbouwschema.html): gefaseerd opbouwschema bij re-integratie.
 - [FML concept-tool](${SITE}/fml.html): 6-rubrieken Functionele Mogelijkheden Lijst (concept).
 - [IZP concept-tool](${SITE}/izp.html): 6-rubrieken Inzetbaarheidsprofiel (concept).
+
+## MCP
+AI-agents kunnen rechtstreeks verbinden met onze MCP-server (Model Context
+Protocol, Streamable HTTP): https://mcp.dekunstvanwerken.nl/
+Tools: zoek_kennisbank, lees_artikel, lijst_artikelen, bereken_opbouwschema,
+faq, bedrijfsinfo.
 `;
 writeFileSync(join(ROOT, 'llms.txt'), llms);
 
