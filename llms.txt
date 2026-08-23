@@ -3,6 +3,9 @@
 > Professionele Nederlandse arbodienstverlening: verzuimbegeleiding, RI&E-toetsing,
 > PAGO/PMO, aanstellingskeuringen, bedrijfsarts en whitelabel-diensten.
 
+## Whitelabel
+- [Whitelabel arbodienstverlening](https://dekunstvanwerken.nl/whitelabel.html): bedrijfsarts en gecertificeerde kerndeskundigen onder uw eigen merk, voor tussenpersonen, verzekeraars en arbodiensten.
+
 ## Tools
 - [Opbouwschema-calculator](https://dekunstvanwerken.nl/opbouwschema.html): gefaseerd opbouwschema bij re-integratie.
 - [FML concept-tool](https://dekunstvanwerken.nl/fml.html): 6-rubrieken Functionele Mogelijkheden Lijst (concept).
