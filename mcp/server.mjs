@@ -11,17 +11,24 @@
  *   - faq                    the site's FAQ answers
  *   - bedrijfsinfo           services & contact details
  *
+ * Extra endpoint (not MCP): POST /aanmelden — stores the website's
+ * signup form submissions as JSONL in MCP_STATE_DIR, collected weekly.
+ *
  * Run:   node mcp/server.mjs           (defaults to 127.0.0.1:8321)
  *        MCP_PORT=9000 node mcp/server.mjs
  * Check: curl -s http://127.0.0.1:8321/healthz
  */
 import { createServer } from 'node:http';
+import { appendFileSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 const SITE = 'https://dekunstvanwerken.nl';
 const PORT = Number(process.env.MCP_PORT || 8321);
 const HOST = process.env.MCP_HOST || '127.0.0.1';
+// Signup submissions are appended here as JSONL; picked up weekly over SSH.
+const STATE_DIR = process.env.MCP_STATE_DIR || '/var/lib/dkvw-mcp';
 
-const SERVER_INFO = { name: 'dekunstvanwerken', version: '1.1.0' };
+const SERVER_INFO = { name: 'dekunstvanwerken', version: '1.2.0' };
 const PROTOCOL_VERSIONS = ['2025-06-18', '2025-03-26', '2024-11-05'];
 
 const FAQ = [
@@ -338,6 +345,63 @@ function handleRpc(msg) {
   }
 }
 
+// ------------------------------------------------------- aanmeldingen
+// POST /aanmelden stores signup-form submissions as one JSON line each in
+// STATE_DIR/aanmeldingen.jsonl. No email, no third parties; the file is
+// collected weekly over SSH. Honeypot field + a small per-IP rate limit
+// keep casual spam out.
+const AANMELD_FILE = () => join(STATE_DIR, 'aanmeldingen.jsonl');
+const rateLog = new Map(); // ip -> [timestamps]
+function rateLimited(ip) {
+  const now = Date.now();
+  const windowMs = 60 * 60 * 1000;
+  const hits = (rateLog.get(ip) || []).filter((t) => now - t < windowMs);
+  hits.push(now);
+  rateLog.set(ip, hits);
+  if (rateLog.size > 5000) rateLog.clear(); // memory backstop
+  return hits.length > 5;
+}
+
+function handleAanmelding(body, req, res) {
+  const reply = (code, obj) => {
+    res.writeHead(code, { 'Content-Type': 'application/json', ...CORS });
+    res.end(JSON.stringify(obj));
+  };
+  let data;
+  try {
+    data = JSON.parse(body);
+  } catch {
+    return reply(400, { ok: false, error: 'ongeldige aanvraag' });
+  }
+  // Honeypot: real users never fill this hidden field. Pretend success.
+  if (data.website) return reply(200, { ok: true });
+
+  const clean = (v, max) => String(v ?? '').trim().slice(0, max);
+  const aanmelding = {
+    ontvangen: new Date().toISOString(),
+    bedrijf: clean(data.bedrijf, 200),
+    naam: clean(data.naam, 200),
+    email: clean(data.email, 200),
+    telefoon: clean(data.telefoon, 50),
+    bericht: clean(data.bericht, 2000),
+  };
+  if (!aanmelding.naam || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(aanmelding.email)) {
+    return reply(400, { ok: false, error: 'naam en een geldig e-mailadres zijn verplicht' });
+  }
+  const ip = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '?';
+  if (rateLimited(String(ip).split(',')[0].trim())) {
+    return reply(429, { ok: false, error: 'te veel aanvragen; probeer het later opnieuw' });
+  }
+  try {
+    mkdirSync(STATE_DIR, { recursive: true });
+    appendFileSync(AANMELD_FILE(), JSON.stringify(aanmelding) + '\n');
+  } catch (e) {
+    console.error('aanmelding opslaan mislukt:', e.message);
+    return reply(500, { ok: false, error: 'opslaan mislukt; mail ons op info@dekunstvanwerken.nl' });
+  }
+  return reply(200, { ok: true });
+}
+
 // ---------------------------------------------------------- HTTP layer
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -389,6 +453,9 @@ const server = createServer((req, res) => {
     if (body.length > 1_000_000) req.destroy(); // 1 MB cap
   });
   req.on('end', () => {
+    if (url.pathname === '/aanmelden') {
+      return handleAanmelding(body, req, res);
+    }
     let parsed;
     try {
       parsed = JSON.parse(body);

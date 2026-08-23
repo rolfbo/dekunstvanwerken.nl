@@ -16,6 +16,10 @@ WorkingDirectory=/var/www/dekunstvanwerken.nl
 ExecStart=/usr/bin/node /var/www/dekunstvanwerken.nl/mcp/server.mjs
 Environment=MCP_PORT=8321
 Environment=MCP_HOST=127.0.0.1
+# systemd creates /var/lib/dkvw-mcp and keeps it writable despite
+# ProtectSystem=strict; the aanmeldformulier submissions land there.
+StateDirectory=dkvw-mcp
+Environment=MCP_STATE_DIR=/var/lib/dkvw-mcp
 Restart=on-failure
 RestartSec=3
 

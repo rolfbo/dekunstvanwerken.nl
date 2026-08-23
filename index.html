@@ -172,6 +172,7 @@
                     </ul>
                 </li>
                 <li><a href="#faq">FAQ</a></li>
+                <li><a href="#aanmelden">Aanmelden</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </div>
@@ -182,7 +183,7 @@
         <div class="container">
             <h1>Gezond Werken is een Kunst</h1>
             <p>Wij ondersteunen werkgevers bij het realiseren van een veilige, gezonde en productieve werkomgeving door middel van deskundige arbodienstverlening.</p>
-            <a href="#contact" class="btn btn-primary">Start Nu</a>
+            <a href="#aanmelden" class="btn btn-primary">Start Nu</a>
         </div>
     </section>
 
@@ -337,6 +338,47 @@
         </div>
     </section>
 
+    <!-- Aanmelden: signup form, stored on our own server -->
+    <section id="aanmelden">
+        <div class="container">
+            <div class="section-title">
+                <h2>Aanmelden</h2>
+                <p>Laat uw gegevens achter en wij nemen contact met u op om de mogelijkheden te bespreken &mdash; vrijblijvend.</p>
+            </div>
+
+            <form id="aanmeld-form" class="aanmeld-form" novalidate>
+                <div class="aanmeld-row">
+                    <label>Bedrijfsnaam
+                        <input type="text" name="bedrijf" maxlength="200" autocomplete="organization">
+                    </label>
+                    <label>Naam <span class="verplicht">*</span>
+                        <input type="text" name="naam" maxlength="200" required autocomplete="name">
+                    </label>
+                </div>
+                <div class="aanmeld-row">
+                    <label>E-mailadres <span class="verplicht">*</span>
+                        <input type="email" name="email" maxlength="200" required autocomplete="email">
+                    </label>
+                    <label>Telefoonnummer
+                        <input type="tel" name="telefoon" maxlength="50" autocomplete="tel">
+                    </label>
+                </div>
+                <label>Waar kunnen we u mee helpen?
+                    <textarea name="bericht" rows="4" maxlength="2000" placeholder="Bijv. verzuimbegeleiding voor 15 medewerkers, RI&amp;E-toetsing, whitelabel-samenwerking&hellip;"></textarea>
+                </label>
+                <!-- Honeypot: onzichtbaar voor mensen, spam-bots vullen het wel in -->
+                <label class="hp-veld" aria-hidden="true">Website
+                    <input type="text" name="website" tabindex="-1" autocomplete="off">
+                </label>
+                <div class="aanmeld-acties">
+                    <button type="submit" class="btn btn-primary" id="aanmeld-verstuur">Verstuur aanmelding</button>
+                    <p class="aanmeld-status" id="aanmeld-status" role="status" aria-live="polite"></p>
+                </div>
+                <p class="aanmeld-privacy">Wij gebruiken uw gegevens alleen om contact met u op te nemen. Zie ons <a href="privacybeleid.html">privacybeleid</a>.</p>
+            </form>
+        </div>
+    </section>
+
     <!-- Contact Section: Direct Email -->
     <section id="contact">
         <div class="container">
@@ -420,6 +462,57 @@
                 if (e.key === 'Escape') closeDrop();
             });
         }
+    })();
+    </script>
+
+    <script>
+    // Aanmeldformulier: POST naar onze eigen server (mcp.dekunstvanwerken.nl),
+    // waar aanmeldingen lokaal worden opgeslagen en wekelijks opgehaald.
+    (function () {
+        const form = document.getElementById('aanmeld-form');
+        if (!form) return;
+        const status = document.getElementById('aanmeld-status');
+        const knop = document.getElementById('aanmeld-verstuur');
+        const ENDPOINT = 'https://mcp.dekunstvanwerken.nl/aanmelden';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(form).entries());
+            if (!data.naam || !data.naam.trim()) {
+                status.textContent = 'Vul uw naam in.';
+                status.className = 'aanmeld-status fout';
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email || '')) {
+                status.textContent = 'Vul een geldig e-mailadres in.';
+                status.className = 'aanmeld-status fout';
+                return;
+            }
+            knop.disabled = true;
+            status.textContent = 'Versturen…';
+            status.className = 'aanmeld-status';
+            try {
+                const resp = await fetch(ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+                const out = await resp.json().catch(() => ({}));
+                if (resp.ok && out.ok) {
+                    form.reset();
+                    status.textContent = 'Bedankt voor uw aanmelding! We nemen binnen enkele werkdagen contact met u op.';
+                    status.className = 'aanmeld-status gelukt';
+                } else {
+                    status.textContent = out.error || 'Er ging iets mis. Mail ons op info@dekunstvanwerken.nl.';
+                    status.className = 'aanmeld-status fout';
+                    knop.disabled = false;
+                }
+            } catch {
+                status.textContent = 'Versturen lukt niet. Mail ons op info@dekunstvanwerken.nl.';
+                status.className = 'aanmeld-status fout';
+                knop.disabled = false;
+            }
+        });
     })();
     </script>
 </body>
