@@ -458,6 +458,86 @@ nav .container {
     font-size: 0.95rem;
 }
 
+/* --- Aanmelden (signup form) --- */
+#aanmelden {
+    background: var(--bg-light);
+}
+
+.aanmeld-form {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--text-light);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
+}
+
+.aanmeld-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.aanmeld-row label {
+    flex: 1;
+    min-width: 240px;
+}
+
+.aanmeld-form label {
+    display: block;
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+.aanmeld-form .verplicht { color: var(--accent-color); }
+
+.aanmeld-form input,
+.aanmeld-form textarea {
+    display: block;
+    width: 100%;
+    margin-top: 0.35rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font: inherit;
+    font-weight: normal;
+    background: var(--bg-light);
+}
+.aanmeld-form input:focus,
+.aanmeld-form textarea:focus {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 1px;
+    background: var(--text-light);
+}
+.aanmeld-form textarea { resize: vertical; }
+
+/* Honeypot: visually gone, still in the DOM for bots */
+.hp-veld {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.aanmeld-acties {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+.aanmeld-status { margin: 0; font-size: 0.95rem; }
+.aanmeld-status.gelukt { color: #1f7a1f; font-weight: bold; }
+.aanmeld-status.fout { color: var(--color-error, #922b21); font-weight: bold; }
+
+.aanmeld-privacy {
+    margin-top: 1.25rem;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+.aanmeld-privacy a { color: var(--secondary-color); }
+
 /* --- Contact Section --- */
 #contact {
     background: var(--text-light);
