@@ -1,24 +1,17 @@
 # MCP server op mcp.dekunstvanwerken.nl
 
-De MCP-server (`mcp/server.mjs`) stelt de kennisbank, de
-opbouwschema-calculator, de FAQ en bedrijfsinfo beschikbaar aan
-AI-clients via het Model Context Protocol (Streamable HTTP transport).
-Zero dependencies: alleen Node.js ≥ 18 is nodig, geen `npm install`.
+De MCP-server (`mcp/server.mjs`) stelt de opbouwschema-calculator, de
+FAQ en bedrijfsinfo beschikbaar aan AI-clients via het Model Context
+Protocol (Streamable HTTP transport). Zero dependencies: alleen
+Node.js ≥ 18 is nodig, geen `npm install`.
 
 ## Tools die de server aanbiedt
 
 | Tool | Doet |
 |---|---|
-| `zoek_kennisbank` | full-text zoeken in de kennisbank |
-| `lees_artikel` | één artikel als Markdown |
-| `lijst_artikelen` | alle artikelen met metadata |
 | `bereken_opbouwschema` | het opbouwschema als tool (zelfde logica als de site, incl. rapporttekst + deel-link) |
 | `faq` | de FAQ-antwoorden |
 | `bedrijfsinfo` | diensten, contact, tools |
-
-De server leest `kennisbank/index.json` van schijf (elke 60 s ververst),
-dus nieuwe artikelen zijn na een deploy automatisch beschikbaar zonder
-herstart.
 
 ## Eenmalige serverinstallatie
 
@@ -65,8 +58,7 @@ Voeg een record toe bij je DNS-provider:
 
 ## Na elke deploy
 
-Niets nodig: de server herleest de kennisbank zelf. Alleen als
-`mcp/server.mjs` zelf wijzigt is een herstart nodig:
+Alleen als `mcp/server.mjs` zelf wijzigt is een herstart nodig:
 
     sudo systemctl restart dkvw-mcp
 
@@ -80,8 +72,7 @@ waarbij `deploy_user` de SSH_USER uit de repo-secrets is.)
 ## Beveiliging
 
 - De server bindt op 127.0.0.1; alleen nginx kan erbij.
-- Alle tools zijn read-only (kennisbank lezen, rekenen); er is geen
+- Alle tools zijn read-only (rekenen, statische info); er is geen
   state, geen database en geen schrijfpad.
-- `lees_artikel` valideert het id (`[a-z0-9-]+`) tegen path traversal.
 - Request-body is gemaximeerd op 1 MB.
 - Publiek en anoniem by design — er staat niets gevoeligs in.
