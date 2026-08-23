@@ -65,12 +65,12 @@ jobs:
             -d "{\"host\":\"dekunstvanwerken.nl\",\"key\":\"$KEY\",\"keyLocation\":\"https://dekunstvanwerken.nl/$KEY.txt\",\"urlList\":[$URLS]}" \
             -w '\nHTTP %{http_code}\n' || echo "WARN: IndexNow ping failed (non-blocking)"
 
-      - name: Restart MCP server (best effort)
+      - name: Server housekeeping + restart MCP (best effort)
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
             -o UserKnownHostsFile=~/.ssh/known_hosts \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
-            'sudo -n /usr/bin/systemctl restart dkvw-mcp 2>/dev/null || true'
+            'rm -rf "${{ secrets.SSH_PATH }}/kennisbank" 2>/dev/null; sudo -n /usr/bin/systemctl restart dkvw-mcp 2>/dev/null || true'
 
       - name: Wipe SSH key
         if: always()
