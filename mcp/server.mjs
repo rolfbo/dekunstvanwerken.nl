@@ -28,7 +28,7 @@ const HOST = process.env.MCP_HOST || '127.0.0.1';
 // Signup submissions are appended here as JSONL; picked up weekly over SSH.
 const STATE_DIR = process.env.MCP_STATE_DIR || '/var/lib/dkvw-mcp';
 
-const SERVER_INFO = { name: 'dekunstvanwerken', version: '1.2.0' };
+const SERVER_INFO = { name: 'dekunstvanwerken', version: '1.3.0' };
 const PROTOCOL_VERSIONS = ['2025-06-18', '2025-03-26', '2024-11-05'];
 
 const FAQ = [
@@ -379,6 +379,8 @@ function handleAanmelding(body, req, res) {
   const clean = (v, max) => String(v ?? '').trim().slice(0, max);
   const aanmelding = {
     ontvangen: new Date().toISOString(),
+    // Lead type: 'werkgever' | 'whitelabel' | 'anders' (free text tolerated)
+    type: clean(data.type, 50) || 'onbekend',
     bedrijf: clean(data.bedrijf, 200),
     naam: clean(data.naam, 200),
     email: clean(data.email, 200),

@@ -1,0 +1,429 @@
+<!--
+   Whitelabel landing page for de Kunst van Werken B.V.
+   Target audience: tussenpersonen, verzekeraars en (kleinere) arbodiensten
+   zonder eigen bedrijfsarts of gecertificeerde kerndeskundigen.
+   Location: /var/www/dekunstvanwerken.nl/whitelabel.html
+-->
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whitelabel arbodienstverlening onder uw eigen merk | De Kunst van Werken</title>
+    <meta name="description" content="Whitelabel bedrijfsarts en gecertificeerde kerndeskundigen onder uw eigen merknaam. Voor tussenpersonen, verzekeraars en arbodiensten: wij voeren uit, u houdt het klantcontact — volledig onzichtbaar voor uw eindklant.">
+    <meta name="author" content="de Kunst van Werken B.V.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://dekunstvanwerken.nl/whitelabel.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="de Kunst van Werken">
+    <meta property="og:locale" content="nl_NL">
+    <meta property="og:url" content="https://dekunstvanwerken.nl/whitelabel.html">
+    <meta property="og:title" content="Whitelabel arbodienstverlening onder uw eigen merk">
+    <meta property="og:description" content="Bedrijfsarts en gecertificeerde kerndeskundigen onder uw merknaam. Wij voeren uit, u houdt het klantcontact.">
+    <meta property="og:image" content="https://dekunstvanwerken.nl/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="de Kunst van Werken — whitelabel arbodienstverlening">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Whitelabel arbodienstverlening onder uw eigen merk">
+    <meta name="twitter:description" content="Bedrijfsarts en gecertificeerde kerndeskundigen onder uw merknaam. Wij voeren uit, u houdt het klantcontact.">
+    <meta name="twitter:image" content="https://dekunstvanwerken.nl/og-image.png">
+
+    <link rel="stylesheet" href="brand-variables.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#004a99">
+
+    <!-- Structured data: Service -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Whitelabel arbodienstverlening",
+      "serviceType": "Whitelabel arbodienstverlening",
+      "url": "https://dekunstvanwerken.nl/whitelabel.html",
+      "inLanguage": "nl",
+      "areaServed": { "@type": "Country", "name": "Nederland" },
+      "audience": {
+        "@type": "BusinessAudience",
+        "name": "Tussenpersonen, verzekeraars en arbodiensten zonder eigen bedrijfsarts of kerndeskundigen"
+      },
+      "provider": {
+        "@type": "Organization",
+        "name": "de Kunst van Werken B.V.",
+        "url": "https://dekunstvanwerken.nl/",
+        "identifier": { "@type": "PropertyValue", "propertyID": "KVK", "value": "94098344" }
+      }
+    }
+    </script>
+
+    <style>
+        /* Page hero, zelfde taal als de homepage-hero */
+        #wl-hero {
+            background:
+                radial-gradient(ellipse at 80% 15%, rgba(230, 126, 34, 0.18), transparent 45%),
+                radial-gradient(ellipse at 15% 85%, rgba(52, 152, 219, 0.35), transparent 55%),
+                linear-gradient(135deg, #003a7a 0%, #004a99 55%, #0057b8 100%);
+            color: var(--text-light);
+            text-align: center;
+            padding: 5.5rem 0 4rem;
+        }
+        #wl-hero h1 {
+            font-size: 2.6rem;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+        #wl-hero p {
+            max-width: 720px;
+            margin: 0 auto 2rem;
+            font-size: 1.15rem;
+        }
+        #wl-aanbod { background: var(--text-light); }
+        #wl-stappen { background: var(--bg-light); }
+        #wl-waarom { background: var(--text-light); }
+        #wl-faq { background: var(--bg-light); }
+        #wl-aanmelden { background: var(--text-light); }
+
+        .stappen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .stap-kaart {
+            background: var(--text-light);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.75rem;
+        }
+        .stap-nummer {
+            display: inline-flex;
+            width: 2.2rem;
+            height: 2.2rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 0.75rem;
+        }
+        .stap-kaart h3 { color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.15rem; }
+        .stap-kaart p { font-size: 0.95rem; }
+
+        .waarom-lijst {
+            max-width: 760px;
+            margin: 0 auto;
+            list-style: none;
+        }
+        .waarom-lijst li {
+            padding: 0.85rem 0 0.85rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        .waarom-lijst li:last-child { border-bottom: none; }
+        .waarom-lijst li::before {
+            content: '\2713';
+            position: absolute;
+            left: 0.25rem;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav>
+        <div class="container">
+            <a href="index.html#hero" class="logo" aria-label="de Kunst van Werken — home">
+                <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+                    <rect width="40" height="40" rx="8" fill="var(--color-primary)"/>
+                    <path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M10 33 Q20 35.5 30 33" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                </svg>
+                <span class="logo-text">de Kunst van Werken</span>
+            </a>
+            <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu openen">
+                <span class="nav-toggle-bar"></span>
+            </button>
+            <ul class="nav-links" id="primary-nav">
+                <li><a href="index.html#hero">Home</a></li>
+                <li><a href="index.html#services">Voor werkgevers</a></li>
+                <li><a href="whitelabel.html" aria-current="page">Whitelabel</a></li>
+                <li class="has-dropdown">
+                    <button class="nav-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="tools-menu">
+                        Tools <span class="caret" aria-hidden="true">&#9662;</span>
+                    </button>
+                    <ul class="nav-dropdown" id="tools-menu">
+                        <li><a href="opbouwschema.html">Opbouwschema</a></li>
+                        <li><a href="fml.html">FML concept</a></li>
+                        <li><a href="izp.html">IZP concept</a></li>
+                    </ul>
+                </li>
+                <li><a href="index.html#faq">FAQ</a></li>
+                <li><a href="#wl-aanmelden">Aanmelden</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="wl-hero">
+        <div class="container">
+            <h1>Whitelabel arbodienstverlening<br>onder &uacute;w eigen merk</h1>
+            <p>U houdt het klantcontact en uw merknaam. Wij leveren de bedrijfsarts, de gecertificeerde kerndeskundigen en de uitvoering &mdash; volledig onzichtbaar voor uw eindklant.</p>
+            <a href="#wl-aanmelden" class="btn btn-primary">Plan een kennismaking</a>
+        </div>
+    </section>
+
+    <!-- Voor wie + wat u krijgt -->
+    <section id="wl-aanbod">
+        <div class="container">
+            <div class="section-title">
+                <h2>Wat u onder uw merk kunt aanbieden</h2>
+                <p>Voor tussenpersonen, verzekeraars, HR-dienstverleners en arbodiensten zonder eigen bedrijfsarts of kerndeskundigen.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Verzuimbegeleiding</h3>
+                    <p>Volledige begeleiding conform de Wet verbetering poortwachter: probleemanalyse, plan van aanpak, vervolgconsulten en evaluaties &mdash; uitgevoerd op naam van uw organisatie.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Bedrijfsarts</h3>
+                    <p>Toegang tot een geregistreerde bedrijfsarts voor spreekuren, verzuimconsulten en preventief advies, met borging van het medisch beroepsgeheim.</p>
+                </div>
+                <div class="service-card">
+                    <h3>RI&amp;E-toetsing</h3>
+                    <p>Toetsing van risico-inventarisaties door gecertificeerde kerndeskundigen, zodat uw klanten aan hun wettelijke verplichting voldoen.</p>
+                </div>
+                <div class="service-card">
+                    <h3>PAGO / PMO</h3>
+                    <p>Preventief (arbeidsgezondheidskundig) onderzoek voor de werknemers van uw klanten, onder uw vlag georganiseerd.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Aanstellingskeuringen</h3>
+                    <p>Keuringen waar wettelijk toegestaan en zinvol, uitgevoerd volgens de geldende richtlijnen.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Flexibele capaciteit</h3>
+                    <p>Geen vaste ondergrens: schaal op bij groei of piek, en neem alleen af wat uw klantportefeuille nodig heeft.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hoe het werkt -->
+    <section id="wl-stappen">
+        <div class="container">
+            <div class="section-title">
+                <h2>Zo werkt het</h2>
+                <p>Van kennismaking tot uitvoering onder uw merk.</p>
+            </div>
+            <div class="stappen-grid">
+                <div class="stap-kaart">
+                    <span class="stap-nummer">1</span>
+                    <h3>Kennismaking &amp; aanbod</h3>
+                    <p>We bespreken uw klantportefeuille, welke diensten u wilt aanbieden en hoe de samenwerking eruitziet. U ontvangt een concreet voorstel.</p>
+                </div>
+                <div class="stap-kaart">
+                    <span class="stap-nummer">2</span>
+                    <h3>Overeenkomst &amp; onboarding</h3>
+                    <p>We leggen de afspraken vast (dienstverlening, verwerkersafspraken, escalatiepaden) en richten de werkstromen in op naam van uw organisatie.</p>
+                </div>
+                <div class="stap-kaart">
+                    <span class="stap-nummer">3</span>
+                    <h3>Uitvoering onder uw merk</h3>
+                    <p>Wij voeren uit; u houdt het klantcontact en de regie. Uw eindklant merkt niets van ons &mdash; alle communicatie loopt onder uw naam.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waarom dKvW -->
+    <section id="wl-waarom">
+        <div class="container">
+            <div class="section-title">
+                <h2>Waarom de Kunst van Werken</h2>
+            </div>
+            <ul class="waarom-lijst">
+                <li><strong>Volledig onzichtbaar voor uw eindklant.</strong> Uw merk, uw relatie, uw factuur &mdash; wij blijven op de achtergrond.</li>
+                <li><strong>Gecertificeerde kerndeskundigen en geregistreerde bedrijfsarts.</strong> U voldoet aantoonbaar aan de wettelijke eisen zonder zelf te hoeven werven.</li>
+                <li><strong>Geen verplicht platform.</strong> Uw klanten houden hun verzuimsoftware in eigen beheer &mdash; geen vendor lock-in, ook niet bij ons.</li>
+                <li><strong>Medisch beroepsgeheim geborgd.</strong> Gezondheidsgegevens blijven onder verantwoordelijkheid van de bedrijfsarts, conform AVG en Wkkgz.</li>
+                <li><strong>Flexibel opschalen.</strong> Van enkele dossiers tot een volledige portefeuille.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Partner-FAQ -->
+    <section id="wl-faq">
+        <div class="container">
+            <div class="section-title">
+                <h2>Veelgestelde partnervragen</h2>
+            </div>
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary>Wie heeft het contact met de eindklant?</summary>
+                    <div class="faq-answer">
+                        <p>U. De eindklant is en blijft &uacute;w klant: u onderhoudt de relatie en stuurt de facturen. Wij voeren de arbo-taken uit onder uw naam en stemmen alleen met u af. Waar direct contact tussen bedrijfsarts en werknemer nodig is (zoals bij consulten), gebeurt dat onder uw vlag.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Ziet mijn eindklant ooit de naam "de Kunst van Werken"?</summary>
+                    <div class="faq-answer">
+                        <p>Nee, dat is de kern van whitelabel: rapportages, communicatie en uitvoering lopen onder uw merknaam. In de samenwerkingsovereenkomst leggen we vast hoe we dit borgen.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Hoe zit het met medische gegevens en de AVG?</summary>
+                    <div class="faq-answer">
+                        <p>Gezondheidsgegevens worden uitsluitend verwerkt onder verantwoordelijkheid van de bedrijfsarts en vallen onder het medisch beroepsgeheim. Met u sluiten we passende (verwerkers)afspraken; uw eindklant ontvangt alleen de informatie die wettelijk gedeeld mag worden, zoals beperkingen en mogelijkheden in werk.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Wat kost een whitelabel-samenwerking?</summary>
+                    <div class="faq-answer">
+                        <p>Dat hangt af van de omvang van uw portefeuille en de diensten die u wilt aanbieden. Omdat er geen verplicht platform is, betaalt u alleen voor de dienstverlening zelf. Plan een kennismaking voor een concreet voorstel.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aanmelden -->
+    <section id="wl-aanmelden">
+        <div class="container">
+            <div class="section-title">
+                <h2>Plan een kennismaking</h2>
+                <p>Laat uw gegevens achter en we bespreken vrijblijvend wat whitelabel voor uw organisatie kan betekenen.</p>
+            </div>
+
+            <form id="aanmeld-form" class="aanmeld-form" novalidate>
+                <input type="hidden" name="type" value="whitelabel">
+                <div class="aanmeld-row">
+                    <label>Organisatie
+                        <input type="text" name="bedrijf" maxlength="200" autocomplete="organization">
+                    </label>
+                    <label>Naam <span class="verplicht">*</span>
+                        <input type="text" name="naam" maxlength="200" required autocomplete="name">
+                    </label>
+                </div>
+                <div class="aanmeld-row">
+                    <label>E-mailadres <span class="verplicht">*</span>
+                        <input type="email" name="email" maxlength="200" required autocomplete="email">
+                    </label>
+                    <label>Telefoonnummer
+                        <input type="tel" name="telefoon" maxlength="50" autocomplete="tel">
+                    </label>
+                </div>
+                <label>Vertel kort iets over uw organisatie en portefeuille
+                    <textarea name="bericht" rows="4" maxlength="2000" placeholder="Bijv. assurantietussenpersoon met 40 MKB-klanten, op zoek naar bedrijfsarts-capaciteit onder eigen label&hellip;"></textarea>
+                </label>
+                <!-- Honeypot -->
+                <label class="hp-veld" aria-hidden="true">Website
+                    <input type="text" name="website" tabindex="-1" autocomplete="off">
+                </label>
+                <div class="aanmeld-acties">
+                    <button type="submit" class="btn btn-primary" id="aanmeld-verstuur">Verstuur aanvraag</button>
+                    <p class="aanmeld-status" id="aanmeld-status" role="status" aria-live="polite"></p>
+                </div>
+                <p class="aanmeld-privacy">Wij gebruiken uw gegevens alleen om contact met u op te nemen. Zie ons <a href="privacybeleid.html">privacybeleid</a>.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 de Kunst van Werken B.V. Alle rechten voorbehouden.</p>
+            <div class="footer-links" style="margin-top: 1rem;">
+                <a href="klachten.html">Klachtenregeling</a>
+                <a href="privacybeleid.html">Privacybeleid</a>
+                <a href="voorwaarden.html">Algemene Voorwaarden</a>
+            </div>
+            <p style="font-size: 0.8rem; color: #bdc3c7; margin-top: 1rem;">
+                de Kunst van Werken B.V. | KVK: 94098344
+            </p>
+        </div>
+    </footer>
+
+    <script>
+    (function () {
+        const toggle = document.querySelector('.nav-toggle');
+        const menu = document.getElementById('primary-nav');
+        if (toggle && menu) {
+            toggle.addEventListener('click', () => {
+                const open = menu.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+            });
+            menu.addEventListener('click', (e) => { if (e.target.tagName === 'A') menu.classList.remove('open'); });
+        }
+        const dt = document.querySelector('.nav-dropdown-trigger');
+        if (dt) {
+            dt.addEventListener('click', (e) => { e.stopPropagation();
+                dt.setAttribute('aria-expanded', dt.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'); });
+            document.addEventListener('click', (e) => { if (!e.target.closest('.has-dropdown')) dt.setAttribute('aria-expanded', 'false'); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') dt.setAttribute('aria-expanded', 'false'); });
+        }
+    })();
+    </script>
+
+    <script>
+    // Aanmeldformulier: zelfde endpoint als de homepage; type=whitelabel.
+    (function () {
+        const form = document.getElementById('aanmeld-form');
+        if (!form) return;
+        const status = document.getElementById('aanmeld-status');
+        const knop = document.getElementById('aanmeld-verstuur');
+        const ENDPOINT = 'https://mcp.dekunstvanwerken.nl/aanmelden';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(form).entries());
+            if (!data.naam || !data.naam.trim()) {
+                status.textContent = 'Vul uw naam in.';
+                status.className = 'aanmeld-status fout';
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email || '')) {
+                status.textContent = 'Vul een geldig e-mailadres in.';
+                status.className = 'aanmeld-status fout';
+                return;
+            }
+            knop.disabled = true;
+            status.textContent = 'Versturen…';
+            status.className = 'aanmeld-status';
+            try {
+                const resp = await fetch(ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+                const out = await resp.json().catch(() => ({}));
+                if (resp.ok && out.ok) {
+                    form.reset();
+                    status.textContent = 'Bedankt voor uw aanvraag! We nemen snel contact met u op voor een kennismaking.';
+                    status.className = 'aanmeld-status gelukt';
+                } else {
+                    status.textContent = out.error || 'Er ging iets mis. Mail ons op info@dekunstvanwerken.nl.';
+                    status.className = 'aanmeld-status fout';
+                    knop.disabled = false;
+                }
+            } catch {
+                status.textContent = 'Versturen lukt niet. Mail ons op info@dekunstvanwerken.nl.';
+                status.className = 'aanmeld-status fout';
+                knop.disabled = false;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
