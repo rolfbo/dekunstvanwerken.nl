@@ -55,6 +55,16 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts" \
             ./ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}/"
 
+      - name: Ping IndexNow (Bing, Yandex, Seznam, Naver)
+        run: |
+          KEY=$(basename $(ls ./????????????????????????????????.txt | head -1) .txt)
+          URLS=$(grep -o '<loc>[^<]*</loc>' sitemap.xml | sed 's/<[^>]*>//g' | sed 's/.*/"&"/' | paste -sd, -)
+          echo "IndexNow: submitting $(echo "$URLS" | tr ',' '\n' | wc -l) urls with key $KEY"
+          curl -sS -X POST 'https://api.indexnow.org/indexnow' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            -d "{\"host\":\"dekunstvanwerken.nl\",\"key\":\"$KEY\",\"keyLocation\":\"https://dekunstvanwerken.nl/$KEY.txt\",\"urlList\":[$URLS]}" \
+            -w '\nHTTP %{http_code}\n' || echo "WARN: IndexNow ping failed (non-blocking)"
+
       - name: Restart MCP server (best effort)
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
