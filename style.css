@@ -275,11 +275,72 @@ nav .container {
         radial-gradient(ellipse at 80% 15%, rgba(230, 126, 34, 0.18), transparent 45%),
         radial-gradient(ellipse at 15% 85%, rgba(52, 152, 219, 0.35), transparent 55%),
         linear-gradient(135deg, #003a7a 0%, #004a99 55%, #0057b8 100%);
-    height: 70vh;
+    min-height: 70vh;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     text-align: center;
     color: var(--text-light);
+}
+
+#hero {
+    /* Cancel the global section padding so the trust strip sits flush
+       at the hero's bottom edge; the container's auto margins center
+       the content in the remaining space. */
+    padding: 0;
+}
+#hero .container {
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-top: 2.5rem;
+}
+
+/* Two audience paths inside the hero */
+.hero-paden {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.hero-pad {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 280px;
+    padding: 1rem 1.75rem;
+    text-align: center;
+}
+.hero-pad strong { font-size: 1.1rem; }
+.hero-pad span {
+    font-size: 0.85rem;
+    font-weight: normal;
+    opacity: 0.9;
+}
+.hero-pad-secundair {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    color: var(--text-light);
+}
+.hero-pad-secundair:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+/* Trust strip pinned at the bottom of the hero: the container's auto
+   margins absorb the free space, so the strip lands flush at the bottom. */
+.trust-strip {
+    width: 100%;
+    padding: 0.85rem 0;
+    background: rgba(0, 20, 45, 0.35);
+}
+.trust-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 2rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.92);
 }
 
 #hero h1 {
@@ -471,6 +532,49 @@ nav .container {
     border-radius: 12px;
     padding: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
+}
+
+/* Lead-type segmentation (Ik ben...) */
+.type-keuze {
+    border: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+}
+.type-keuze legend {
+    font-weight: bold;
+    color: var(--text-dark);
+    padding: 0;
+    margin-bottom: 0.5rem;
+}
+.type-opties {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.type-optie {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    font-weight: normal !important;
+    margin-bottom: 0 !important;
+    font-size: 0.95rem;
+    transition: border-color 0.12s, background 0.12s;
+}
+.type-optie:hover { border-color: var(--secondary-color); }
+.type-optie:has(input:checked) {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+.type-optie input {
+    width: auto !important;
+    margin: 0 !important;
+    accent-color: #fff;
+    display: inline !important;
 }
 
 .aanmeld-row {

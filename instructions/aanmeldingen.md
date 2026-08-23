@@ -34,6 +34,7 @@ betrokken; het bestand staat alleen op de eigen server.
 | Veld | Verplicht | Max |
 |---|---|---|
 | `ontvangen` | (server-timestamp, ISO) | — |
+| `type` | lead-type: `werkgever`, `whitelabel` of `anders` | 50 |
 | `bedrijf` | nee | 200 |
 | `naam` | ja | 200 |
 | `email` | ja (formaat gecheckt) | 200 |
