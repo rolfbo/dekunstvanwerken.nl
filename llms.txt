@@ -23,7 +23,7 @@
 - [Is een RI&E verplicht?](https://dekunstvanwerken.nl/kennisbank/rie-verplicht.html)
 - [PAGO of PMO: het verschil](https://dekunstvanwerken.nl/kennisbank/pago-vs-pmo.html)
 - [Opbouwschema bij re-integratie](https://dekunstvanwerken.nl/kennisbank/opbouwschema-re-integratie.html)
-- [Whitelabel arbodienst: wat is het?](https://dekunstvanwerken.nl/kennisbank/whitelabel-arbodienst-wat-is-het.html)
+- [Whitelabel arbodienstverlening: wat is het?](https://dekunstvanwerken.nl/kennisbank/whitelabel-arbodienst-wat-is-het.html)
 
 ## Tools
 - [Opbouwschema-calculator](https://dekunstvanwerken.nl/opbouwschema.html): gefaseerd opbouwschema bij re-integratie.
