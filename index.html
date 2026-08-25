@@ -14,19 +14,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>De Kunst van Werken | Arbodienst voor werkgevers &amp; whitelabel-partner</title>
-    <meta name="description" content="Arbodienst voor werkgevers: verzuimbegeleiding, bedrijfsarts, RI&E-toetsing en PAGO/PMO. Ook whitelabel: gecertificeerde bedrijfsarts en kerndeskundigen onder uw eigen merk, voor tussenpersonen en arbodiensten.">
+    <title>Arbodienst voor werkgevers &amp; whitelabel | De Kunst van Werken</title>
+    <meta name="description" content="Arbodienst voor werkgevers: verzuimbegeleiding, bedrijfsarts, RI&E-toetsing en PAGO/PMO in Amsterdam en heel Nederland. Ook whitelabel voor tussenpersonen.">
     <meta name="author" content="de Kunst van Werken B.V.">
     <meta name="robots" content="index,follow">
     <meta name="google-site-verification" content="rxyuG_jK9EjSRGVfu7hiPHG5WBe0Gc_wF5P1Pk7iXSk">
     <link rel="canonical" href="https://dekunstvanwerken.nl/">
+    <link rel="alternate" hreflang="nl-NL" href="https://dekunstvanwerken.nl/">
+    <link rel="alternate" hreflang="x-default" href="https://dekunstvanwerken.nl/">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="de Kunst van Werken">
     <meta property="og:locale" content="nl_NL">
     <meta property="og:url" content="https://dekunstvanwerken.nl/">
-    <meta property="og:title" content="De Kunst van Werken | Arbodienst voor werkgevers & whitelabel-partner">
+    <meta property="og:title" content="Arbodienst voor werkgevers & whitelabel | De Kunst van Werken">
     <meta property="og:description" content="Professionele arbodienstverlening voor werkgevers in Nederland: verzuim, RI&E, PAGO/PMO, bedrijfsarts en whitelabel-diensten.">
     <meta property="og:image" content="https://dekunstvanwerken.nl/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -35,39 +37,88 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="De Kunst van Werken | Arbodienst voor werkgevers & whitelabel-partner">
+    <meta name="twitter:title" content="Arbodienst voor werkgevers & whitelabel | De Kunst van Werken">
     <meta name="twitter:description" content="Professionele arbodienstverlening voor werkgevers in Nederland: verzuim, RI&E, PAGO/PMO, bedrijfsarts en whitelabel-diensten.">
     <meta name="twitter:image" content="https://dekunstvanwerken.nl/og-image.png">
 
     <!-- Brand design tokens, then custom stylesheet -->
     <link rel="stylesheet" href="brand-variables.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="content.css">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
     <meta name="theme-color" content="#004a99">
 
     <!-- Structured data: ProfessionalService / MedicalBusiness -->
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@type": ["ProfessionalService", "MedicalBusiness"],
+      "@type": [
+        "ProfessionalService",
+        "MedicalBusiness"
+      ],
+      "@id": "https://dekunstvanwerken.nl/#organization",
       "name": "de Kunst van Werken B.V.",
+      "alternateName": "De Kunst van Werken",
       "url": "https://dekunstvanwerken.nl/",
-      "logo": "https://dekunstvanwerken.nl/favicon.svg",
+      "logo": "https://dekunstvanwerken.nl/logo.png",
       "image": "https://dekunstvanwerken.nl/og-image.png",
-      "description": "Professionele Nederlandse arbodienstverlening: verzuimbegeleiding, RI&E-toetsing, PAGO/PMO, aanstellingskeuringen, bedrijfsarts en whitelabel-diensten.",
+      "description": "Arbodienst voor werkgevers en whitelabel-partner: verzuimbegeleiding, bedrijfsarts, RI&E-toetsing, PAGO/PMO, aanstellingskeuringen en preventieadvies. Amsterdam, heel Nederland.",
       "email": "info@dekunstvanwerken.nl",
       "telephone": "+31638903264",
-      "inLanguage": "nl",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Marius Bauerstraat 339",
+        "postalCode": "1062 AN",
+        "addressLocality": "Amsterdam",
+        "addressRegion": "Noord-Holland",
+        "addressCountry": "NL"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 52.354,
+        "longitude": 4.839
+      },
       "areaServed": {
         "@type": "Country",
         "name": "Nederland"
       },
+      "priceRange": "€€",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "opens": "09:00",
+          "closes": "17:00"
+        }
+      ],
+      "founder": {
+        "@type": "Person",
+        "name": "R. Bosscha",
+        "jobTitle": "Bedrijfsarts"
+      },
+      "memberOf": {
+        "@type": "Organization",
+        "name": "Stichting DOKh",
+        "url": "https://www.dokh.nl"
+      },
+      "inLanguage": "nl",
       "knowsAbout": [
         "Arbodienstverlening",
         "Verzuimbegeleiding",
         "Re-integratie",
+        "Wet verbetering poortwachter",
         "RI&E",
         "PAGO",
         "PMO",
@@ -79,8 +130,96 @@
         "@type": "PropertyValue",
         "propertyID": "KVK",
         "value": "94098344"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Arbodiensten",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Verzuimbegeleiding",
+              "url": "https://dekunstvanwerken.nl/diensten/verzuimbegeleiding.html"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Bedrijfsarts",
+              "url": "https://dekunstvanwerken.nl/diensten/bedrijfsarts.html"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "RI&E-toetsing",
+              "url": "https://dekunstvanwerken.nl/diensten/rie-toetsing.html"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "PAGO / PMO",
+              "url": "https://dekunstvanwerken.nl/diensten/pago-pmo.html"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Aanstellingskeuringen",
+              "url": "https://dekunstvanwerken.nl/diensten/aanstellingskeuring.html"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Preventieadvies",
+              "url": "https://dekunstvanwerken.nl/diensten/preventieadvies.html"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Whitelabel arbodienstverlening",
+              "url": "https://dekunstvanwerken.nl/whitelabel.html"
+            }
+          }
+        ]
       }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://dekunstvanwerken.nl/#website",
+      "url": "https://dekunstvanwerken.nl/",
+      "name": "de Kunst van Werken",
+      "inLanguage": "nl",
+      "publisher": {
+        "@id": "https://dekunstvanwerken.nl/#organization"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://dekunstvanwerken.nl/",
+      "url": "https://dekunstvanwerken.nl/",
+      "name": "Arbodienst voor werkgevers & whitelabel | De Kunst van Werken",
+      "isPartOf": {
+        "@id": "https://dekunstvanwerken.nl/#website"
+      },
+      "about": {
+        "@id": "https://dekunstvanwerken.nl/#organization"
+      },
+      "inLanguage": "nl",
+      "dateModified": "2026-08-25"
     }
+  ]
+}
     </script>
 
     <!-- Structured data: FAQ (matches the visible FAQ section) -->
@@ -159,7 +298,7 @@
             </button>
             <ul class="nav-links" id="primary-nav">
                 <li><a href="#hero">Home</a></li>
-                <li><a href="#services">Voor werkgevers</a></li>
+                <li><a href="diensten/">Voor werkgevers</a></li>
                 <li><a href="whitelabel.html">Whitelabel</a></li>
                 <li class="has-dropdown">
                     <button class="nav-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="tools-menu">
@@ -171,7 +310,7 @@
                         <li><a href="izp.html">IZP concept</a></li>
                     </ul>
                 </li>
-                <li><a href="#faq">FAQ</a></li>
+                <li><a href="kennisbank/">Kennisbank</a></li>
                 <li><a href="#aanmelden">Aanmelden</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -181,7 +320,8 @@
     <!-- Hero Section: The main introduction -->
     <section id="hero">
         <div class="container">
-            <h1>Gezond Werken is een Kunst</h1>
+            <p class="hero-kicker">Gezond Werken is een Kunst</p>
+            <h1>Arbodienst &amp; bedrijfsarts voor werkgevers in Amsterdam en heel Nederland</h1>
             <p>Deskundige arbodienstverlening &mdash; rechtstreeks voor werkgevers, of onder uw eigen merk als whitelabel-partner.</p>
             <div class="hero-paden">
                 <a href="#services" class="btn btn-primary hero-pad">
@@ -216,42 +356,58 @@
             <div class="services-grid">
                 <!-- Ziekteverzuim -->
                 <div class="service-card">
-                    <h3>Ziekteverzuimbegeleiding</h3>
+                    <h3><a href="diensten/verzuimbegeleiding.html">Ziekteverzuimbegeleiding</a></h3>
                     <p>Wanneer een werknemer uitvalt, telt elke stap. Wij begeleiden werkgever en werknemer door het hele traject van de Wet verbetering poortwachter: van de eerste ziekmelding en probleemanalyse tot het plan van aanpak en een verantwoorde terugkeer naar werk. Zo voorkomt u onnodig lang verzuim én loonsancties van het UWV.</p>
                     <p style="margin-top: 1rem;"><a href="opbouwschema.html">Probeer de opbouwschema-calculator &rarr;</a></p>
                 </div>
 
                 <!-- RI&E -->
                 <div class="service-card">
-                    <h3>RI&amp;E Toetsing</h3>
+                    <h3><a href="diensten/rie-toetsing.html">RI&amp;E Toetsing</a></h3>
                     <p>De Risico-Inventarisatie en -Evaluatie is voor vrijwel elke werkgever wettelijk verplicht en vormt de basis van uw arbobeleid. Wij toetsen uw RI&amp;E op volledigheid en betrouwbaarheid en beoordelen het bijbehorende plan van aanpak. U ontvangt concrete, prioriteerbare verbeterpunten waarmee u direct aan de slag kunt voor een veiligere werkplek.</p>
                 </div>
 
                 <!-- PAGO -->
                 <div class="service-card">
-                    <h3>PAGO / PMO</h3>
+                    <h3><a href="diensten/pago-pmo.html">PAGO / PMO</a></h3>
                     <p>Met een Periodiek Arbeidsgezondheidskundig Onderzoek (PAGO) of Preventief Medisch Onderzoek (PMO) brengen wij de gezondheid van uw medewerkers preventief in kaart. Zo signaleert u werkgebonden gezondheidsrisico's vroegtijdig en kunt u gericht bijsturen — voordat klachten leiden tot uitval.</p>
                 </div>
 
                 <!-- Aanstellingskeuring -->
                 <div class="service-card">
-                    <h3>Aanstellingskeuringen</h3>
+                    <h3><a href="diensten/aanstellingskeuring.html">Aanstellingskeuringen</a></h3>
                     <p>Een aanstellingskeuring mag alleen wanneer aan de functie bijzondere medische eisen zijn verbonden, bijvoorbeeld vanwege veiligheid voor de werknemer of anderen. Wij voeren deze keuringen uit binnen de strikte kaders van de Wet op de medische keuringen, zodat u zeker weet dat het zorgvuldig en rechtmatig gebeurt.</p>
                 </div>
 
                 <!-- Bedrijfsarts -->
                 <div class="service-card">
-                    <h3>Toegang Bedrijfsarts</h3>
+                    <h3><a href="diensten/bedrijfsarts.html">Toegang Bedrijfsarts</a></h3>
                     <p>Iedere werknemer heeft het recht de bedrijfsarts te bezoeken, ook zonder dat er sprake is van verzuim. Wij bieden directe en laagdrempelige toegang, bijvoorbeeld via een open spreekuur, zodat gezondheidsvragen op tijd worden besproken en klachten worden voorkomen of vroeg worden aangepakt.</p>
                     <p style="margin-top: 1rem;">Bereid het gesprek voor met de <a href="fml.html">FML concept-tool</a> of de <a href="izp.html">IZP concept-tool</a>.</p>
                 </div>
 
                 <!-- Preventie -->
                 <div class="service-card">
-                    <h3>Preventieadvies</h3>
+                    <h3><a href="diensten/preventieadvies.html">Preventieadvies</a></h3>
                     <p>Voorkomen is beter dan verzuim. Wij adviseren over gezonde en veilige arbeidsomstandigheden en ondersteunen uw preventiemedewerker bij het terugdringen van fysieke en mentale belasting. Het resultaat: minder uitval, meer werkplezier en een duurzaam inzetbaar team.</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Kennisbank teaser -->
+    <section id="kennisbank">
+        <div class="container">
+            <div class="section-title">
+                <h2>Kennisbank: arbo, verzuim en re-integratie</h2>
+                <p>Praktische uitleg van de bedrijfsarts voor werkgevers en HR.</p>
+            </div>
+            <div class="services-grid">
+                <a class="service-card card-link" href="kennisbank/wet-verbetering-poortwachter-stappenplan.html"><h3>Wet verbetering poortwachter: stappenplan</h3><p>Alle termijnen van ziekmelding tot WIA-aanvraag, en hoe u een loonsanctie voorkomt.</p></a>
+                <a class="service-card card-link" href="kennisbank/rie-verplicht.html"><h3>Is een RI&amp;E verplicht?</h3><p>Regels, toetsing en boetes voor werkgevers, helder uitgelegd.</p></a>
+                <a class="service-card card-link" href="kennisbank/wat-doet-een-bedrijfsarts.html"><h3>Wat doet een bedrijfsarts?</h3><p>Taken, beroepsgeheim en het verschil met een arboarts.</p></a>
+            </div>
+            <p style="text-align:center; margin-top: 1.5rem;"><a href="kennisbank/">Alle artikelen &rarr;</a> &nbsp;·&nbsp; <a href="diensten/">Alle diensten &rarr;</a></p>
         </div>
     </section>
 
@@ -412,6 +568,7 @@
                 <h2>Neem Contact Op</h2>
                 <p>Wilt u meer weten over onze diensten of een offerte aanvragen? Neem direct contact met ons op via e-mail of telefoon.</p>
                 <p class="contact-phone"><strong>Telefoon:</strong> <a href="tel:+31638903264">+31 (0) 6 38 90 32 64</a></p>
+                <p class="contact-address"><strong>Adres:</strong> Marius Bauerstraat 339, 1062 AN Amsterdam</p>
             </div>
             
             <div class="contact-container" style="text-align: center;">
@@ -441,12 +598,16 @@
         <div class="container">
             <p>&copy; 2026 de Kunst van Werken B.V. Alle rechten voorbehouden.</p>
             <div class="footer-links" style="margin-top: 1rem;">
+                <a href="diensten/">Diensten</a>
+                <a href="whitelabel.html">Whitelabel</a>
+                <a href="kennisbank/">Kennisbank</a>
+                <a href="opbouwschema.html">Opbouwschema</a>
                 <a href="klachten.html">Klachtenregeling</a>
                 <a href="privacybeleid.html">Privacybeleid</a>
                 <a href="voorwaarden.html">Algemene Voorwaarden</a>
             </div>
             <p style="font-size: 0.8rem; color: #bdc3c7; margin-top: 1rem;">
-                de Kunst van Werken B.V. | KVK: 94098344
+                de Kunst van Werken B.V. | Marius Bauerstraat 339, 1062 AN Amsterdam | KVK: 94098344
             </p>
         </div>
     </footer>

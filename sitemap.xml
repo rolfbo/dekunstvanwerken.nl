@@ -2,8 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://dekunstvanwerken.nl/</loc>
-    <lastmod>2026-08-23</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
@@ -13,10 +13,22 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dekunstvanwerken.nl/opbouwschema.html</loc>
-    <lastmod>2026-07-02</lastmod>
+    <loc>https://dekunstvanwerken.nl/diensten/</loc>
+    <lastmod>2026-08-25</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/kennisbank/</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/opbouwschema.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dekunstvanwerken.nl/fml.html</loc>
@@ -31,21 +43,93 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://dekunstvanwerken.nl/diensten/verzuimbegeleiding.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/diensten/rie-toetsing.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/diensten/pago-pmo.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/diensten/aanstellingskeuring.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/diensten/bedrijfsarts.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/diensten/preventieadvies.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/kennisbank/wet-verbetering-poortwachter-stappenplan.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/kennisbank/wat-doet-een-bedrijfsarts.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/kennisbank/rie-verplicht.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/kennisbank/pago-vs-pmo.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/kennisbank/opbouwschema-re-integratie.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dekunstvanwerken.nl/kennisbank/whitelabel-arbodienst-wat-is-het.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dekunstvanwerken.nl/klachten.html</loc>
     <lastmod>2026-07-02</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://dekunstvanwerken.nl/privacybeleid.html</loc>
     <lastmod>2026-07-02</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://dekunstvanwerken.nl/voorwaarden.html</loc>
     <lastmod>2026-07-02</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.3</priority>
   </url>
 </urlset>

@@ -70,7 +70,7 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
             -o UserKnownHostsFile=~/.ssh/known_hosts \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
-            'rm -rf "${{ secrets.SSH_PATH }}/kennisbank" 2>/dev/null; sudo -n /usr/bin/systemctl restart dkvw-mcp 2>/dev/null || true'
+            'sudo -n /usr/bin/systemctl restart dkvw-mcp 2>/dev/null || true'
 
       - name: Wipe SSH key
         if: always()

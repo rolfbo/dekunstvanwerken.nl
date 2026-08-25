@@ -765,3 +765,15 @@ footer {
         font-size: 2rem;
     }
 }
+
+/* SEO/content additions */
+.hero-kicker { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 700; color: var(--color-accent); margin-bottom: 0.75rem; }
+.service-card h3 a { color: inherit; text-decoration: none; }
+.service-card h3 a:hover { color: var(--color-secondary); }
+.contact-address { margin-top: 0.5rem; }
+/* Tablet/small-laptop: keep 7 nav items on one line */
+@media (max-width: 1240px) and (min-width: 769px) {
+    .nav-links li { margin-left: 1.1rem; }
+    .nav-links a, .nav-dropdown-trigger { font-size: 0.95rem; }
+    #hero h1 { font-size: 2.4rem; }
+}

@@ -2,9 +2,28 @@
 
 > Professionele Nederlandse arbodienstverlening: verzuimbegeleiding, RI&E-toetsing,
 > PAGO/PMO, aanstellingskeuringen, bedrijfsarts en whitelabel-diensten.
+> Gevestigd in Amsterdam (Marius Bauerstraat 339, 1062 AN), werkzaam in heel Nederland. KVK 94098344.
 
 ## Whitelabel
 - [Whitelabel arbodienstverlening](https://dekunstvanwerken.nl/whitelabel.html): bedrijfsarts en gecertificeerde kerndeskundigen onder uw eigen merk, voor tussenpersonen, verzekeraars en arbodiensten.
+
+## Diensten
+- [Alle diensten](https://dekunstvanwerken.nl/diensten/)
+- [Verzuimbegeleiding](https://dekunstvanwerken.nl/diensten/verzuimbegeleiding.html): begeleiding conform Wet verbetering poortwachter, direct door de bedrijfsarts.
+- [Bedrijfsarts](https://dekunstvanwerken.nl/diensten/bedrijfsarts.html): spreekuur, open spreekuur, second opinion, basiscontract.
+- [RI&E-toetsing](https://dekunstvanwerken.nl/diensten/rie-toetsing.html): toetsing door gecertificeerde kerndeskundige.
+- [PAGO / PMO](https://dekunstvanwerken.nl/diensten/pago-pmo.html): periodiek en preventief medisch onderzoek.
+- [Aanstellingskeuringen](https://dekunstvanwerken.nl/diensten/aanstellingskeuring.html): keuringen conform Wet op de medische keuringen.
+- [Preventieadvies](https://dekunstvanwerken.nl/diensten/preventieadvies.html): werkplekonderzoek, PSA, duurzame inzetbaarheid.
+
+## Kennisbank
+- [Kennisbank](https://dekunstvanwerken.nl/kennisbank/): praktische artikelen van de bedrijfsarts.
+- [Wet verbetering poortwachter: stappenplan](https://dekunstvanwerken.nl/kennisbank/wet-verbetering-poortwachter-stappenplan.html)
+- [Wat doet een bedrijfsarts?](https://dekunstvanwerken.nl/kennisbank/wat-doet-een-bedrijfsarts.html)
+- [Is een RI&E verplicht?](https://dekunstvanwerken.nl/kennisbank/rie-verplicht.html)
+- [PAGO of PMO: het verschil](https://dekunstvanwerken.nl/kennisbank/pago-vs-pmo.html)
+- [Opbouwschema bij re-integratie](https://dekunstvanwerken.nl/kennisbank/opbouwschema-re-integratie.html)
+- [Whitelabel arbodienst: wat is het?](https://dekunstvanwerken.nl/kennisbank/whitelabel-arbodienst-wat-is-het.html)
 
 ## Tools
 - [Opbouwschema-calculator](https://dekunstvanwerken.nl/opbouwschema.html): gefaseerd opbouwschema bij re-integratie.
