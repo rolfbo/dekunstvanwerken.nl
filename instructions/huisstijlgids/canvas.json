@@ -1,0 +1,64 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "01 Merk",
+      "x": 0,
+      "y": 0,
+      "w": 1200,
+      "h": 900
+    },
+    {
+      "file": "Kleur.dc.html",
+      "title": "02 Kleur",
+      "x": 1300,
+      "y": 0,
+      "w": 1200,
+      "h": 1150
+    },
+    {
+      "file": "Typografie.dc.html",
+      "title": "03 Typografie",
+      "x": 2600,
+      "y": 0,
+      "w": 1200,
+      "h": 1000
+    },
+    {
+      "file": "Componenten.dc.html",
+      "title": "04 Componenten",
+      "x": 0,
+      "y": 1300,
+      "w": 1200,
+      "h": 1350
+    },
+    {
+      "file": "Stem.dc.html",
+      "title": "05 Stem & toon",
+      "x": 1300,
+      "y": 1300,
+      "w": 1200,
+      "h": 1450
+    },
+    {
+      "file": "Schrijfregels.dc.html",
+      "title": "06 Schrijfregels",
+      "x": 2600,
+      "y": 1300,
+      "w": 1200,
+      "h": 1250
+    }
+  ],
+  "annotations": [
+    {
+      "id": "bron",
+      "x": 0,
+      "y": -140,
+      "w": 520,
+      "text": "Bron: brand-variables.css, instructions/style_guide.md v1.1 en de live pagina's (aug 2026). Waarden zijn letterlijk overgenomen; niets op de site is gewijzigd."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

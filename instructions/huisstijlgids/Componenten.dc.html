@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50; background: #f8fafc; -webkit-font-smoothing: antialiased; }
+    a { color: #3498db; } a:hover { color: #004a99; }
+    p { margin: 0; }
+  </style>
+</helmet>
+<div style="width: 1200px; min-height: 1350px; padding: 56px 64px; box-sizing: border-box; background: #f8fafc;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #004a99; padding-bottom: 16px; margin-bottom: 40px;"><div><p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #e67e22; margin-bottom: 6px;">Huisstijlgids · 04</p><h1 style="font-size: 40px; font-weight: 700; line-height: 1.2; color: #004a99; margin: 0;">Componenten</h1></div><div style="display: flex; align-items: center; gap: 12px;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="#004a99"></rect><path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 33 Q20 35.5 30 33" stroke="#e67e22" stroke-width="2.2" stroke-linecap="round"></path></svg><span style="font-size: 22px; font-weight: 700; color: #004a99;">[de Kunst van Werken]</span></div></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px;">
+  <div style="background: #ffffff; border: 1px solid #d1d8e0; border-radius: 10px; padding: 22px;">
+    <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3498db; margin-bottom: 12px;">Knoppen</p>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+      <span style="display: inline-block; background: #004a99; color: #ffffff; padding: 12.8px 24px; border-radius: 5px; font-weight: 700; font-size: 16px;">Primair</span>
+      <span style="display: inline-block; background: #3498db; color: #ffffff; padding: 12.8px 24px; border-radius: 5px; font-weight: 700; font-size: 16px;">Primair · hover</span>
+      <span style="display: inline-block; background: transparent; color: #004a99; padding: 10.8px 22px; border: 2px solid #004a99; border-radius: 5px; font-weight: 700; font-size: 16px;">Secundair</span>
+      <span style="display: inline-block; background: #004a99; color: #ffffff; padding: 12.8px 24px; border-radius: 5px; font-weight: 700; font-size: 16px; outline: 2px solid #e67e22; outline-offset: 2px;">Focus</span>
+    </div>
+    <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">Radius 5px, padding 0.8rem × 1.5rem, vet. Hover = secundair blauw. Focus = oranje ring. Eén primaire knop per sectie; oranje is nooit een knopvulling.</p>
+  </div>
+  <div style="background: #ffffff; border: 1px solid #d1d8e0; border-radius: 10px; padding: 22px;">
+    <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3498db; margin-bottom: 12px;">Hero-keuze (twee doelgroepen)</p>
+    <div style="background: linear-gradient(135deg, #0b2e5c 0%, #004a99 100%); border-radius: 8px; padding: 24px; display: flex; gap: 12px;">
+      <div style="flex: 1; background: #004a99; border: 1px solid rgba(255,255,255,0.15); border-radius: 5px; padding: 14px 18px; color: #ffffff; display: flex; flex-direction: column; gap: 4px;"><strong style="font-size: 16px;">Ik ben werkgever</strong><span style="font-size: 13px; opacity: 0.9;">Verzuimbegeleiding, bedrijfsarts &amp; preventie</span></div>
+      <div style="flex: 1; background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.85); border-radius: 5px; padding: 14px 18px; color: #ffffff; display: flex; flex-direction: column; gap: 4px;"><strong style="font-size: 16px;">Ik zoek whitelabel</strong><span style="font-size: 13px; opacity: 0.9;">Bedrijfsarts &amp; kerndeskundigen onder úw merk</span></div>
+    </div>
+    <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">De bezoeker kiest een pad, niet een dienst. Kop erboven is altijd de pay-off. Achtergrond is een pure CSS-gradient van twee blauwtinten — geen foto.</p>
+  </div>
+  <div style="background: #ffffff; border: 1px solid #d1d8e0; border-radius: 10px; padding: 22px;">
+    <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3498db; margin-bottom: 12px;">Dienstkaart</p>
+    <div style="background: #ffffff; border: 1px solid #d1d8e0; border-radius: 10px; padding: 32px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); max-width: 420px;">
+      <p style="font-size: 28px; font-weight: 600; line-height: 1.3; color: #004a99; margin-bottom: 16px;">Ziekteverzuimbegeleiding</p>
+      <p style="font-size: 16px; line-height: 1.6;">Wanneer een werknemer uitvalt, telt elke stap. Wij begeleiden werkgever en werknemer door het hele traject van de Wet verbetering poortwachter.</p>
+      <p style="font-size: 16px; margin-top: 16px;"><a href="#" style="color: #3498db; text-decoration: none; font-weight: 600;">Meer over verzuimbegeleiding →</a></p>
+    </div>
+    <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">Radius 10px, rand 1px lichtgrijs, padding 2rem. Hover: 5px omhoog + zachte schaduw. Kop is H3 (28px/600, primair blauw) als link, nooit onderstreept.</p>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 32px;">
+    <div style="background: #ffffff; border: 1px solid #d1d8e0; border-radius: 10px; padding: 22px;">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3498db; margin-bottom: 12px;">Vertrouwensstrook</p>
+      <div style="background: #0b2e5c; border-radius: 6px; padding: 13.6px 16px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 32px; font-size: 13.6px; color: rgba(255,255,255,0.92);"><span>KVK 94098344</span><span>Aangesloten bij Stichting DOKh</span><span>Gecertificeerde kerndeskundigen</span><span>AVG &amp; medisch beroepsgeheim</span></div>
+      <p style="font-size: 14px; line-height: 1.6; margin-top: 12px;">Alleen controleerbare feiten. Geen sterren, geen "1000+ klanten", geen logo-wall zonder toestemming.</p>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #d1d8e0; border-radius: 10px; padding: 22px;">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3498db; margin-bottom: 12px;">FAQ-item</p>
+      <div style="border: 1px solid #d1d8e0; border-radius: 8px; background: #ffffff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 600; color: #004a99; font-size: 16px;">Is een RI&amp;E verplicht voor mijn bedrijf?</span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#004a99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+      <p style="font-size: 14px; line-height: 1.6; margin-top: 12px;">Native details/summary, radius 8px. Vraag in de woorden van de klant, antwoord begint met ja/nee.</p>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #d1d8e0; border-radius: 10px; padding: 22px;">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3498db; margin-bottom: 12px;">Iconen</p>
+      <div style="display: flex; gap: 20px; align-items: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#004a99" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"></path><path d="M9 12l2 2 4-4"></path></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#004a99" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M8 3v4M16 3v4M3 10h18"></path></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#004a99" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#004a99" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"></path></svg>
+        <p style="font-size: 14px; line-height: 1.6; margin-left: 8px;">Lijniconen, 1.5–2px, 24px-grid, primair blauw of tekst-donker. Geen emoji.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="margin-top: 32px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; align-items: end;">
+  <div><div style="height: 4px; background: #004a99; border-radius: 2px;"></div><p style="font-size: 12px; margin-top: 6px; font-family: ui-monospace, Menlo, monospace;">xs 4</p></div>
+  <div><div style="height: 8px; background: #004a99; border-radius: 2px;"></div><p style="font-size: 12px; margin-top: 6px; font-family: ui-monospace, Menlo, monospace;">sm 8</p></div>
+  <div><div style="height: 16px; background: #004a99; border-radius: 2px;"></div><p style="font-size: 12px; margin-top: 6px; font-family: ui-monospace, Menlo, monospace;">md 16</p></div>
+  <div><div style="height: 24px; background: #004a99; border-radius: 2px;"></div><p style="font-size: 12px; margin-top: 6px; font-family: ui-monospace, Menlo, monospace;">lg 24</p></div>
+  <div><div style="height: 32px; background: #004a99; border-radius: 2px;"></div><p style="font-size: 12px; margin-top: 6px; font-family: ui-monospace, Menlo, monospace;">xl 32</p></div>
+  <div><div style="height: 48px; background: #004a99; border-radius: 2px;"></div><p style="font-size: 12px; margin-top: 6px; font-family: ui-monospace, Menlo, monospace;">xxl 48</p></div>
+  <div><div style="height: 80px; background: #004a99; border-radius: 2px;"></div><p style="font-size: 12px; margin-top: 6px; font-family: ui-monospace, Menlo, monospace;">sectie 80</p></div>
+</div>
+<p style="font-size: 14px; line-height: 1.6; margin-top: 12px;">Ruimteschaal in px. Container max 1200px met 2rem zijmarge; secties 5rem verticaal.</p>
+</div>
+</x-dc>
+</body>
+</html>
