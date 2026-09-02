@@ -1,0 +1,687 @@
+{
+  "site": "dekunstvanwerken.nl",
+  "days": 90,
+  "classifier": 2,
+  "generated": "2026-09-02 11:20 UTC",
+  "requests": 184645,
+  "own_hits": 266,
+  "mix": {
+    "bot": 36720,
+    "engine": 48,
+    "scraper": 8456,
+    "oneshot": 24764,
+    "human": 114657
+  },
+  "views": 2771,
+  "ips": 737,
+  "browsers": 526,
+  "oneshot_ip_days": 4567,
+  "leads": {
+    "total": 0,
+    "by_type": {
+      "werkgever": 0,
+      "whitelabel": 0,
+      "anders": 0
+    },
+    "by_day": []
+  },
+  "by_day": [
+    {
+      "date": "2026-06-11",
+      "views": 6,
+      "ips": 2
+    },
+    {
+      "date": "2026-06-12",
+      "views": 32,
+      "ips": 9
+    },
+    {
+      "date": "2026-06-13",
+      "views": 63,
+      "ips": 17
+    },
+    {
+      "date": "2026-06-14",
+      "views": 67,
+      "ips": 19
+    },
+    {
+      "date": "2026-06-15",
+      "views": 23,
+      "ips": 6
+    },
+    {
+      "date": "2026-06-16",
+      "views": 37,
+      "ips": 15
+    },
+    {
+      "date": "2026-06-17",
+      "views": 27,
+      "ips": 12
+    },
+    {
+      "date": "2026-06-18",
+      "views": 12,
+      "ips": 8
+    },
+    {
+      "date": "2026-06-19",
+      "views": 36,
+      "ips": 10
+    },
+    {
+      "date": "2026-06-20",
+      "views": 62,
+      "ips": 15
+    },
+    {
+      "date": "2026-06-21",
+      "views": 33,
+      "ips": 14
+    },
+    {
+      "date": "2026-06-22",
+      "views": 14,
+      "ips": 4
+    },
+    {
+      "date": "2026-06-23",
+      "views": 112,
+      "ips": 19
+    },
+    {
+      "date": "2026-06-24",
+      "views": 42,
+      "ips": 15
+    },
+    {
+      "date": "2026-06-25",
+      "views": 26,
+      "ips": 15
+    },
+    {
+      "date": "2026-06-26",
+      "views": 19,
+      "ips": 9
+    },
+    {
+      "date": "2026-06-27",
+      "views": 46,
+      "ips": 10
+    },
+    {
+      "date": "2026-06-28",
+      "views": 20,
+      "ips": 9
+    },
+    {
+      "date": "2026-06-29",
+      "views": 35,
+      "ips": 16
+    },
+    {
+      "date": "2026-06-30",
+      "views": 54,
+      "ips": 12
+    },
+    {
+      "date": "2026-07-01",
+      "views": 47,
+      "ips": 19
+    },
+    {
+      "date": "2026-07-02",
+      "views": 27,
+      "ips": 13
+    },
+    {
+      "date": "2026-07-03",
+      "views": 33,
+      "ips": 12
+    },
+    {
+      "date": "2026-07-04",
+      "views": 20,
+      "ips": 9
+    },
+    {
+      "date": "2026-07-05",
+      "views": 37,
+      "ips": 20
+    },
+    {
+      "date": "2026-07-06",
+      "views": 44,
+      "ips": 14
+    },
+    {
+      "date": "2026-07-07",
+      "views": 53,
+      "ips": 12
+    },
+    {
+      "date": "2026-07-08",
+      "views": 32,
+      "ips": 9
+    },
+    {
+      "date": "2026-07-09",
+      "views": 14,
+      "ips": 12
+    },
+    {
+      "date": "2026-07-10",
+      "views": 48,
+      "ips": 16
+    },
+    {
+      "date": "2026-07-11",
+      "views": 39,
+      "ips": 17
+    },
+    {
+      "date": "2026-07-12",
+      "views": 38,
+      "ips": 13
+    },
+    {
+      "date": "2026-07-13",
+      "views": 39,
+      "ips": 15
+    },
+    {
+      "date": "2026-07-14",
+      "views": 23,
+      "ips": 10
+    },
+    {
+      "date": "2026-07-15",
+      "views": 25,
+      "ips": 13
+    },
+    {
+      "date": "2026-07-16",
+      "views": 57,
+      "ips": 14
+    },
+    {
+      "date": "2026-07-17",
+      "views": 25,
+      "ips": 15
+    },
+    {
+      "date": "2026-07-18",
+      "views": 33,
+      "ips": 13
+    },
+    {
+      "date": "2026-07-19",
+      "views": 58,
+      "ips": 18
+    },
+    {
+      "date": "2026-07-20",
+      "views": 19,
+      "ips": 11
+    },
+    {
+      "date": "2026-07-21",
+      "views": 40,
+      "ips": 12
+    },
+    {
+      "date": "2026-07-22",
+      "views": 44,
+      "ips": 14
+    },
+    {
+      "date": "2026-07-23",
+      "views": 30,
+      "ips": 14
+    },
+    {
+      "date": "2026-07-24",
+      "views": 11,
+      "ips": 6
+    },
+    {
+      "date": "2026-07-25",
+      "views": 20,
+      "ips": 8
+    },
+    {
+      "date": "2026-07-26",
+      "views": 92,
+      "ips": 21
+    },
+    {
+      "date": "2026-07-27",
+      "views": 45,
+      "ips": 20
+    },
+    {
+      "date": "2026-07-28",
+      "views": 26,
+      "ips": 12
+    },
+    {
+      "date": "2026-07-29",
+      "views": 44,
+      "ips": 18
+    },
+    {
+      "date": "2026-07-30",
+      "views": 54,
+      "ips": 17
+    },
+    {
+      "date": "2026-07-31",
+      "views": 40,
+      "ips": 15
+    },
+    {
+      "date": "2026-08-01",
+      "views": 38,
+      "ips": 17
+    },
+    {
+      "date": "2026-08-02",
+      "views": 32,
+      "ips": 12
+    },
+    {
+      "date": "2026-08-03",
+      "views": 44,
+      "ips": 15
+    },
+    {
+      "date": "2026-08-04",
+      "views": 17,
+      "ips": 7
+    },
+    {
+      "date": "2026-08-05",
+      "views": 36,
+      "ips": 10
+    },
+    {
+      "date": "2026-08-06",
+      "views": 16,
+      "ips": 9
+    },
+    {
+      "date": "2026-08-07",
+      "views": 23,
+      "ips": 11
+    },
+    {
+      "date": "2026-08-08",
+      "views": 25,
+      "ips": 11
+    },
+    {
+      "date": "2026-08-09",
+      "views": 24,
+      "ips": 12
+    },
+    {
+      "date": "2026-08-10",
+      "views": 100,
+      "ips": 14
+    },
+    {
+      "date": "2026-08-11",
+      "views": 69,
+      "ips": 20
+    },
+    {
+      "date": "2026-08-12",
+      "views": 83,
+      "ips": 22
+    },
+    {
+      "date": "2026-08-13",
+      "views": 45,
+      "ips": 13
+    },
+    {
+      "date": "2026-08-14",
+      "views": 12,
+      "ips": 4
+    },
+    {
+      "date": "2026-08-15",
+      "views": 10,
+      "ips": 4
+    },
+    {
+      "date": "2026-08-16",
+      "views": 20,
+      "ips": 6
+    },
+    {
+      "date": "2026-08-17",
+      "views": 1,
+      "ips": 1
+    },
+    {
+      "date": "2026-08-18",
+      "views": 4,
+      "ips": 2
+    },
+    {
+      "date": "2026-08-19",
+      "views": 10,
+      "ips": 6
+    },
+    {
+      "date": "2026-08-20",
+      "views": 54,
+      "ips": 7
+    },
+    {
+      "date": "2026-08-21",
+      "views": 4,
+      "ips": 1
+    },
+    {
+      "date": "2026-08-22",
+      "views": 16,
+      "ips": 4
+    },
+    {
+      "date": "2026-08-23",
+      "views": 26,
+      "ips": 5
+    },
+    {
+      "date": "2026-08-24",
+      "views": 1,
+      "ips": 1
+    },
+    {
+      "date": "2026-08-25",
+      "views": 6,
+      "ips": 3
+    },
+    {
+      "date": "2026-08-26",
+      "views": 11,
+      "ips": 7
+    },
+    {
+      "date": "2026-08-27",
+      "views": 2,
+      "ips": 2
+    },
+    {
+      "date": "2026-08-28",
+      "views": 10,
+      "ips": 5
+    },
+    {
+      "date": "2026-08-29",
+      "views": 16,
+      "ips": 6
+    },
+    {
+      "date": "2026-08-30",
+      "views": 8,
+      "ips": 3
+    },
+    {
+      "date": "2026-08-31",
+      "views": 48,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-01",
+      "views": 1,
+      "ips": 1
+    },
+    {
+      "date": "2026-09-02",
+      "views": 36,
+      "ips": 4
+    }
+  ],
+  "pages": [
+    {
+      "path": "/",
+      "n": 1876
+    },
+    {
+      "path": "/index.html",
+      "n": 139
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 129
+    },
+    {
+      "path": "/privacybeleid.html",
+      "n": 117
+    },
+    {
+      "path": "/fml.html",
+      "n": 107
+    },
+    {
+      "path": "/klachten.html",
+      "n": 92
+    },
+    {
+      "path": "/izp.html",
+      "n": 92
+    },
+    {
+      "path": "/kennisbank/",
+      "n": 87
+    },
+    {
+      "path": "/voorwaarden.html",
+      "n": 81
+    },
+    {
+      "path": "/kennisbank/arousal-performance-curve.html",
+      "n": 19
+    },
+    {
+      "path": "/whitelabel.html",
+      "n": 5
+    },
+    {
+      "path": "/diensten/pago-pmo.html",
+      "n": 4
+    },
+    {
+      "path": "/diensten/verzuimbegeleiding.html",
+      "n": 3
+    },
+    {
+      "path": "/diensten/rie-toetsing.html",
+      "n": 3
+    },
+    {
+      "path": "/diensten/aanstellingskeuring.html",
+      "n": 3
+    }
+  ],
+  "conversion": [
+    {
+      "path": "/whitelabel.html",
+      "n": 5
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 129
+    },
+    {
+      "path": "/fml.html",
+      "n": 107
+    },
+    {
+      "path": "/izp.html",
+      "n": 92
+    }
+  ],
+  "referrers": [
+    {
+      "ref": "https://www.google.com/",
+      "n": 24
+    },
+    {
+      "ref": "https://37.97.226.65/",
+      "n": 18
+    },
+    {
+      "ref": "https://37-97-226-65.colo.transip.net/",
+      "n": 14
+    },
+    {
+      "ref": "https://softsecrets.fr",
+      "n": 10
+    },
+    {
+      "ref": "https://37-97-226-65.colo.transip.net",
+      "n": 10
+    },
+    {
+      "ref": "https://www.bing.com/",
+      "n": 9
+    },
+    {
+      "ref": "https://duckduckgo.com/",
+      "n": 8
+    },
+    {
+      "ref": "https://news.ycombinator.com/",
+      "n": 5
+    },
+    {
+      "ref": "https://bing.com/",
+      "n": 4
+    },
+    {
+      "ref": "https://google.com/",
+      "n": 3
+    }
+  ],
+  "crawlers": [
+    {
+      "ua": "curl/8.7.1",
+      "n": 20093
+    },
+    {
+      "ua": "Mozilla/5.0 (compatible; GoogleOther; +http://www.google.com",
+      "n": 3981
+    },
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatib",
+      "n": 2398
+    },
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
+      "n": 1735
+    },
+    {
+      "ua": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/r",
+      "n": 1657
+    },
+    {
+      "ua": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.c",
+      "n": 942
+    }
+  ],
+  "scrapers": [
+    {
+      "ip": "185.242.3.39",
+      "pages": 7507
+    },
+    {
+      "ip": "45.148.10.119",
+      "pages": 395
+    },
+    {
+      "ip": "93.123.109.166",
+      "pages": 145
+    }
+  ],
+  "notfound": [
+    {
+      "path": "/login.html",
+      "n": 20
+    },
+    {
+      "path": "/arousal-performance-curve.html",
+      "n": 13
+    },
+    {
+      "path": "/admin.html",
+      "n": 10
+    },
+    {
+      "path": "/readme.html",
+      "n": 8
+    },
+    {
+      "path": "/mentions-legales.html",
+      "n": 7
+    },
+    {
+      "path": "/swagger-ui.html",
+      "n": 7
+    },
+    {
+      "path": "/kennisbank/index.js",
+      "n": 7
+    },
+    {
+      "path": "/kennisbank/arousal-performance-curve.html",
+      "n": 7
+    },
+    {
+      "path": "/auth.html",
+      "n": 6
+    },
+    {
+      "path": "/auth1.html",
+      "n": 3
+    }
+  ],
+  "errors": [
+    {
+      "status": "400",
+      "path": "/",
+      "n": 1316
+    },
+    {
+      "status": "405",
+      "path": "/",
+      "n": 739
+    },
+    {
+      "status": "400",
+      "path": "/index.html",
+      "n": 4
+    },
+    {
+      "status": "400",
+      "path": "/login.html",
+      "n": 2
+    },
+    {
+      "status": "413",
+      "path": "/",
+      "n": 2
+    },
+    {
+      "status": "405",
+      "path": "/index.html",
+      "n": 1
+    }
+  ],
+  "server_errors": {}
+}

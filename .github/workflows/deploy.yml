@@ -50,6 +50,8 @@ jobs:
             --exclude='.github' \
             --exclude='.gitignore' \
             --exclude='instructions' \
+            --exclude='scripts' \
+            --exclude='data' \
             --exclude='node_modules' \
             --exclude='*.md' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts" \
