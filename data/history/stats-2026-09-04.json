@@ -1,0 +1,364 @@
+{
+  "site": "dekunstvanwerken.nl",
+  "days": 30,
+  "classifier": 2,
+  "generated": "2026-09-04 05:51 UTC",
+  "requests": 72062,
+  "own_hits": 108,
+  "mix": {
+    "bot": 17484,
+    "engine": 46,
+    "scraper": 0,
+    "oneshot": 10363,
+    "human": 44169
+  },
+  "views": 741,
+  "ips": 192,
+  "browsers": 129,
+  "oneshot_ip_days": 1211,
+  "leads": {
+    "total": 0,
+    "by_type": {
+      "werkgever": 0,
+      "whitelabel": 0,
+      "anders": 0
+    },
+    "by_day": []
+  },
+  "by_day": [
+    {
+      "date": "2026-08-05",
+      "views": 25,
+      "ips": 9
+    },
+    {
+      "date": "2026-08-06",
+      "views": 16,
+      "ips": 9
+    },
+    {
+      "date": "2026-08-07",
+      "views": 23,
+      "ips": 11
+    },
+    {
+      "date": "2026-08-08",
+      "views": 25,
+      "ips": 11
+    },
+    {
+      "date": "2026-08-09",
+      "views": 24,
+      "ips": 12
+    },
+    {
+      "date": "2026-08-10",
+      "views": 100,
+      "ips": 14
+    },
+    {
+      "date": "2026-08-11",
+      "views": 69,
+      "ips": 20
+    },
+    {
+      "date": "2026-08-12",
+      "views": 83,
+      "ips": 22
+    },
+    {
+      "date": "2026-08-13",
+      "views": 45,
+      "ips": 13
+    },
+    {
+      "date": "2026-08-14",
+      "views": 12,
+      "ips": 4
+    },
+    {
+      "date": "2026-08-15",
+      "views": 10,
+      "ips": 4
+    },
+    {
+      "date": "2026-08-16",
+      "views": 20,
+      "ips": 6
+    },
+    {
+      "date": "2026-08-17",
+      "views": 1,
+      "ips": 1
+    },
+    {
+      "date": "2026-08-18",
+      "views": 4,
+      "ips": 2
+    },
+    {
+      "date": "2026-08-19",
+      "views": 10,
+      "ips": 6
+    },
+    {
+      "date": "2026-08-20",
+      "views": 54,
+      "ips": 7
+    },
+    {
+      "date": "2026-08-21",
+      "views": 4,
+      "ips": 1
+    },
+    {
+      "date": "2026-08-22",
+      "views": 16,
+      "ips": 4
+    },
+    {
+      "date": "2026-08-23",
+      "views": 26,
+      "ips": 5
+    },
+    {
+      "date": "2026-08-24",
+      "views": 1,
+      "ips": 1
+    },
+    {
+      "date": "2026-08-25",
+      "views": 6,
+      "ips": 3
+    },
+    {
+      "date": "2026-08-26",
+      "views": 11,
+      "ips": 7
+    },
+    {
+      "date": "2026-08-27",
+      "views": 2,
+      "ips": 2
+    },
+    {
+      "date": "2026-08-28",
+      "views": 10,
+      "ips": 5
+    },
+    {
+      "date": "2026-08-29",
+      "views": 16,
+      "ips": 6
+    },
+    {
+      "date": "2026-08-30",
+      "views": 8,
+      "ips": 3
+    },
+    {
+      "date": "2026-08-31",
+      "views": 48,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-01",
+      "views": 1,
+      "ips": 1
+    },
+    {
+      "date": "2026-09-02",
+      "views": 43,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-03",
+      "views": 28,
+      "ips": 8
+    }
+  ],
+  "pages": [
+    {
+      "path": "/",
+      "n": 478
+    },
+    {
+      "path": "/index.html",
+      "n": 37
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 34
+    },
+    {
+      "path": "/kennisbank/",
+      "n": 33
+    },
+    {
+      "path": "/privacybeleid.html",
+      "n": 26
+    },
+    {
+      "path": "/fml.html",
+      "n": 26
+    },
+    {
+      "path": "/voorwaarden.html",
+      "n": 22
+    },
+    {
+      "path": "/klachten.html",
+      "n": 22
+    },
+    {
+      "path": "/izp.html",
+      "n": 21
+    },
+    {
+      "path": "/kennisbank/arousal-performance-curve.html",
+      "n": 8
+    },
+    {
+      "path": "/whitelabel.html",
+      "n": 7
+    },
+    {
+      "path": "/diensten/",
+      "n": 4
+    },
+    {
+      "path": "/diensten/pago-pmo.html",
+      "n": 4
+    },
+    {
+      "path": "/diensten/verzuimbegeleiding.html",
+      "n": 3
+    },
+    {
+      "path": "/diensten/rie-toetsing.html",
+      "n": 3
+    }
+  ],
+  "conversion": [
+    {
+      "path": "/whitelabel.html",
+      "n": 7
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 34
+    },
+    {
+      "path": "/fml.html",
+      "n": 26
+    },
+    {
+      "path": "/izp.html",
+      "n": 21
+    }
+  ],
+  "referrers": [
+    {
+      "ref": "https://www.google.com/",
+      "n": 13
+    },
+    {
+      "ref": "https://37-97-226-65.colo.transip.net/",
+      "n": 7
+    },
+    {
+      "ref": "https://duckduckgo.com/",
+      "n": 4
+    },
+    {
+      "ref": "https://www.bing.com/",
+      "n": 3
+    },
+    {
+      "ref": "http://www.google.com.hk",
+      "n": 1
+    }
+  ],
+  "crawlers": [
+    {
+      "ua": "curl/8.7.1",
+      "n": 11961
+    },
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatib",
+      "n": 2175
+    },
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
+      "n": 812
+    },
+    {
+      "ua": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/r",
+      "n": 673
+    },
+    {
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
+      "n": 221
+    },
+    {
+      "ua": "Mozilla/5.0 (compatible; Amazonbot/0.1; +https://developer.a",
+      "n": 192
+    }
+  ],
+  "scrapers": [],
+  "notfound": [
+    {
+      "path": "/kennisbank/arousal-performance-curve.html",
+      "n": 9
+    },
+    {
+      "path": "/arousal-performance-curve.html",
+      "n": 6
+    },
+    {
+      "path": "/kennisbank/index.js",
+      "n": 4
+    },
+    {
+      "path": "/readme.html",
+      "n": 3
+    },
+    {
+      "path": "/kennisbank/arousal-performance-curve.md",
+      "n": 3
+    },
+    {
+      "path": "/login.html",
+      "n": 2
+    },
+    {
+      "path": "/swagger-ui.html",
+      "n": 2
+    },
+    {
+      "path": "/auth.html",
+      "n": 2
+    },
+    {
+      "path": "/admin.html",
+      "n": 2
+    },
+    {
+      "path": "/kennisbank/",
+      "n": 2
+    }
+  ],
+  "errors": [
+    {
+      "status": "405",
+      "path": "/",
+      "n": 225
+    },
+    {
+      "status": "400",
+      "path": "/",
+      "n": 173
+    }
+  ],
+  "server_errors": {}
+}
