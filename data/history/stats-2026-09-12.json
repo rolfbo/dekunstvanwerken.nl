@@ -1,0 +1,365 @@
+{
+  "site": "dekunstvanwerken.nl",
+  "days": 30,
+  "classifier": 2,
+  "generated": "2026-09-12 06:09 UTC",
+  "requests": 65753,
+  "own_hits": 96,
+  "mix": {
+    "bot": 16496,
+    "engine": 46,
+    "scraper": 0,
+    "oneshot": 12458,
+    "human": 36753
+  },
+  "views": 541,
+  "ips": 134,
+  "browsers": 82,
+  "oneshot_ip_days": 1015,
+  "leads": {
+    "total": 0,
+    "by_type": {
+      "werkgever": 0,
+      "whitelabel": 0,
+      "anders": 0
+    },
+    "by_day": []
+  },
+  "by_day": [
+    {
+      "date": "2026-08-13",
+      "views": 35,
+      "ips": 8
+    },
+    {
+      "date": "2026-08-14",
+      "views": 12,
+      "ips": 4
+    },
+    {
+      "date": "2026-08-15",
+      "views": 10,
+      "ips": 4
+    },
+    {
+      "date": "2026-08-16",
+      "views": 20,
+      "ips": 6
+    },
+    {
+      "date": "2026-08-17",
+      "views": 1,
+      "ips": 1
+    },
+    {
+      "date": "2026-08-18",
+      "views": 4,
+      "ips": 2
+    },
+    {
+      "date": "2026-08-19",
+      "views": 10,
+      "ips": 6
+    },
+    {
+      "date": "2026-08-20",
+      "views": 54,
+      "ips": 7
+    },
+    {
+      "date": "2026-08-21",
+      "views": 4,
+      "ips": 1
+    },
+    {
+      "date": "2026-08-22",
+      "views": 16,
+      "ips": 4
+    },
+    {
+      "date": "2026-08-23",
+      "views": 26,
+      "ips": 5
+    },
+    {
+      "date": "2026-08-24",
+      "views": 1,
+      "ips": 1
+    },
+    {
+      "date": "2026-08-25",
+      "views": 6,
+      "ips": 3
+    },
+    {
+      "date": "2026-08-26",
+      "views": 11,
+      "ips": 7
+    },
+    {
+      "date": "2026-08-27",
+      "views": 2,
+      "ips": 2
+    },
+    {
+      "date": "2026-08-28",
+      "views": 10,
+      "ips": 5
+    },
+    {
+      "date": "2026-08-29",
+      "views": 16,
+      "ips": 6
+    },
+    {
+      "date": "2026-08-30",
+      "views": 8,
+      "ips": 3
+    },
+    {
+      "date": "2026-08-31",
+      "views": 48,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-01",
+      "views": 1,
+      "ips": 1
+    },
+    {
+      "date": "2026-09-02",
+      "views": 43,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-03",
+      "views": 28,
+      "ips": 8
+    },
+    {
+      "date": "2026-09-04",
+      "views": 7,
+      "ips": 5
+    },
+    {
+      "date": "2026-09-05",
+      "views": 3,
+      "ips": 2
+    },
+    {
+      "date": "2026-09-06",
+      "views": 14,
+      "ips": 5
+    },
+    {
+      "date": "2026-09-07",
+      "views": 43,
+      "ips": 10
+    },
+    {
+      "date": "2026-09-08",
+      "views": 8,
+      "ips": 5
+    },
+    {
+      "date": "2026-09-09",
+      "views": 17,
+      "ips": 7
+    },
+    {
+      "date": "2026-09-10",
+      "views": 12,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-11",
+      "views": 14,
+      "ips": 7
+    },
+    {
+      "date": "2026-09-12",
+      "views": 57,
+      "ips": 2
+    }
+  ],
+  "pages": [
+    {
+      "path": "/",
+      "n": 379
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 19
+    },
+    {
+      "path": "/index.html",
+      "n": 17
+    },
+    {
+      "path": "/privacybeleid.html",
+      "n": 14
+    },
+    {
+      "path": "/voorwaarden.html",
+      "n": 14
+    },
+    {
+      "path": "/kennisbank/",
+      "n": 11
+    },
+    {
+      "path": "/fml.html",
+      "n": 11
+    },
+    {
+      "path": "/diensten/",
+      "n": 10
+    },
+    {
+      "path": "/izp.html",
+      "n": 10
+    },
+    {
+      "path": "/whitelabel.html",
+      "n": 10
+    },
+    {
+      "path": "/klachten.html",
+      "n": 9
+    },
+    {
+      "path": "/diensten/verzuimbegeleiding.html",
+      "n": 5
+    },
+    {
+      "path": "/diensten/aanstellingskeuring.html",
+      "n": 4
+    },
+    {
+      "path": "/kennisbank/arousal-performance-curve.html",
+      "n": 4
+    },
+    {
+      "path": "/diensten/rie-toetsing.html",
+      "n": 4
+    }
+  ],
+  "conversion": [
+    {
+      "path": "/whitelabel.html",
+      "n": 10
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 19
+    },
+    {
+      "path": "/fml.html",
+      "n": 11
+    },
+    {
+      "path": "/izp.html",
+      "n": 10
+    }
+  ],
+  "referrers": [
+    {
+      "ref": "https://www.google.com/",
+      "n": 18
+    },
+    {
+      "ref": "https://www.bing.com/",
+      "n": 4
+    },
+    {
+      "ref": "https://duckduckgo.com/",
+      "n": 3
+    },
+    {
+      "ref": "http://www.google.com.hk",
+      "n": 1
+    }
+  ],
+  "crawlers": [
+    {
+      "ua": "curl/8.7.1",
+      "n": 11961
+    },
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatib",
+      "n": 871
+    },
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
+      "n": 726
+    },
+    {
+      "ua": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/r",
+      "n": 690
+    },
+    {
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
+      "n": 323
+    },
+    {
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      "n": 164
+    }
+  ],
+  "scrapers": [],
+  "notfound": [
+    {
+      "path": "/kennisbank/arousal-performance-curve.html",
+      "n": 14
+    },
+    {
+      "path": "/readme.html",
+      "n": 3
+    },
+    {
+      "path": "/kennisbank/arousal-performance-curve.md",
+      "n": 3
+    },
+    {
+      "path": "/contact.html",
+      "n": 3
+    },
+    {
+      "path": "/admin.html",
+      "n": 2
+    },
+    {
+      "path": "/kennisbank/",
+      "n": 2
+    },
+    {
+      "path": "/ie.html",
+      "n": 1
+    },
+    {
+      "path": "/it.html",
+      "n": 1
+    },
+    {
+      "path": "/kennisbank/index.js",
+      "n": 1
+    },
+    {
+      "path": "/swagger-ui.html",
+      "n": 1
+    }
+  ],
+  "errors": [
+    {
+      "status": "405",
+      "path": "/",
+      "n": 404
+    },
+    {
+      "status": "400",
+      "path": "/",
+      "n": 26
+    }
+  ],
+  "server_errors": {}
+}
