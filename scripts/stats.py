@@ -14,14 +14,26 @@ default log), so leads are read from the service's own JSONL store instead: stat
 appends its lines to the stream, and this script only keeps the timestamp and lead type.
 Our own IP is left out of every figure — during build days it dominates a site this small.
 
+Classifier 3 (12 sep 2026): booksofpodcast's hosting-ASN rule, ported via verzuimdatabase.
+Every address inside a listed cloud network is bucketed "datacenter" whatever its volume.
+See the Hosting class. Page-view figures before and after this change are not comparable:
+the JSON records "classifier": 3 and "hosting_asn_rule": true so a snapshot says which it is.
+
+The OWN_IPS exclusion is untouched and still runs first: our own address is dropped before
+classify() ever sees it, so it can never be re-labelled "datacenter".
+
 argv is parsed as data and never becomes code; stats.sh passes the day count through.
 """
 import argparse
+import bisect
+import csv
 import datetime
+import ipaddress
 import json
 import re
 import sys
 from collections import Counter
+from pathlib import Path
 
 # combined log format:
 # ip - - [10/Oct/2026:13:55:36 +0000] "GET /path HTTP/1.1" 200 1234 "ref" "ua"
@@ -43,6 +55,103 @@ SEARCH_REFERRER = re.compile(
     r"|ecosia\.org|startpage\.com|qwant\.com|search\.brave\.com)/",
     re.I,
 )
+
+ROOT = Path(__file__).resolve().parent.parent
+ASN_FILES = {4: "asn-ipv4-num.csv", 6: "asn-ipv6-num.csv"}
+
+
+def default_asn_dir(root=ROOT):
+    """Where the ASN range CSVs live: this repo's data/geo/, else booksofpodcast's.
+
+    The two CSVs are ~32 MB, CC0, gitignored, and already fetched by booksofpodcast's
+    scripts/geo-db.sh. Rather than keep a second copy, fall back to a booksofpodcast/data/geo/
+    found by walking up from this repo (works from a .worktrees/ checkout too). A local
+    data/geo/ wins when present. Neither found = the rule is off, never an error.
+    """
+    local = root / "data" / "geo"
+    if (local / ASN_FILES[4]).is_file():
+        return local
+    for parent in root.parents:
+        shared = parent / "booksofpodcast" / "data" / "geo"
+        if (shared / ASN_FILES[4]).is_file():
+            return shared
+    return local
+
+
+class Hosting:
+    """IP → is this address inside a hosting/cloud network we never expect a reader from?
+
+    Ported from booksofpodcast (10 sep 2026) via verzuimdatabase on 12 sep 2026. What it
+    costs to leave out: investordatabase's 11 sep report showed 1067 human page views, 12x
+    its previous peak. It was 2,112 requests from 413 Alibaba Cloud addresses (47.79.x.x,
+    AS45102), 2-9 pages each, every one with referer https://www.google.com/, zero CSS/JS.
+    Under the per-IP scraper threshold, and the search referer exempts it from the one-shot
+    rule — so classifier 2 counted all of it as human. Volume cannot see this; the network
+    it comes from can.
+
+    Ranges come from @ip-location-db/asn (CC0, "start,end,asn,name"); which ASNs count as
+    hosting is data/hosting-asns.json, a committed copy of booksofpodcast's curated list.
+    Absent files mean the rule is silently off, never an error — but the JSON report records
+    whether it was on, because it changes every human number in the file.
+    """
+
+    FILES = ASN_FILES
+
+    def __init__(self, directory, listing):
+        self.tables = {}
+        self.asns = {}
+        try:
+            listed = json.loads(Path(listing).read_text())
+        except (OSError, ValueError):
+            return                          # no list, no rule
+        for key, name in getattr(listed, "items", lambda: ())():
+            try:
+                self.asns[int(key)] = name  # non-numeric keys are comments, not errors
+            except (TypeError, ValueError):
+                continue
+        if not self.asns:
+            return
+        for version, name in self.FILES.items():
+            path = Path(directory) / name
+            starts, ends, nums = [], [], []
+            try:
+                with open(path) as fh:
+                    for row in csv.reader(fh):
+                        if len(row) < 3:
+                            continue        # header or damaged row
+                        try:
+                            starts.append(int(row[0]))
+                            ends.append(int(row[1]))
+                            nums.append(int(row[2]))
+                        except ValueError:
+                            continue
+            except OSError:
+                continue
+            if starts:
+                self.tables[version] = (starts, ends, nums)
+
+    def __bool__(self):
+        return bool(self.tables and self.asns)
+
+    def asn(self, ip):
+        """Autonomous system number for an address, or None when unknown."""
+        try:
+            addr = ipaddress.ip_address(ip)
+        except ValueError:
+            return None
+        table = self.tables.get(addr.version)
+        if not table:
+            return None
+        starts, ends, nums = table
+        n = int(addr)
+        i = bisect.bisect_right(starts, n) - 1
+        if i >= 0 and n <= ends[i]:
+            return nums[i]
+        return None
+
+    def is_hosting(self, ip):
+        return self.asn(ip) in self.asns
+
 
 SITE = "dekunstvanwerken.nl"
 # Our own connection; kept out of every figure (a curl smoke test after each deploy,
@@ -90,10 +199,13 @@ def parse(stream, cutoff, leads):
         yield ip, when, bare, status, ref, ua, bool(ASSET.search(bare))
 
 
-def classify(rows):
-    """Split traffic into declared bots, search engines, scrapers and humans.
+def classify(rows, hosting=None):
+    """Split traffic into declared bots, search engines, scrapers, datacenters and humans.
 
     Returns (bucket_of_ip, scrapers, oneshot, pages_by_ip, assets_by_ip).
+
+    `hosting` is an optional Hosting table; when present, every address inside a listed
+    cloud network is bucketed "datacenter" whatever its volume.
     """
     pages_by_ip, assets_by_ip = Counter(), Counter()
     day_pages, day_assets, day_search = Counter(), Counter(), set()
@@ -132,6 +244,10 @@ def classify(rows):
             bucket[ip] = "engine"
         elif ip in scrapers:
             bucket[ip] = "scraper"
+        elif hosting and hosting.is_hosting(ip):
+            # Kept apart from "scraper", which means "caught by volume". This one was never
+            # plausible traffic in the first place.
+            bucket[ip] = "datacenter"
         else:
             bucket[ip] = "human"
     return bucket, scrapers, oneshot, pages_by_ip, assets_by_ip
@@ -142,6 +258,11 @@ def main():
     ap.add_argument("--days", type=int, default=7)
     ap.add_argument("--site", default=SITE)
     ap.add_argument("--json", action="store_true", help="emit the same figures as JSON (archive-stats.sh)")
+    ap.add_argument("--asn-dir", default=None,
+                    help="directory with asn-ipv4-num.csv / asn-ipv6-num.csv (default: data/geo/, "
+                         "else booksofpodcast's data/geo/); missing = hosting rule off")
+    ap.add_argument("--hosting-asns", default=str(ROOT / "data" / "hosting-asns.json"),
+                    help="JSON list of hosting ASNs; missing = hosting rule off")
     args = ap.parse_args()
 
     cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=args.days)
@@ -152,7 +273,8 @@ def main():
             own_hits += 1
             continue
         rows.append(row)
-    bucket, scrapers, oneshot, pages_by_ip, assets_by_ip = classify(rows)
+    hosting = Hosting(args.asn_dir or default_asn_dir(), args.hosting_asns)
+    bucket, scrapers, oneshot, pages_by_ip, assets_by_ip = classify(rows, hosting)
 
     mix = Counter()
     days, uniq_by_day, pages, refs, bots = Counter(), {}, Counter(), Counter(), Counter()
@@ -195,11 +317,15 @@ def main():
                 "site": args.site,
                 "days": args.days,
                 # Same numbering as healthcaredatabase: 2 = the one-shot no-asset rule.
-                "classifier": 2,
+                # 3 = classifier 2 plus the hosting-ASN rule (12 sep 2026, as booksofpodcast).
+                # Snapshots written as classifier 2 count cloud traffic as human and overstate
+                # every human figure; they are not comparable with these.
+                "classifier": 3 if hosting else 2,
+                "hosting_asn_rule": bool(hosting),
                 "generated": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
                 "requests": sum(mix.values()),
                 "own_hits": own_hits,
-                "mix": {k: mix[k] for k in ("bot", "engine", "scraper", "oneshot", "human")},
+                "mix": {k: mix[k] for k in ("bot", "engine", "scraper", "datacenter", "oneshot", "human")},
                 "views": sum(days.values()),
                 "ips": len(human_ips),
                 "browsers": len(browsers),
@@ -231,7 +357,9 @@ def main():
     out(f"  {sum(mix.values()):>6}  requests in window (own IP excluded: {own_hits})")
     out(f"  {mix['bot']:>6}  declared bots (User-Agent)")
     out(f"  {mix['engine']:>6}  search engines not declaring in UA")
-    out(f"  {mix['scraper']:>6}  datacenter scrapers ({len(scrapers)} IPs, browser UA, near-zero assets)")
+    out(f"  {mix['scraper']:>6}  volumetric scrapers ({len(scrapers)} IPs, browser UA, near-zero assets)")
+    out(f"  {mix['datacenter']:>6}  hosting networks (cloud ASNs; not readers at any volume)"
+        + ("" if hosting else " — table missing, rule OFF"))
     out(f"  {mix['oneshot']:>6}  one-shot no-asset hits ({len(oneshot)} IP-days, <=2 pages, no assets, not from search)")
     out("")
     out(f"  {sum(days.values()):>6}  page views (human, assets excluded)")

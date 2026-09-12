@@ -1,0 +1,29 @@
+{
+  "_copy_of": "booksofpodcast/data/hosting-asns.json as of 11 sep 2026 (copied for the classifier-3 port). That file is the curated original: change it there first, then copy here.",
+  "_comment": "Autonomous systems that host servers, not readers. scripts/stats.py buckets every request from these as 'datacenter', whatever its volume — see the Hosting class there and the 10 sep 2026 diary entry. Keys that are not numbers (like this one) are ignored. Eyeball networks (Comcast, KPN, Verizon, BT) must never appear here: a real reader behind one is exactly the traffic we are trying to count.",
+
+  "45102": "Alibaba (US) Technology — the pool found 10 sep 2026: 2363 IPs, 4789 pages, 5 assets",
+  "37963": "Alibaba Cloud (CN)",
+  "45103": "Alibaba (US) Technology, second block",
+  "132203": "Tencent Building, Kejizhongyi Avenue — seen walking /go/ 10 sep 2026",
+  "45090": "Tencent Cloud (CN)",
+  "396982": "Google Cloud Platform (distinct from AS15169 Google and AS16591 Google Fiber)",
+  "136907": "Huawei Cloud (SG)",
+  "31898": "Oracle Cloud",
+  "19318": "InterServer",
+  "54113": "Fastly",
+
+  "_also": "Not yet seen in our logs; listed because they are unambiguously hosting and cost nothing to pre-empt.",
+  "16509": "Amazon AWS",
+  "14618": "Amazon AWS, second block",
+  "8075": "Microsoft Azure",
+  "14061": "DigitalOcean",
+  "24940": "Hetzner",
+  "16276": "OVH",
+  "63949": "Akamai Connected Cloud (Linode)",
+  "20473": "Vultr (Constant/Choopa)",
+  "12876": "Scaleway",
+  "51167": "Contabo",
+  "9009": "M247",
+  "49981": "WorldStream"
+}
