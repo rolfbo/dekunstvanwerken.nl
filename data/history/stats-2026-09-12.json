@@ -1,20 +1,22 @@
 {
   "site": "dekunstvanwerken.nl",
   "days": 30,
-  "classifier": 2,
-  "generated": "2026-09-12 11:01 UTC",
-  "requests": 65387,
-  "own_hits": 111,
+  "classifier": 3,
+  "hosting_asn_rule": true,
+  "generated": "2026-09-12 17:05 UTC",
+  "requests": 64872,
+  "own_hits": 124,
   "mix": {
-    "bot": 16497,
+    "bot": 16507,
     "engine": 46,
     "scraper": 0,
-    "oneshot": 12237,
-    "human": 36607
+    "datacenter": 17876,
+    "oneshot": 667,
+    "human": 29776
   },
-  "views": 535,
-  "ips": 131,
-  "browsers": 79,
+  "views": 338,
+  "ips": 79,
+  "browsers": 49,
   "oneshot_ip_days": 1009,
   "leads": {
     "total": 0,
@@ -28,28 +30,18 @@
   "by_day": [
     {
       "date": "2026-08-13",
-      "views": 29,
-      "ips": 5
+      "views": 21,
+      "ips": 1
     },
     {
       "date": "2026-08-14",
-      "views": 12,
-      "ips": 4
-    },
-    {
-      "date": "2026-08-15",
-      "views": 10,
-      "ips": 4
+      "views": 2,
+      "ips": 1
     },
     {
       "date": "2026-08-16",
-      "views": 20,
-      "ips": 6
-    },
-    {
-      "date": "2026-08-17",
-      "views": 1,
-      "ips": 1
+      "views": 14,
+      "ips": 4
     },
     {
       "date": "2026-08-18",
@@ -58,28 +50,23 @@
     },
     {
       "date": "2026-08-19",
-      "views": 10,
-      "ips": 6
+      "views": 4,
+      "ips": 3
     },
     {
       "date": "2026-08-20",
-      "views": 54,
-      "ips": 7
-    },
-    {
-      "date": "2026-08-21",
-      "views": 4,
-      "ips": 1
+      "views": 49,
+      "ips": 5
     },
     {
       "date": "2026-08-22",
-      "views": 16,
-      "ips": 4
+      "views": 1,
+      "ips": 1
     },
     {
       "date": "2026-08-23",
-      "views": 26,
-      "ips": 5
+      "views": 23,
+      "ips": 4
     },
     {
       "date": "2026-08-24",
@@ -88,13 +75,13 @@
     },
     {
       "date": "2026-08-25",
-      "views": 6,
-      "ips": 3
+      "views": 3,
+      "ips": 1
     },
     {
       "date": "2026-08-26",
-      "views": 11,
-      "ips": 7
+      "views": 7,
+      "ips": 5
     },
     {
       "date": "2026-08-27",
@@ -103,38 +90,33 @@
     },
     {
       "date": "2026-08-28",
-      "views": 10,
-      "ips": 5
-    },
-    {
-      "date": "2026-08-29",
-      "views": 16,
-      "ips": 6
-    },
-    {
-      "date": "2026-08-30",
-      "views": 8,
+      "views": 3,
       "ips": 3
     },
     {
-      "date": "2026-08-31",
-      "views": 48,
-      "ips": 6
+      "date": "2026-08-29",
+      "views": 3,
+      "ips": 2
     },
     {
-      "date": "2026-09-01",
-      "views": 1,
+      "date": "2026-08-30",
+      "views": 2,
       "ips": 1
     },
     {
+      "date": "2026-08-31",
+      "views": 41,
+      "ips": 4
+    },
+    {
       "date": "2026-09-02",
-      "views": 43,
-      "ips": 6
+      "views": 16,
+      "ips": 3
     },
     {
       "date": "2026-09-03",
-      "views": 28,
-      "ips": 8
+      "views": 26,
+      "ips": 6
     },
     {
       "date": "2026-09-04",
@@ -148,128 +130,128 @@
     },
     {
       "date": "2026-09-06",
-      "views": 14,
-      "ips": 5
+      "views": 4,
+      "ips": 3
     },
     {
       "date": "2026-09-07",
-      "views": 43,
-      "ips": 10
+      "views": 13,
+      "ips": 4
     },
     {
       "date": "2026-09-08",
-      "views": 8,
-      "ips": 5
+      "views": 3,
+      "ips": 3
     },
     {
       "date": "2026-09-09",
-      "views": 17,
-      "ips": 7
+      "views": 7,
+      "ips": 4
     },
     {
       "date": "2026-09-10",
+      "views": 11,
+      "ips": 5
+    },
+    {
+      "date": "2026-09-11",
       "views": 12,
       "ips": 6
     },
     {
-      "date": "2026-09-11",
-      "views": 14,
-      "ips": 7
-    },
-    {
       "date": "2026-09-12",
-      "views": 57,
-      "ips": 2
+      "views": 56,
+      "ips": 1
     }
   ],
   "pages": [
     {
       "path": "/",
-      "n": 373
-    },
-    {
-      "path": "/opbouwschema.html",
-      "n": 19
+      "n": 228
     },
     {
       "path": "/index.html",
-      "n": 17
+      "n": 14
     },
     {
-      "path": "/privacybeleid.html",
-      "n": 14
+      "path": "/opbouwschema.html",
+      "n": 10
     },
     {
       "path": "/voorwaarden.html",
-      "n": 14
+      "n": 10
     },
     {
       "path": "/kennisbank/",
-      "n": 11
+      "n": 7
     },
     {
       "path": "/fml.html",
-      "n": 11
-    },
-    {
-      "path": "/diensten/",
-      "n": 10
-    },
-    {
-      "path": "/izp.html",
-      "n": 10
-    },
-    {
-      "path": "/whitelabel.html",
-      "n": 10
+      "n": 7
     },
     {
       "path": "/klachten.html",
-      "n": 9
+      "n": 7
+    },
+    {
+      "path": "/izp.html",
+      "n": 6
+    },
+    {
+      "path": "/privacybeleid.html",
+      "n": 6
+    },
+    {
+      "path": "/diensten/",
+      "n": 5
     },
     {
       "path": "/diensten/verzuimbegeleiding.html",
       "n": 5
     },
     {
-      "path": "/diensten/aanstellingskeuring.html",
+      "path": "/diensten/rie-toetsing.html",
       "n": 4
+    },
+    {
+      "path": "/whitelabel.html",
+      "n": 4
+    },
+    {
+      "path": "/kennisbank/rie-verplicht.html",
+      "n": 3
     },
     {
       "path": "/kennisbank/arousal-performance-curve.html",
-      "n": 4
-    },
-    {
-      "path": "/diensten/rie-toetsing.html",
-      "n": 4
+      "n": 3
     }
   ],
   "conversion": [
     {
       "path": "/whitelabel.html",
-      "n": 10
+      "n": 4
     },
     {
       "path": "/opbouwschema.html",
-      "n": 19
+      "n": 10
     },
     {
       "path": "/fml.html",
-      "n": 11
+      "n": 7
     },
     {
       "path": "/izp.html",
-      "n": 10
+      "n": 6
     }
   ],
   "referrers": [
     {
       "ref": "https://www.google.com/",
-      "n": 18
+      "n": 16
     },
     {
       "ref": "https://www.bing.com/",
-      "n": 4
+      "n": 3
     },
     {
       "ref": "https://duckduckgo.com/",
@@ -291,19 +273,19 @@
     },
     {
       "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
-      "n": 735
+      "n": 741
     },
     {
       "ua": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/r",
-      "n": 691
+      "n": 690
     },
     {
       "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
-      "n": 324
+      "n": 330
     },
     {
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      "n": 164
+      "n": 167
     }
   ],
   "scrapers": [],
@@ -353,12 +335,12 @@
     {
       "status": "405",
       "path": "/",
-      "n": 401
+      "n": 398
     },
     {
       "status": "400",
       "path": "/",
-      "n": 19
+      "n": 18
     }
   ],
   "server_errors": {}
