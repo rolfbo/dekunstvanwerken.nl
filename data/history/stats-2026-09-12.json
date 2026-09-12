@@ -2,20 +2,20 @@
   "site": "dekunstvanwerken.nl",
   "days": 30,
   "classifier": 2,
-  "generated": "2026-09-12 06:09 UTC",
-  "requests": 65753,
-  "own_hits": 96,
+  "generated": "2026-09-12 11:01 UTC",
+  "requests": 65387,
+  "own_hits": 111,
   "mix": {
-    "bot": 16496,
+    "bot": 16497,
     "engine": 46,
     "scraper": 0,
-    "oneshot": 12458,
-    "human": 36753
+    "oneshot": 12237,
+    "human": 36607
   },
-  "views": 541,
-  "ips": 134,
-  "browsers": 82,
-  "oneshot_ip_days": 1015,
+  "views": 535,
+  "ips": 131,
+  "browsers": 79,
+  "oneshot_ip_days": 1009,
   "leads": {
     "total": 0,
     "by_type": {
@@ -28,8 +28,8 @@
   "by_day": [
     {
       "date": "2026-08-13",
-      "views": 35,
-      "ips": 8
+      "views": 29,
+      "ips": 5
     },
     {
       "date": "2026-08-14",
@@ -185,7 +185,7 @@
   "pages": [
     {
       "path": "/",
-      "n": 379
+      "n": 373
     },
     {
       "path": "/opbouwschema.html",
@@ -291,15 +291,15 @@
     },
     {
       "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
-      "n": 726
+      "n": 735
     },
     {
       "ua": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/r",
-      "n": 690
+      "n": 691
     },
     {
       "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
-      "n": 323
+      "n": 324
     },
     {
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -333,10 +333,6 @@
       "n": 2
     },
     {
-      "path": "/ie.html",
-      "n": 1
-    },
-    {
       "path": "/it.html",
       "n": 1
     },
@@ -347,18 +343,22 @@
     {
       "path": "/swagger-ui.html",
       "n": 1
+    },
+    {
+      "path": "/googleebfdec0664055d5f.html",
+      "n": 1
     }
   ],
   "errors": [
     {
       "status": "405",
       "path": "/",
-      "n": 404
+      "n": 401
     },
     {
       "status": "400",
       "path": "/",
-      "n": 26
+      "n": 19
     }
   ],
   "server_errors": {}
