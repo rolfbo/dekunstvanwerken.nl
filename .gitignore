@@ -14,3 +14,14 @@ node_modules/
 # Ignore temporary files
 *.tmp
 .cache/
+
+# stats.py falls back to booksofpodcast/data/geo/ when absent; to keep a local copy, run
+# booksofpodcast's ./scripts/geo-db.sh and copy asn-ipv4-num.csv + asn-ipv6-num.csv here.
+data/geo/
+
+# scripts/test_stats.py leaves these behind
+__pycache__/
+
+# Other sessions' worktrees (house pattern, as investordatabase/verzuimdatabase)
+.claude/worktrees/
+.worktrees/
