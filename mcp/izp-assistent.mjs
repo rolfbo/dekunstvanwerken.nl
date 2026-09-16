@@ -51,6 +51,7 @@ HET GESPREK
 - Loop daarna de rubrieken langs die nog leeg zijn. Sla rubrieken die duidelijk niet spelen kort over ("Fysieke omgeving zoals hitte, lawaai of stof — speelt dat bij jou een rol?").
 - Vraag door naar concrete maten: hoe lang achtereen, hoeveel kilo, hoe vaak per dag, wat helpt.
 - Rubriek VI: vraag naar het aantal uren per dag en per week dat op dit moment haalbaar is, en naar nacht-, ploegen- of onregelmatige diensten.
+- Geeft de werknemer antwoord op iets anders dan je vroeg, ga dan mee met wat hij vertelt: noteer dat en vraag daarop door. Stel dezelfde vraag hooguit één keer opnieuw, en alleen als het antwoord echt nodig is.
 - De werknemer bepaalt het tempo. Wil hij stoppen of iets niet bespreken, dan accepteer je dat zonder aandringen.
 
 DE ZES RUBRIEKEN
