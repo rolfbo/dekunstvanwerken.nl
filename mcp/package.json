@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.126.0",
-    "@anthropic-ai/vertex-sdk": "^0.19.9"
+    "@anthropic-ai/vertex-sdk": "^0.19.9",
+    "google-auth-library": "^10.5.0"
   }
 }

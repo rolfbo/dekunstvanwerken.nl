@@ -30,7 +30,13 @@
 import { createServer } from 'node:http';
 import { appendFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { assistentIngeschakeld, handleIzpGesprek, handleIzpStart } from './izp-assistent.mjs';
+import {
+  assistentIngeschakeld,
+  handleIzpGesprek,
+  handleIzpSpraak,
+  handleIzpStart,
+  spraakIngeschakeld,
+} from './izp-assistent.mjs';
 
 const SITE = 'https://dekunstvanwerken.nl';
 const PORT = Number(process.env.MCP_PORT || 8321);
@@ -445,7 +451,12 @@ const server = createServer((req, res) => {
 
   if (req.method === 'GET' && url.pathname === '/healthz') {
     res.writeHead(200, { 'Content-Type': 'application/json', ...CORS });
-    return res.end(JSON.stringify({ ok: true, server: SERVER_INFO, izpAssistent: assistentIngeschakeld() }));
+    return res.end(JSON.stringify({
+      ok: true,
+      server: SERVER_INFO,
+      izpAssistent: assistentIngeschakeld(),
+      izpSpraak: spraakIngeschakeld(),
+    }));
   }
 
   if (req.method === 'GET') {
@@ -475,15 +486,22 @@ const server = createServer((req, res) => {
   req.setEncoding('utf8');
   req.on('data', (c) => {
     body += c;
-    if (body.length > 1_000_000) req.destroy(); // 1 MB cap
+    // Ingesproken antwoorden zijn groter dan tekst; de rest blijft op 1 MB.
+    const maxBody = url.pathname === '/izp/spraak' ? 5_000_000 : 1_000_000;
+    if (body.length > maxBody) req.destroy();
   });
   req.on('end', () => {
     if (url.pathname === '/aanmelden') {
       return handleAanmelding(body, req, res);
     }
-    if (url.pathname === '/izp/start' || url.pathname === '/izp/gesprek') {
+    const IZP_ROUTES = {
+      '/izp/start': handleIzpStart,
+      '/izp/gesprek': handleIzpGesprek,
+      '/izp/spraak': handleIzpSpraak,
+    };
+    if (IZP_ROUTES[url.pathname]) {
       const ctx = { reply: jsonReply(res), stateDir: STATE_DIR, rateLimited, clientIp: clientIp(req) };
-      const handler = url.pathname === '/izp/start' ? handleIzpStart : handleIzpGesprek;
+      const handler = IZP_ROUTES[url.pathname];
       return Promise.resolve(handler(body, req, res, ctx)).catch((e) => {
         console.error('izp: onverwachte fout:', e.name || 'fout');
         if (!res.headersSent) ctx.reply(500, { ok: false, error: 'er ging iets mis' });

@@ -80,6 +80,37 @@ Controleren of de assistent aanstaat:
     curl -s https://mcp.dekunstvanwerken.nl/healthz
     # {"ok":true,...,"izpAssistent":true}
 
+## Inspreken (spraak naar tekst)
+
+De werknemer kan een antwoord inspreken in plaats van typen. De opname gaat
+naar onze server en van daar naar Google Cloud Speech-to-Text v2 in de
+EU-regio; de tekst komt terug in het invoerveld, zodat de werknemer eerst
+ziet wat er verstaan is. De opname wordt nergens bewaard.
+
+Aanzetten in `/etc/dkvw-mcp.env`:
+
+    STT_PROJECT_ID=dkvw-izp        # of leeg laten: dan wordt VERTEX_PROJECT_ID gebruikt
+    STT_REGIO=eu                   # EU-datalocatie; endpoint wordt eu-speech.googleapis.com
+    GOOGLE_APPLICATION_CREDENTIALS=/etc/dkvw-mcp/vertex-sa.json
+    # optioneel: STT_MODEL=chirp_3
+
+In Google Cloud:
+
+- Speech-to-Text API aanzetten in hetzelfde project
+- het service account de rol **Speech-to-Text Client** (`roles/speech.client`) geven
+- het logging-programma níet aanzetten; standaard bewaart Google de audio niet
+  en gebruikt het die niet om modellen te trainen
+
+Ontbreekt de instelling, dan blijft de knop "Antwoord inspreken" verborgen en
+werkt alles verder gewoon met typen.
+
+Het voorlezen van antwoorden doet de browser zelf (SpeechSynthesis). Daar komt
+geen dienst aan te pas en er verlaat niets het apparaat.
+
+Kosten spraak: ongeveer $0,016 per minuut audio, met 60 gratis minuten per
+maand. Een gesprek van twintig ingesproken antwoorden kost een paar cent.
+Controleer de actuele prijs op cloud.google.com/speech-to-text/pricing.
+
 ## Kosten
 
 Ongeveer $0,30 tot $0,70 per gesprek. Stel in Google Cloud een

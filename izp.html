@@ -321,6 +321,57 @@
             font: inherit;
             resize: vertical;
         }
+        .spraak-rij {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 0.6rem;
+        }
+        .spraak-knop {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font: inherit;
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            border: 1px solid var(--primary-color);
+            background: #fff;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        .spraak-knop[aria-pressed="true"] {
+            background: #b03a2e;
+            border-color: #b03a2e;
+            color: #fff;
+        }
+        .niveau {
+            flex: 1;
+            min-width: 6rem;
+            height: 0.5rem;
+            border-radius: 999px;
+            background: var(--border-color);
+            overflow: hidden;
+        }
+        .niveau span {
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: var(--primary-color);
+            transition: width 0.1s linear;
+        }
+        .spreek-knop {
+            font: inherit;
+            font-size: 0.78rem;
+            margin-left: 0.5rem;
+            padding: 0 0.4rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: #fff;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
         .chat-status { font-size: 0.85rem; color: #7f8c8d; margin-top: 0.5rem; }
         .chat-fout { color: #b03a2e; }
         .izp-voorstel {
@@ -520,6 +571,7 @@
                         <h3>Voordat je begint</h3>
                         <ul>
                             <li><strong>Je antwoorden gaan naar een AI-dienst.</strong> Wat je typt, wordt verwerkt door een taalmodel van Anthropic (Claude) dat draait in een datacentrum binnen de EU. Wij hebben daarover afspraken vastgelegd; je gegevens worden niet gebruikt om het model te trainen.</li>
+                            <li><strong>Inspreken mag ook.</strong> Spreek je je antwoord in, dan gaat die opname naar Google Cloud in de EU om er tekst van te maken. Je ziet die tekst eerst zelf en kunt hem aanpassen. De opname wordt nergens bewaard. Typen kan altijd.</li>
                             <li><strong>Wij bewaren het gesprek niet.</strong> Het staat alleen in dit browservenster en verdwijnt als je het sluit. We noteren alleen dát deze code is gebruikt en wanneer.</li>
                             <li><strong>Je werkgever ziet niets.</strong> Alleen wat jij zelf print of deelt, kan een ander zien.</li>
                             <li><strong>Noem geen namen en geen diagnose.</strong> Beschrijf wat je wel en niet kunt, niet wat je hebt. Meer heeft een IZP niet nodig.</li>
@@ -545,6 +597,13 @@
                             <textarea id="chat-input" rows="2" maxlength="4000"
                                       placeholder="Typ je antwoord en druk op Enter"></textarea>
                             <button type="button" class="btn-action" id="btn-verstuur">Stuur</button>
+                        </div>
+                        <div class="spraak-rij" id="spraak-rij" hidden>
+                            <button type="button" class="spraak-knop" id="btn-opnemen" aria-pressed="false">
+                                <span aria-hidden="true">&#127908;</span> <span id="opnemen-label">Antwoord inspreken</span>
+                            </button>
+                            <div class="niveau" id="niveau" hidden aria-hidden="true"><span></span></div>
+                            <span class="chat-status" id="opname-status"></span>
                         </div>
                         <div class="chat-status" id="chat-status" aria-live="polite"></div>
                         <div class="actions" style="margin-top:0.75rem;">
@@ -924,7 +983,7 @@
             ? 'http://127.0.0.1:8321'
             : 'https://mcp.dekunstvanwerken.nl';
 
-        const CONSENT_VERSIE = '2026-09-16.1';
+        const CONSENT_VERSIE = '2026-09-16.2';
 
         // Voorstellen van de assistent die nog niet zijn overgenomen.
         const openVoorstel = { rubrieken: {}, ud: null, uw: null };
@@ -948,6 +1007,24 @@
             div.appendChild(label);
             // textContent: modeltekst wordt nooit als HTML uitgevoerd.
             div.appendChild(document.createTextNode(tekst));
+            // Voorlezen start alleen vanuit een klik: iOS negeert speak()
+            // dat niet rechtstreeks uit een handeling van de gebruiker komt.
+            if (klasse !== 'van-jou' && 'speechSynthesis' in window) {
+                const luister = document.createElement('button');
+                luister.type = 'button';
+                luister.className = 'spreek-knop';
+                luister.textContent = '▶ Lees voor';
+                luister.addEventListener('click', () => {
+                    if (speechSynthesis.speaking) {
+                        speechSynthesis.cancel();
+                        luister.textContent = '▶ Lees voor';
+                        return;
+                    }
+                    spreekUit(tekst, () => { luister.textContent = '▶ Lees voor'; });
+                    luister.textContent = '■ Stop';
+                });
+                label.appendChild(luister);
+            }
             const log = el('chat-log');
             log.appendChild(div);
             log.scrollTop = log.scrollHeight;
@@ -1108,6 +1185,8 @@
                 }
                 izpToken = data.token;
                 toonStap('stap-chat');
+                el('spraak-rij').hidden = !spraakBeschikbaar;
+                el('opname-status').textContent = '';
                 el('chat-log').textContent = '';
                 zetStatus('');
                 await stuurBericht('Ik wil mijn inzetbaarheidsprofiel voorbereiden.', true);
@@ -1119,6 +1198,9 @@
         }
 
         function sluitAssistent() {
+            stopOpname();
+            zetOpnameStand(false);
+            if ('speechSynthesis' in window) speechSynthesis.cancel();
             izpToken = null;
             el('assistent-panel').hidden = true;
             el('assistent-start').hidden = false;
@@ -1128,13 +1210,179 @@
             toonStap('stap-code');
         }
 
+        // ---------------------------------------------------- voorlezen
+        // De stemmenlijst komt in Chrome pas later binnen; in Safari juist
+        // meteen en zonder voiceschanged. Daarom allebei proberen.
+        let nlStemmen = [];
+        function laadStemmen() {
+            if (!('speechSynthesis' in window)) return;
+            nlStemmen = speechSynthesis.getVoices().filter((v) => v.lang && v.lang.toLowerCase().startsWith('nl'));
+        }
+        if ('speechSynthesis' in window) {
+            laadStemmen();
+            speechSynthesis.addEventListener('voiceschanged', laadStemmen);
+        }
+
+        function spreekUit(tekst, klaar) {
+            if (!('speechSynthesis' in window)) return;
+            speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(tekst);
+            u.lang = 'nl-NL';
+            const stem = nlStemmen.find((v) => v.lang === 'nl-NL') || nlStemmen[0];
+            if (stem) u.voice = stem;
+            u.rate = 0.95; // iets rustiger dan standaard
+            u.onend = klaar;
+            u.onerror = klaar;
+            speechSynthesis.speak(u);
+        }
+
+        // ---------------------------------------------------- inspreken
+        // De opname gaat naar onze eigen server, die er tekst van maakt.
+        // Die tekst komt eerst in het invoerveld te staan: de werknemer
+        // ziet wat er verstaan is en kan het aanpassen voor hij verstuurt.
+        let spraakBeschikbaar = false;
+        let recorder = null;
+        let opnameStop = null;
+
+        function kiesMimetype() {
+            if (!window.MediaRecorder) return null;
+            const opties = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/mp4;codecs=mp4a.40.2', 'audio/ogg;codecs=opus'];
+            for (const t of opties) {
+                const kan = MediaRecorder.isTypeSupported ? MediaRecorder.isTypeSupported(t) : t.startsWith('audio/mp4');
+                if (kan) return t;
+            }
+            return ''; // browser kiest zelf
+        }
+
+        function zetOpnameStand(bezigMetOpnemen) {
+            const knop = el('btn-opnemen');
+            knop.setAttribute('aria-pressed', bezigMetOpnemen ? 'true' : 'false');
+            el('opnemen-label').textContent = bezigMetOpnemen ? 'Klaar met praten' : 'Antwoord inspreken';
+            el('niveau').hidden = !bezigMetOpnemen;
+            if (!bezigMetOpnemen) el('niveau').firstElementChild.style.width = '0%';
+        }
+
+        async function startOpname() {
+            const mimetype = kiesMimetype();
+            if (mimetype === null) {
+                el('opname-status').textContent = 'Deze browser kan niet opnemen; typen kan wel.';
+                return;
+            }
+            let stream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true },
+                });
+            } catch {
+                el('opname-status').textContent = 'Geen toegang tot de microfoon. Typen kan gewoon.';
+                return;
+            }
+
+            recorder = new MediaRecorder(stream, mimetype ? { mimeType: mimetype, audioBitsPerSecond: 32000 } : {});
+            const stukjes = [];
+            recorder.addEventListener('dataavailable', (e) => { if (e.data.size) stukjes.push(e.data); });
+
+            // Niveaumeter en automatisch stoppen na stilte.
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const bron = ctx.createMediaStreamSource(stream);
+            const meter = ctx.createAnalyser();
+            meter.fftSize = 512;
+            bron.connect(meter);
+            const buf = new Float32Array(meter.fftSize);
+            const STILTE = 0.004;      // ongeveer -48 dBFS
+            const STILTE_MS = 2000;
+            const MAX_MS = 60000;
+            let stilVanaf = null;
+            const begon = performance.now();
+            let loopt = true;
+
+            const meet = () => {
+                if (!loopt) return;
+                meter.getFloatTimeDomainData(buf);
+                let som = 0;
+                for (let i = 0; i < buf.length; i++) som += buf[i] * buf[i];
+                const rms = Math.sqrt(som / buf.length);
+                el('niveau').firstElementChild.style.width = Math.min(100, Math.round(rms * 900)) + '%';
+                const nu = performance.now();
+                if (rms < STILTE) {
+                    if (stilVanaf === null) stilVanaf = nu;
+                    else if (nu - stilVanaf > STILTE_MS) return stopOpname();
+                } else {
+                    stilVanaf = null;
+                }
+                if (nu - begon > MAX_MS) return stopOpname();
+                requestAnimationFrame(meet);
+            };
+
+            opnameStop = () => {
+                loopt = false;
+                try { recorder.stop(); } catch {}
+                stream.getTracks().forEach((t) => t.stop());
+                ctx.close().catch(() => {});
+            };
+
+            recorder.addEventListener('stop', async () => {
+                zetOpnameStand(false);
+                const blob = new Blob(stukjes, { type: recorder.mimeType });
+                stukjes.length = 0;
+                if (!blob.size) { el('opname-status').textContent = ''; return; }
+                el('opname-status').textContent = 'Bezig met omzetten naar tekst…';
+                try {
+                    const buffer = await blob.arrayBuffer();
+                    let binair = '';
+                    const bytes = new Uint8Array(buffer);
+                    for (let i = 0; i < bytes.length; i += 0x8000) {
+                        binair += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+                    }
+                    const res = await fetch(`${MCP_BASE}/izp/spraak`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token: izpToken, audio: btoa(binair), mimetype: recorder.mimeType }),
+                    });
+                    const data = await res.json();
+                    if (!data.ok) { el('opname-status').textContent = data.error || 'Omzetten lukte niet.'; return; }
+                    if (!data.tekst) { el('opname-status').textContent = 'Ik heb niets verstaan. Probeer het nog eens.'; return; }
+                    const veld = el('chat-input');
+                    veld.value = veld.value ? `${veld.value} ${data.tekst}` : data.tekst;
+                    veld.focus();
+                    el('opname-status').textContent = 'Klopt dit? Pas het gerust aan en druk op Stuur.';
+                } catch {
+                    el('opname-status').textContent = 'Geen verbinding. Typ je antwoord of probeer opnieuw.';
+                }
+            });
+
+            recorder.start();
+            zetOpnameStand(true);
+            el('opname-status').textContent = 'Ik luister… klik op "Klaar met praten" als je uitgesproken bent.';
+            requestAnimationFrame(meet);
+        }
+
+        function stopOpname() {
+            if (opnameStop) { opnameStop(); opnameStop = null; }
+        }
+
+        function wireSpraak() {
+            el('btn-opnemen').addEventListener('click', () => {
+                if (el('btn-opnemen').getAttribute('aria-pressed') === 'true') stopOpname();
+                else startOpname();
+            });
+        }
+
         function wireAssistent() {
             // Zonder de assistent op de server blijft de knop verborgen en is
             // de pagina precies zoals hij was.
             fetch(`${MCP_BASE}/healthz`)
                 .then((r) => r.json())
-                .then((d) => { if (d && d.izpAssistent) el('assistent-start').hidden = false; })
+                .then((d) => {
+                    if (!d || !d.izpAssistent) return;
+                    el('assistent-start').hidden = false;
+                    // Inspreken alleen aanbieden als de server het aankan én
+                    // de browser kan opnemen.
+                    spraakBeschikbaar = Boolean(d.izpSpraak) && Boolean(navigator.mediaDevices) && kiesMimetype() !== null;
+                })
                 .catch(() => {});
+
+            wireSpraak();
 
             el('btn-assistent').addEventListener('click', () => {
                 el('assistent-start').hidden = true;

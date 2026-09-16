@@ -22,7 +22,7 @@ import { join } from 'node:path';
 
 // Versie van de toestemmingstekst op izp.html. Verhoog dit nummer zodra
 // de tekst inhoudelijk wijzigt; het wordt per toestemming vastgelegd.
-export const CONSENT_VERSIE = '2026-09-16.1';
+export const CONSENT_VERSIE = '2026-09-16.2';
 
 const MODEL = process.env.VERTEX_MODEL || 'claude-opus-5';
 const MAX_BEURTEN = Number(process.env.IZP_MAX_BEURTEN || 30);
@@ -272,6 +272,123 @@ async function vraagModel(transcript) {
   }
 
   return { tekst, voorstel };
+}
+
+// ------------------------------------------------------------ spraak
+// De werknemer mag inspreken in plaats van typen. De opname gaat naar
+// deze server, wordt omgezet naar tekst en daarna behandeld als een
+// gewoon getypt bericht. De opname zelf wordt nergens bewaard: hij staat
+// alleen in het geheugen tijdens het omzetten.
+const MAX_AUDIO_BYTES = 3_000_000; // ruim 60 seconden opus
+
+// Google Cloud Speech-to-Text v2. De regio 'eu' houdt de verwerking binnen
+// Europa; de opname wordt door Google niet bewaard en niet gebruikt om het
+// model te verbeteren, zolang het logging-programma uit staat (standaard).
+const STT_REGIO = process.env.STT_REGIO || 'eu';
+const STT_PROJECT = process.env.STT_PROJECT_ID || process.env.VERTEX_PROJECT_ID || '';
+const STT_MODEL = process.env.STT_MODEL || 'chirp_3';
+
+export function spraakIngeschakeld() {
+  return Boolean(process.env.GOOGLE_APPLICATION_CREDENTIALS && STT_PROJECT);
+}
+
+let authPromise = null;
+async function googleToken() {
+  if (!authPromise) {
+    authPromise = (async () => {
+      const { GoogleAuth } = await import('google-auth-library');
+      const auth = new GoogleAuth({
+        keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+        scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+      });
+      return auth.getClient();
+    })();
+  }
+  const client = await authPromise;
+  const { token } = await client.getAccessToken();
+  return token;
+}
+
+/**
+ * Zet een opname om naar tekst. De browser levert webm/opus (Chrome, Firefox)
+ * of mp4/aac (Safari); beide leest Speech-to-Text zelf uit, dus er hoeft niets
+ * omgezet te worden op de server.
+ */
+async function transcribeer(audio, _mimetype) {
+  if (!spraakIngeschakeld()) {
+    throw Object.assign(new Error('spraak-naar-tekst is niet ingericht'), { code: 'geen-provider' });
+  }
+  const token = await googleToken();
+  const url = `https://${STT_REGIO}-speech.googleapis.com/v2/projects/${STT_PROJECT}` +
+              `/locations/${STT_REGIO}/recognizers/_:recognize`;
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      config: {
+        autoDecodingConfig: {},
+        languageCodes: ['nl-NL'],
+        model: STT_MODEL,
+      },
+      content: audio.toString('base64'),
+    }),
+  });
+
+  if (!res.ok) {
+    // Alleen de status loggen; de fouttekst kan een stuk van de opname bevatten.
+    throw Object.assign(new Error('speech-to-text gaf een fout'), { status: res.status });
+  }
+  const data = await res.json();
+  return (data.results || [])
+    .map((r) => (r.alternatives && r.alternatives[0] && r.alternatives[0].transcript) || '')
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export async function handleIzpSpraak(body, req, res, ctx) {
+  const { reply, rateLimited, clientIp } = ctx;
+  let data;
+  try {
+    data = JSON.parse(body);
+  } catch {
+    return reply(400, { ok: false, error: 'ongeldige aanvraag' });
+  }
+  if (!spraakIngeschakeld()) {
+    return reply(503, { ok: false, error: 'inspreken is niet beschikbaar; typen kan wel' });
+  }
+  const sessie = vindSessie(data.token);
+  if (!sessie) {
+    return reply(403, { ok: false, error: 'het gesprek is verlopen. Start opnieuw met je code.' });
+  }
+  if (rateLimited('izp-spraak', clientIp, 120)) {
+    return reply(429, { ok: false, error: 'te veel opnames achter elkaar; wacht even' });
+  }
+
+  let audio;
+  try {
+    audio = Buffer.from(String(data.audio || ''), 'base64');
+  } catch {
+    return reply(400, { ok: false, error: 'opname onleesbaar' });
+  }
+  if (!audio.length) return reply(400, { ok: false, error: 'lege opname' });
+  if (audio.length > MAX_AUDIO_BYTES) {
+    return reply(413, { ok: false, error: 'de opname is te lang; houd het bij ongeveer een minuut' });
+  }
+
+  try {
+    const tekst = (await transcribeer(audio, String(data.mimetype || ''))).trim().slice(0, MAX_BERICHT);
+    if (!tekst) {
+      return reply(200, { ok: true, tekst: '', leeg: true });
+    }
+    // De tekst gaat terug naar de pagina, niet meteen naar het model: de
+    // werknemer ziet eerst wat er verstaan is en kan het aanpassen.
+    return reply(200, { ok: true, tekst });
+  } catch (e) {
+    console.error('izp: spraak omzetten mislukt:', e.code || e.status || '', e.name || 'fout');
+    return reply(502, { ok: false, error: 'het omzetten lukte niet; typ het antwoord of probeer opnieuw' });
+  }
 }
 
 // -------------------------------------------------------- endpoints
