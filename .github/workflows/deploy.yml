@@ -72,7 +72,8 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
             -o UserKnownHostsFile=~/.ssh/known_hosts \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
-            'sudo -n /usr/bin/systemctl restart dkvw-mcp 2>/dev/null || true'
+            'cd "${{ secrets.SSH_PATH }}/mcp" && npm ci --omit=dev --no-audit --no-fund 2>&1 | tail -3 || echo "WARN: npm ci failed; IZP assistant may be unavailable"
+             sudo -n /usr/bin/systemctl restart dkvw-mcp 2>/dev/null || true'
 
       - name: Wipe SSH key
         if: always()

@@ -234,6 +234,123 @@
             margin-left: 0.3rem;
         }
 
+        .visually-hidden-label {
+            position: absolute;
+            width: 1px; height: 1px;
+            margin: -1px; padding: 0; border: 0;
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        /* --- AI-assistent --- */
+        .assistent-start {
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--primary-color);
+            border-radius: 6px;
+            padding: 1rem 1.15rem;
+            margin-bottom: 1.5rem;
+            background: var(--bg-light);
+        }
+        .assistent-start p {
+            margin: 0.4rem 0 0.9rem;
+            font-size: 0.95rem;
+        }
+        .assistent-panel {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.15rem;
+            margin-bottom: 1.5rem;
+        }
+        .assistent-panel h3 {
+            margin: 0 0 0.6rem;
+            color: var(--primary-color);
+            font-size: 1.05rem;
+        }
+        .assistent-panel ul { margin: 0.6rem 0 1rem 1.1rem; font-size: 0.92rem; }
+        .assistent-panel li { margin-bottom: 0.35rem; }
+        .assistent-panel label.consent {
+            display: flex;
+            gap: 0.6rem;
+            align-items: flex-start;
+            font-size: 0.95rem;
+            margin: 1rem 0;
+        }
+        .code-input {
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 1.1rem;
+            letter-spacing: 0.08em;
+            padding: 0.5rem 0.7rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            width: 12em;
+            text-transform: uppercase;
+        }
+        .chat-log {
+            max-height: 22rem;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            background: #fff;
+        }
+        .chat-bericht {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .chat-bericht .wie {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #7f8c8d;
+            margin-bottom: 0.15rem;
+        }
+        .chat-bericht.van-jou { padding-left: 1rem; border-left: 3px solid var(--border-color); }
+        .chat-invoer { display: flex; gap: 0.6rem; align-items: flex-end; }
+        .chat-invoer textarea {
+            flex: 1;
+            min-height: 3.2rem;
+            padding: 0.55rem 0.7rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font: inherit;
+            resize: vertical;
+        }
+        .chat-status { font-size: 0.85rem; color: #7f8c8d; margin-top: 0.5rem; }
+        .chat-fout { color: #b03a2e; }
+        .izp-voorstel {
+            border: 1px dashed var(--primary-color);
+            border-radius: 5px;
+            padding: 0.7rem 0.85rem;
+            margin-top: 0.6rem;
+            background: var(--bg-light);
+            font-size: 0.93rem;
+        }
+        .izp-voorstel .kop {
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        .izp-voorstel .tekst { white-space: pre-wrap; }
+        .izp-voorstel .knoppen { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+        .izp-voorstel button {
+            font: inherit;
+            font-size: 0.88rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            border: 1px solid var(--primary-color);
+            background: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+        }
+        .izp-voorstel button.ghost { background: #fff; color: var(--primary-color); }
+
         .actions {
             display: flex;
             flex-wrap: wrap;
@@ -294,7 +411,8 @@
         }
 
         @media print {
-            nav, footer, .actions, .disclaimer-top { display: none !important; }
+            nav, footer, .actions, .disclaimer-top,
+            .assistent-start, .assistent-panel, .izp-voorstel { display: none !important; }
             .print-only { display: block !important; }
             body { background: #fff; color: #000; }
             #izp-tool { background: #fff; padding: 0; }
@@ -375,6 +493,64 @@
             <div class="tool-card">
                 <div class="disclaimer-top">
                     <strong>Concept-tool, geen formeel IZP.</strong> Een formeel inzetbaarheidsprofiel kan uitsluitend door de bedrijfsarts worden opgemaakt; een formele FML uitsluitend door een verzekeringsarts. Deze tool helpt om de mogelijkheden en beperkingen alvast op een rij te zetten als voorbereiding op het gesprek of als interne notitie.
+                </div>
+
+                <div class="assistent-start" id="assistent-start" hidden>
+                    <strong>Liever samen invullen?</strong>
+                    <p>Heb je van je bedrijfsarts een code gekregen, dan kun je de zes rubrieken doorlopen in een gesprek met een AI-assistent. Die schrijft je antwoorden om naar concepttekst, die je hieronder zelf kunt aanpassen. Het formulier zelf invullen kan gewoon en is net zo goed.</p>
+                    <button type="button" class="btn-action" id="btn-assistent">Vul samen met de assistent in</button>
+                </div>
+
+                <div class="assistent-panel" id="assistent-panel" hidden>
+                    <div id="stap-code">
+                        <h3>Je code</h3>
+                        <p>Vul de code in die je van je bedrijfsarts hebt gekregen.</p>
+                        <p>
+                            <label for="izp-code" class="visually-hidden-label">Toegangscode</label>
+                            <input type="text" id="izp-code" class="code-input" placeholder="IZP-XXXX-XX"
+                                   autocomplete="off" spellcheck="false" maxlength="14">
+                        </p>
+                        <div class="actions" style="margin-top:0.75rem;">
+                            <button type="button" class="btn-action" id="btn-code-volgende">Volgende</button>
+                            <button type="button" class="btn-action btn-action--ghost" id="btn-assistent-annuleer">Annuleren</button>
+                        </div>
+                    </div>
+
+                    <div id="stap-consent" hidden>
+                        <h3>Voordat je begint</h3>
+                        <ul>
+                            <li><strong>Je antwoorden gaan naar een AI-dienst.</strong> Wat je typt, wordt verwerkt door een taalmodel van Anthropic (Claude) dat draait in een datacentrum binnen de EU. Wij hebben daarover afspraken vastgelegd; je gegevens worden niet gebruikt om het model te trainen.</li>
+                            <li><strong>Wij bewaren het gesprek niet.</strong> Het staat alleen in dit browservenster en verdwijnt als je het sluit. We noteren alleen dát deze code is gebruikt en wanneer.</li>
+                            <li><strong>Je werkgever ziet niets.</strong> Alleen wat jij zelf print of deelt, kan een ander zien.</li>
+                            <li><strong>Noem geen namen en geen diagnose.</strong> Beschrijf wat je wel en niet kunt, niet wat je hebt. Meer heeft een IZP niet nodig.</li>
+                            <li><strong>Dit is geen medische beoordeling.</strong> De assistent kan zich vergissen. Controleer elke zin en pas aan wat niet klopt. Je bedrijfsarts beoordeelt het concept en stelt het definitieve IZP op.</li>
+                            <li><strong>Je bent vrij om nee te zeggen.</strong> Je kunt het formulier ook zelf invullen. Dat heeft geen enkel gevolg. Stoppen kan op elk moment.</li>
+                        </ul>
+                        <label class="consent">
+                            <input type="checkbox" id="izp-consent-check">
+                            <span>Ik heb dit gelezen en geef toestemming dat mijn antwoorden voor dit gesprek door een AI-dienst worden verwerkt.</span>
+                        </label>
+                        <div class="actions" style="margin-top:0.5rem;">
+                            <button type="button" class="btn-action" id="btn-start-gesprek" disabled>Start gesprek</button>
+                            <button type="button" class="btn-action btn-action--ghost" id="btn-liever-zelf">Liever zelf invullen</button>
+                            <span class="action-feedback chat-fout" id="start-fout" role="status" aria-live="polite"></span>
+                        </div>
+                    </div>
+
+                    <div id="stap-chat" hidden>
+                        <h3>Gesprek met de assistent</h3>
+                        <div class="chat-log" id="chat-log" role="log" aria-live="polite"></div>
+                        <div class="chat-invoer">
+                            <label for="chat-input" class="visually-hidden-label">Jouw bericht</label>
+                            <textarea id="chat-input" rows="2" maxlength="4000"
+                                      placeholder="Typ je antwoord en druk op Enter"></textarea>
+                            <button type="button" class="btn-action" id="btn-verstuur">Stuur</button>
+                        </div>
+                        <div class="chat-status" id="chat-status" aria-live="polite"></div>
+                        <div class="actions" style="margin-top:0.75rem;">
+                            <button type="button" class="btn-action btn-action--ghost" id="btn-stop-gesprek">Gesprek afsluiten</button>
+                        </div>
+                    </div>
                 </div>
 
                 <form id="izp-form" onsubmit="return false;">
@@ -612,6 +788,7 @@
             document.getElementById('meta-datum').value = state.meta.datum || '';
 
             updateMeta();
+            tekenVoorstellen();
         }
 
         function updateMeta() {
@@ -714,7 +891,7 @@
             writeStateToUrl();
             try {
                 await navigator.clipboard.writeText(location.href);
-                showFeedback('Gekopieerd naar klembord');
+                showFeedback('Gekopieerd — let op: de link bevat de volledige ingevulde tekst');
             } catch {
                 showFeedback('Kopiëren niet beschikbaar — kopieer de URL handmatig');
             }
@@ -736,9 +913,267 @@
 
         window.addEventListener('beforeprint', refreshPrintMeta);
 
+        // ------------------------------------------------------------------
+        // AI-assistent
+        // ------------------------------------------------------------------
+        // Het gesprek loopt via mcp.dekunstvanwerken.nl; daar staat de sleutel.
+        // Hier wordt niets bewaard: het gesprek staat alleen in deze pagina en
+        // verdwijnt zodra het venster sluit. De naam uit "Algemene gegevens"
+        // gaat nooit mee in een verzoek.
+        const MCP_BASE = ['localhost', '127.0.0.1'].includes(location.hostname)
+            ? 'http://127.0.0.1:8321'
+            : 'https://mcp.dekunstvanwerken.nl';
+
+        const CONSENT_VERSIE = '2026-09-16.1';
+
+        // Voorstellen van de assistent die nog niet zijn overgenomen.
+        const openVoorstel = { rubrieken: {}, ud: null, uw: null };
+        let izpToken = null;
+        let bezig = false;
+
+        const el = (id) => document.getElementById(id);
+
+        function toonStap(naam) {
+            for (const s of ['stap-code', 'stap-consent', 'stap-chat']) {
+                el(s).hidden = (s !== naam);
+            }
+        }
+
+        function chatRegel(wie, tekst, klasse) {
+            const div = document.createElement('div');
+            div.className = 'chat-bericht' + (klasse ? ' ' + klasse : '');
+            const label = document.createElement('span');
+            label.className = 'wie';
+            label.textContent = wie;
+            div.appendChild(label);
+            // textContent: modeltekst wordt nooit als HTML uitgevoerd.
+            div.appendChild(document.createTextNode(tekst));
+            const log = el('chat-log');
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+            return div;
+        }
+
+        function zetStatus(tekst, fout) {
+            const s = el('chat-status');
+            s.textContent = tekst;
+            s.classList.toggle('chat-fout', Boolean(fout));
+        }
+
+        /** Tekent de nog openstaande voorstellen onder de betreffende rubriek. */
+        function tekenVoorstellen() {
+            for (const r of RUBRIEKEN) {
+                const tekst = openVoorstel.rubrieken[r.id];
+                const uren = r.special === 'werktijden' && (openVoorstel.ud || openVoorstel.uw);
+                if (!tekst && !uren) continue;
+
+                const body = document.querySelector(`.rubriek[data-rubriek="${r.id}"] .rubriek-body`);
+                if (!body) continue;
+
+                const box = document.createElement('div');
+                box.className = 'izp-voorstel';
+                const kop = document.createElement('span');
+                kop.className = 'kop';
+                kop.textContent = 'Voorstel van de assistent';
+                box.appendChild(kop);
+
+                const regels = [];
+                if (openVoorstel.ud && r.special === 'werktijden') regels.push(`Maximaal ${openVoorstel.ud} uur per dag`);
+                if (openVoorstel.uw && r.special === 'werktijden') regels.push(`Maximaal ${openVoorstel.uw} uur per week`);
+                if (tekst) regels.push(tekst);
+
+                const p = document.createElement('div');
+                p.className = 'tekst';
+                p.textContent = regels.join('\n');
+                box.appendChild(p);
+
+                const knoppen = document.createElement('div');
+                knoppen.className = 'knoppen';
+                const huidig = (state.rubrieken[r.id] || '').trim();
+
+                const mkKnop = (label, ghost, fn) => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.textContent = label;
+                    if (ghost) b.className = 'ghost';
+                    b.addEventListener('click', fn);
+                    knoppen.appendChild(b);
+                };
+
+                // Alleen de werktijden-rubriek neemt de uren over; wie rubriek I
+                // overneemt, zegt daarmee niets over zijn uren.
+                const neemUrenOver = () => {
+                    if (r.special !== 'werktijden') return;
+                    if (openVoorstel.ud) { state.werktijden.ud = openVoorstel.ud; openVoorstel.ud = null; }
+                    if (openVoorstel.uw) { state.werktijden.uw = openVoorstel.uw; openVoorstel.uw = null; }
+                };
+
+                if (tekst && huidig) {
+                    mkKnop('Vervangen', false, () => {
+                        state.rubrieken[r.id] = tekst;
+                        delete openVoorstel.rubrieken[r.id];
+                        neemUrenOver();
+                        render(); writeStateToUrl();
+                    });
+                    mkKnop('Toevoegen', false, () => {
+                        state.rubrieken[r.id] = `${huidig}\n${tekst}`.slice(0, 1500);
+                        delete openVoorstel.rubrieken[r.id];
+                        neemUrenOver();
+                        render(); writeStateToUrl();
+                    });
+                } else {
+                    mkKnop('Overnemen', false, () => {
+                        if (tekst) state.rubrieken[r.id] = tekst;
+                        delete openVoorstel.rubrieken[r.id];
+                        neemUrenOver();
+                        render(); writeStateToUrl();
+                    });
+                }
+                mkKnop('Negeren', true, () => {
+                    delete openVoorstel.rubrieken[r.id];
+                    if (r.special === 'werktijden') { openVoorstel.ud = null; openVoorstel.uw = null; }
+                    render();
+                });
+
+                box.appendChild(knoppen);
+                body.appendChild(box);
+            }
+        }
+
+        function verwerkVoorstel(voorstel) {
+            if (!voorstel) return false;
+            let iets = false;
+            for (const [id, tekst] of Object.entries(voorstel.rubrieken || {})) {
+                if (typeof tekst === 'string' && tekst.trim()) {
+                    openVoorstel.rubrieken[id] = tekst.trim();
+                    iets = true;
+                }
+            }
+            if (voorstel.ud) { openVoorstel.ud = voorstel.ud; iets = true; }
+            if (voorstel.uw) { openVoorstel.uw = voorstel.uw; iets = true; }
+            if (iets) { render(); }
+            return iets;
+        }
+
+        async function stuurBericht(bericht, stil) {
+            if (bezig || !izpToken) return;
+            bezig = true;
+            el('btn-verstuur').disabled = true;
+            if (!stil) chatRegel('Jij', bericht, 'van-jou');
+            zetStatus('De assistent denkt na…');
+            try {
+                const res = await fetch(`${MCP_BASE}/izp/gesprek`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: izpToken, bericht }),
+                });
+                const data = await res.json();
+                if (!data.ok) {
+                    zetStatus(data.error || 'Er ging iets mis.', true);
+                    if (res.status === 403) izpToken = null;
+                    return;
+                }
+                if (data.antwoord) chatRegel('Assistent', data.antwoord);
+                const nieuw = verwerkVoorstel(data.voorstel);
+                zetStatus(
+                    (nieuw ? 'Er staat een voorstel in het formulier hieronder. ' : '') +
+                    `Nog ${data.beurtenOver} bericht${data.beurtenOver === 1 ? '' : 'en'} in dit gesprek.`,
+                );
+            } catch {
+                zetStatus('Geen verbinding met de assistent. Probeer het zo nog eens.', true);
+            } finally {
+                bezig = false;
+                el('btn-verstuur').disabled = false;
+                el('chat-input').focus();
+            }
+        }
+
+        async function startGesprek() {
+            const code = el('izp-code').value.trim().toUpperCase();
+            const knop = el('btn-start-gesprek');
+            knop.disabled = true;
+            el('start-fout').textContent = '';
+            try {
+                const res = await fetch(`${MCP_BASE}/izp/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, toestemming: true, consentVersie: CONSENT_VERSIE }),
+                });
+                const data = await res.json();
+                if (!data.ok) {
+                    el('start-fout').textContent = data.error || 'Starten lukte niet.';
+                    el('start-fout').classList.add('show');
+                    knop.disabled = false;
+                    return;
+                }
+                izpToken = data.token;
+                toonStap('stap-chat');
+                el('chat-log').textContent = '';
+                zetStatus('');
+                await stuurBericht('Ik wil mijn inzetbaarheidsprofiel voorbereiden.', true);
+            } catch {
+                el('start-fout').textContent = 'Geen verbinding. Probeer het later opnieuw.';
+                el('start-fout').classList.add('show');
+                knop.disabled = false;
+            }
+        }
+
+        function sluitAssistent() {
+            izpToken = null;
+            el('assistent-panel').hidden = true;
+            el('assistent-start').hidden = false;
+            el('chat-log').textContent = '';
+            el('izp-consent-check').checked = false;
+            el('btn-start-gesprek').disabled = true;
+            toonStap('stap-code');
+        }
+
+        function wireAssistent() {
+            // Zonder de assistent op de server blijft de knop verborgen en is
+            // de pagina precies zoals hij was.
+            fetch(`${MCP_BASE}/healthz`)
+                .then((r) => r.json())
+                .then((d) => { if (d && d.izpAssistent) el('assistent-start').hidden = false; })
+                .catch(() => {});
+
+            el('btn-assistent').addEventListener('click', () => {
+                el('assistent-start').hidden = true;
+                el('assistent-panel').hidden = false;
+                toonStap('stap-code');
+                el('izp-code').focus();
+            });
+            el('btn-assistent-annuleer').addEventListener('click', sluitAssistent);
+            el('btn-liever-zelf').addEventListener('click', sluitAssistent);
+            el('btn-stop-gesprek').addEventListener('click', () => {
+                sluitAssistent();
+                showFeedback('Gesprek afgesloten. Je concept staat in het formulier.');
+            });
+            el('btn-code-volgende').addEventListener('click', () => {
+                if (!el('izp-code').value.trim()) { el('izp-code').focus(); return; }
+                toonStap('stap-consent');
+            });
+            el('izp-code').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); el('btn-code-volgende').click(); }
+            });
+            el('izp-consent-check').addEventListener('change', (e) => {
+                el('btn-start-gesprek').disabled = !e.target.checked;
+            });
+            el('btn-start-gesprek').addEventListener('click', startGesprek);
+            el('btn-verstuur').addEventListener('click', () => {
+                const t = el('chat-input').value.trim();
+                if (!t) return;
+                el('chat-input').value = '';
+                stuurBericht(t);
+            });
+            el('chat-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); el('btn-verstuur').click(); }
+            });
+        }
+
         // --- Init ---
         applyStateFromUrl();
         wireMeta();
+        wireAssistent();
         render();
         writeStateToUrl();
     })();

@@ -2,7 +2,7 @@
 /*
  * MCP server for de Kunst van Werken — mcp.dekunstvanwerken.nl
  * ------------------------------------------------------------------
- * Zero-dependency Node.js implementation of the Model Context Protocol
+ * Node.js implementation of the Model Context Protocol
  * over the Streamable HTTP transport (stateless mode): a single POST
  * endpoint speaking JSON-RPC 2.0. No npm install needed on the server.
  *
@@ -11,8 +11,17 @@
  *   - faq                    the site's FAQ answers
  *   - bedrijfsinfo           services & contact details
  *
- * Extra endpoint (not MCP): POST /aanmelden — stores the website's
- * signup form submissions as JSONL in MCP_STATE_DIR, collected weekly.
+ * Extra endpoints (not MCP):
+ *   - POST /aanmelden     stores the website's signup form submissions as
+ *                         JSONL in MCP_STATE_DIR, collected weekly.
+ *   - POST /izp/start     checks an access code + consent for the IZP
+ *                         assistant (see izp-assistent.mjs)
+ *   - POST /izp/gesprek   one turn of that conversation
+ *
+ * The MCP part itself has no npm dependencies. The IZP assistant needs
+ * @anthropic-ai/vertex-sdk (mcp/package.json) and is only switched on when
+ * VERTEX_PROJECT_ID and VERTEX_REGION are set; without them the server
+ * runs exactly as before.
  *
  * Run:   node mcp/server.mjs           (defaults to 127.0.0.1:8321)
  *        MCP_PORT=9000 node mcp/server.mjs
@@ -21,6 +30,7 @@
 import { createServer } from 'node:http';
 import { appendFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { assistentIngeschakeld, handleIzpGesprek, handleIzpStart } from './izp-assistent.mjs';
 
 const SITE = 'https://dekunstvanwerken.nl';
 const PORT = Number(process.env.MCP_PORT || 8321);
@@ -28,7 +38,7 @@ const HOST = process.env.MCP_HOST || '127.0.0.1';
 // Signup submissions are appended here as JSONL; picked up weekly over SSH.
 const STATE_DIR = process.env.MCP_STATE_DIR || '/var/lib/dkvw-mcp';
 
-const SERVER_INFO = { name: 'dekunstvanwerken', version: '1.3.0' };
+const SERVER_INFO = { name: 'dekunstvanwerken', version: '1.4.0' };
 const PROTOCOL_VERSIONS = ['2025-06-18', '2025-03-26', '2024-11-05'];
 
 const FAQ = [
@@ -351,15 +361,29 @@ function handleRpc(msg) {
 // collected weekly over SSH. Honeypot field + a small per-IP rate limit
 // keep casual spam out.
 const AANMELD_FILE = () => join(STATE_DIR, 'aanmeldingen.jsonl');
-const rateLog = new Map(); // ip -> [timestamps]
-function rateLimited(ip) {
+const rateLog = new Map(); // "bucket|ip" -> [timestamps]
+/** Telt hits per uur per bucket; elk endpoint heeft zijn eigen teller. */
+function rateLimited(bucket, ip, limiet = 5) {
   const now = Date.now();
   const windowMs = 60 * 60 * 1000;
-  const hits = (rateLog.get(ip) || []).filter((t) => now - t < windowMs);
+  const key = `${bucket}|${ip}`;
+  const hits = (rateLog.get(key) || []).filter((t) => now - t < windowMs);
   hits.push(now);
-  rateLog.set(ip, hits);
+  rateLog.set(key, hits);
   if (rateLog.size > 5000) rateLog.clear(); // memory backstop
-  return hits.length > 5;
+  return hits.length > limiet;
+}
+
+function clientIp(req) {
+  const ip = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '?';
+  return String(ip).split(',')[0].trim();
+}
+
+function jsonReply(res) {
+  return (code, obj) => {
+    res.writeHead(code, { 'Content-Type': 'application/json', ...CORS });
+    res.end(JSON.stringify(obj));
+  };
 }
 
 function handleAanmelding(body, req, res) {
@@ -390,8 +414,7 @@ function handleAanmelding(body, req, res) {
   if (!aanmelding.naam || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(aanmelding.email)) {
     return reply(400, { ok: false, error: 'naam en een geldig e-mailadres zijn verplicht' });
   }
-  const ip = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '?';
-  if (rateLimited(String(ip).split(',')[0].trim())) {
+  if (rateLimited('aanmelden', clientIp(req))) {
     return reply(429, { ok: false, error: 'te veel aanvragen; probeer het later opnieuw' });
   }
   try {
@@ -422,7 +445,7 @@ const server = createServer((req, res) => {
 
   if (req.method === 'GET' && url.pathname === '/healthz') {
     res.writeHead(200, { 'Content-Type': 'application/json', ...CORS });
-    return res.end(JSON.stringify({ ok: true, server: SERVER_INFO }));
+    return res.end(JSON.stringify({ ok: true, server: SERVER_INFO, izpAssistent: assistentIngeschakeld() }));
   }
 
   if (req.method === 'GET') {
@@ -457,6 +480,14 @@ const server = createServer((req, res) => {
   req.on('end', () => {
     if (url.pathname === '/aanmelden') {
       return handleAanmelding(body, req, res);
+    }
+    if (url.pathname === '/izp/start' || url.pathname === '/izp/gesprek') {
+      const ctx = { reply: jsonReply(res), stateDir: STATE_DIR, rateLimited, clientIp: clientIp(req) };
+      const handler = url.pathname === '/izp/start' ? handleIzpStart : handleIzpGesprek;
+      return Promise.resolve(handler(body, req, res, ctx)).catch((e) => {
+        console.error('izp: onverwachte fout:', e.name || 'fout');
+        if (!res.headersSent) ctx.reply(500, { ok: false, error: 'er ging iets mis' });
+      });
     }
     let parsed;
     try {

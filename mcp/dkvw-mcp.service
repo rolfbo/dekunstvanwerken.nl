@@ -16,6 +16,11 @@ WorkingDirectory=/var/www/dekunstvanwerken.nl
 ExecStart=/usr/bin/node /var/www/dekunstvanwerken.nl/mcp/server.mjs
 Environment=MCP_PORT=8321
 Environment=MCP_HOST=127.0.0.1
+# IZP-assistent: Vertex-project, EU-regio en het pad naar de sleutel van
+# het service account. Staat niet in de repo. Aanmaken met rechten 600,
+# eigenaar www-data. Ontbreekt het bestand, dan draait de MCP-server
+# gewoon door en is alleen de assistent uitgeschakeld.
+EnvironmentFile=-/etc/dkvw-mcp.env
 # systemd creates /var/lib/dkvw-mcp and keeps it writable despite
 # ProtectSystem=strict; the aanmeldformulier submissions land there.
 StateDirectory=dkvw-mcp

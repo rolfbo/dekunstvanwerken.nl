@@ -1,0 +1,14 @@
+{
+  "name": "dkvw-mcp",
+  "version": "1.4.0",
+  "private": true,
+  "type": "module",
+  "description": "MCP-server en IZP-assistent van de Kunst van Werken",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.126.0",
+    "@anthropic-ai/vertex-sdk": "^0.19.9"
+  }
+}
