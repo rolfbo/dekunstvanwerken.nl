@@ -1,0 +1,287 @@
+{
+  "site": "dekunstvanwerken.nl",
+  "days": 30,
+  "classifier": 3,
+  "hosting_asn_rule": true,
+  "generated": "2026-09-17 15:15 UTC",
+  "requests": 14486,
+  "own_hits": 40,
+  "mix": {
+    "bot": 2960,
+    "engine": 0,
+    "scraper": 0,
+    "datacenter": 6538,
+    "oneshot": 543,
+    "human": 4445
+  },
+  "views": 208,
+  "ips": 61,
+  "browsers": 41,
+  "oneshot_ip_days": 500,
+  "leads": {
+    "total": 0,
+    "by_type": {
+      "werkgever": 0,
+      "whitelabel": 0,
+      "anders": 0
+    },
+    "by_day": []
+  },
+  "by_day": [
+    {
+      "date": "2026-09-03",
+      "views": 26,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-04",
+      "views": 7,
+      "ips": 5
+    },
+    {
+      "date": "2026-09-05",
+      "views": 3,
+      "ips": 2
+    },
+    {
+      "date": "2026-09-06",
+      "views": 4,
+      "ips": 3
+    },
+    {
+      "date": "2026-09-07",
+      "views": 13,
+      "ips": 4
+    },
+    {
+      "date": "2026-09-08",
+      "views": 3,
+      "ips": 3
+    },
+    {
+      "date": "2026-09-09",
+      "views": 7,
+      "ips": 4
+    },
+    {
+      "date": "2026-09-10",
+      "views": 11,
+      "ips": 5
+    },
+    {
+      "date": "2026-09-11",
+      "views": 12,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-12",
+      "views": 56,
+      "ips": 1
+    },
+    {
+      "date": "2026-09-13",
+      "views": 5,
+      "ips": 1
+    },
+    {
+      "date": "2026-09-14",
+      "views": 10,
+      "ips": 9
+    },
+    {
+      "date": "2026-09-15",
+      "views": 13,
+      "ips": 1
+    },
+    {
+      "date": "2026-09-16",
+      "views": 22,
+      "ips": 14
+    },
+    {
+      "date": "2026-09-17",
+      "views": 16,
+      "ips": 2
+    }
+  ],
+  "pages": [
+    {
+      "path": "/",
+      "n": 154
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 6
+    },
+    {
+      "path": "/diensten/",
+      "n": 5
+    },
+    {
+      "path": "/fml.html",
+      "n": 5
+    },
+    {
+      "path": "/voorwaarden.html",
+      "n": 4
+    },
+    {
+      "path": "/diensten/verzuimbegeleiding.html",
+      "n": 3
+    },
+    {
+      "path": "/diensten/preventieadvies.html",
+      "n": 3
+    },
+    {
+      "path": "/kennisbank/rie-verplicht.html",
+      "n": 3
+    },
+    {
+      "path": "/kennisbank/",
+      "n": 2
+    },
+    {
+      "path": "/diensten/rie-toetsing.html",
+      "n": 2
+    },
+    {
+      "path": "/diensten/aanstellingskeuring.html",
+      "n": 2
+    },
+    {
+      "path": "/diensten/bedrijfsarts.html",
+      "n": 2
+    },
+    {
+      "path": "/kennisbank/wet-verbetering-poortwachter-stappenplan.html",
+      "n": 2
+    },
+    {
+      "path": "/kennisbank/wat-doet-een-bedrijfsarts.html",
+      "n": 2
+    },
+    {
+      "path": "/kennisbank/opbouwschema-re-integratie.html",
+      "n": 2
+    }
+  ],
+  "conversion": [
+    {
+      "path": "/whitelabel.html",
+      "n": 2
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 6
+    },
+    {
+      "path": "/fml.html",
+      "n": 5
+    },
+    {
+      "path": "/izp.html",
+      "n": 1
+    }
+  ],
+  "referrers": [
+    {
+      "ref": "https://www.google.com/",
+      "n": 19
+    },
+    {
+      "ref": "https://www.bing.com/",
+      "n": 2
+    },
+    {
+      "ref": "https://duckduckgo.com/",
+      "n": 2
+    },
+    {
+      "ref": "http://www.google.com.hk",
+      "n": 1
+    }
+  ],
+  "crawlers": [
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
+      "n": 769
+    },
+    {
+      "ua": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/r",
+      "n": 332
+    },
+    {
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
+      "n": 253
+    },
+    {
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      "n": 105
+    },
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatib",
+      "n": 60
+    },
+    {
+      "ua": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.c",
+      "n": 59
+    }
+  ],
+  "scrapers": [],
+  "notfound": [
+    {
+      "path": "/kennisbank/arousal-performance-curve.html",
+      "n": 10
+    },
+    {
+      "path": "/contact.html",
+      "n": 4
+    },
+    {
+      "path": "/medewerkers.html",
+      "n": 1
+    },
+    {
+      "path": "/onze-medewerkers.html",
+      "n": 1
+    },
+    {
+      "path": "/vestigingen.html",
+      "n": 1
+    },
+    {
+      "path": "/route.html",
+      "n": 1
+    },
+    {
+      "path": "/locaties.html",
+      "n": 1
+    },
+    {
+      "path": "/locatie.html",
+      "n": 1
+    },
+    {
+      "path": "/over-ons.html",
+      "n": 1
+    },
+    {
+      "path": "/kennisbank/index.json",
+      "n": 1
+    }
+  ],
+  "errors": [
+    {
+      "status": "405",
+      "path": "/",
+      "n": 353
+    },
+    {
+      "status": "400",
+      "path": "/",
+      "n": 1
+    }
+  ],
+  "server_errors": {}
+}
