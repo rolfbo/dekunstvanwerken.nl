@@ -3,21 +3,21 @@
   "days": 30,
   "classifier": 3,
   "hosting_asn_rule": true,
-  "generated": "2026-09-18 15:06 UTC",
-  "requests": 14209,
-  "own_hits": 46,
+  "generated": "2026-09-19 10:18 UTC",
+  "requests": 15538,
+  "own_hits": 45,
   "mix": {
-    "bot": 2991,
+    "bot": 3055,
     "engine": 0,
     "scraper": 0,
-    "datacenter": 6799,
-    "oneshot": 558,
-    "human": 3861
+    "datacenter": 7723,
+    "oneshot": 552,
+    "human": 4208
   },
-  "views": 191,
-  "ips": 59,
-  "browsers": 40,
-  "oneshot_ip_days": 511,
+  "views": 188,
+  "ips": 57,
+  "browsers": 38,
+  "oneshot_ip_days": 496,
   "leads": {
     "total": 0,
     "by_type": {
@@ -28,11 +28,6 @@
     "by_day": []
   },
   "by_day": [
-    {
-      "date": "2026-09-04",
-      "views": 7,
-      "ips": 5
-    },
     {
       "date": "2026-09-05",
       "views": 3,
@@ -102,12 +97,17 @@
       "date": "2026-09-18",
       "views": 9,
       "ips": 5
+    },
+    {
+      "date": "2026-09-19",
+      "views": 4,
+      "ips": 1
     }
   ],
   "pages": [
     {
       "path": "/",
-      "n": 140
+      "n": 138
     },
     {
       "path": "/opbouwschema.html",
@@ -138,11 +138,11 @@
       "n": 3
     },
     {
-      "path": "/voorwaarden.html",
-      "n": 3
+      "path": "/diensten/aanstellingskeuring.html",
+      "n": 2
     },
     {
-      "path": "/kennisbank/",
+      "path": "/voorwaarden.html",
       "n": 2
     },
     {
@@ -150,11 +150,11 @@
       "n": 2
     },
     {
-      "path": "/diensten/aanstellingskeuring.html",
+      "path": "/diensten/bedrijfsarts.html",
       "n": 2
     },
     {
-      "path": "/diensten/bedrijfsarts.html",
+      "path": "/kennisbank/",
       "n": 2
     },
     {
@@ -205,38 +205,42 @@
   "crawlers": [
     {
       "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
-      "n": 798
+      "n": 829
     },
     {
       "ua": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/r",
-      "n": 314
+      "n": 296
     },
     {
       "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
-      "n": 261
+      "n": 262
     },
     {
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      "n": 113
+      "n": 115
     },
     {
       "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatib",
-      "n": 60
+      "n": 62
     },
     {
       "ua": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.c",
-      "n": 60
+      "n": 59
     }
   ],
   "scrapers": [],
   "notfound": [
     {
       "path": "/kennisbank/arousal-performance-curve.html",
-      "n": 10
+      "n": 11
     },
     {
       "path": "/contact.html",
       "n": 3
+    },
+    {
+      "path": "/tcpconfig.html",
+      "n": 2
     },
     {
       "path": "/kennisbank/index.json",
@@ -247,7 +251,7 @@
     {
       "status": "405",
       "path": "/",
-      "n": 287
+      "n": 313
     },
     {
       "status": "400",
