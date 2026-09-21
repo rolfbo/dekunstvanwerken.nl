@@ -17,9 +17,11 @@
   "stats-2026-09-16.json",
   "stats-2026-09-17.json",
   "stats-2026-09-18.json",
-  "stats-2026-09-19.json"
+  "stats-2026-09-19.json",
+  "stats-2026-09-20.json",
+  "stats-2026-09-21.json"
  ],
- "merged_on": "2026-09-19",
+ "merged_on": "2026-09-21",
  "by_day": [
   {
    "date": "2026-06-11",
@@ -721,7 +723,7 @@
    "date": "2026-09-06",
    "views": 4,
    "ips": 3,
-   "from": "2026-09-19",
+   "from": "2026-09-20",
    "complete": true,
    "classifier": 3
   },
@@ -729,7 +731,7 @@
    "date": "2026-09-07",
    "views": 13,
    "ips": 4,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -737,7 +739,7 @@
    "date": "2026-09-08",
    "views": 3,
    "ips": 3,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -745,7 +747,7 @@
    "date": "2026-09-09",
    "views": 7,
    "ips": 4,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -753,7 +755,7 @@
    "date": "2026-09-10",
    "views": 11,
    "ips": 5,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -761,7 +763,7 @@
    "date": "2026-09-11",
    "views": 12,
    "ips": 6,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -769,7 +771,7 @@
    "date": "2026-09-12",
    "views": 56,
    "ips": 1,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -777,7 +779,7 @@
    "date": "2026-09-13",
    "views": 5,
    "ips": 1,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -785,7 +787,7 @@
    "date": "2026-09-14",
    "views": 10,
    "ips": 9,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -793,7 +795,7 @@
    "date": "2026-09-15",
    "views": 13,
    "ips": 1,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -801,7 +803,7 @@
    "date": "2026-09-16",
    "views": 22,
    "ips": 14,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -809,7 +811,7 @@
    "date": "2026-09-17",
    "views": 16,
    "ips": 2,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -817,7 +819,7 @@
    "date": "2026-09-18",
    "views": 9,
    "ips": 5,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
    "complete": true,
    "classifier": 3
   },
@@ -825,7 +827,23 @@
    "date": "2026-09-19",
    "views": 4,
    "ips": 1,
-   "from": "2026-09-19",
+   "from": "2026-09-21",
+   "complete": true,
+   "classifier": 3
+  },
+  {
+   "date": "2026-09-20",
+   "views": 7,
+   "ips": 7,
+   "from": "2026-09-21",
+   "complete": true,
+   "classifier": 3
+  },
+  {
+   "date": "2026-09-21",
+   "views": 3,
+   "ips": 3,
+   "from": "2026-09-21",
    "complete": false,
    "classifier": 3
   }
