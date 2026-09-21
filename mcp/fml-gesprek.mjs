@@ -65,7 +65,12 @@ const API_KEY = process.env.FML_API_KEY || process.env.ANTHROPIC_API_KEY;
 // EU-regio of een no-train-afspraak in het contract, zet het hier dan recht.
 const LEVERANCIER = process.env.FML_LEVERANCIER || PROVIDER.naam;
 const LAND = process.env.FML_LAND || PROVIDER.land;
-const TRAINT = process.env.FML_TRAINT || 'nee, contractueel vastgelegd';
+/* Standaard staat hier geen geruststelling maar de waarheid: zolang er geen
+   verwerkersovereenkomst is, is er niets vastgelegd. Wie dat wil wijzigen zet
+   FML_TRAINT — en heeft dan hopelijk het contract ernaast liggen. Zo staat de
+   stand van zaken in de interface zelf en niet alleen in een document. */
+const TRAINT = process.env.FML_TRAINT
+  || 'dat is nog niet met de leverancier vastgelegd — daarom staat deze tool nog niet publiek aan';
 
 // Latency/kwaliteit-knop (alleen Anthropic). 'low' houdt een gespreksbeurt
 // snel; zet hoger als blijkt dat het model items mist.

@@ -181,9 +181,11 @@ FML_LEVERANCIER="Naam zoals de bezoeker hem te zien krijgt"
 FML_LAND="Waar hun servers staan"
 ```
 
-`FML_TRAINT` overschrijft de zin over trainen (standaard "nee, contractueel
-vastgelegd"). Zet die pas op iets geruststellends als het ook echt in het
-contract staat — het is de zin die de bezoeker leest voordat hij iets intypt.
+`FML_TRAINT` overschrijft de zin over trainen. Standaard staat daar geen
+geruststelling maar de stand van zaken: *"dat is nog niet met de leverancier
+vastgelegd — daarom staat deze tool nog niet publiek aan"*. Zet hem pas om als
+de verwerkersovereenkomst er ligt. Zo staat de openstaande taak in de interface
+zelf, en niet alleen in dit document.
 
 De adapters geven allebei hetzelfde terug, en wat er terugkomt wordt sowieso
 gewantrouwd: onbekende itemsleutels worden weggegooid, scores buiten 0–3
