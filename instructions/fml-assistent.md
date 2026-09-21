@@ -34,6 +34,50 @@ De pagina praat met `127.0.0.1:8321` zodra je hem op localhost opent, en met
 `mcp.dekunstvanwerken.nl` daarbuiten. Openen via `file://` werkt niet: de
 pagina laadt `fml-items.js` als module en dat vereist http.
 
+## Het dagverhaal
+
+De reden om dit als gesprek te doen en niet als formulier: je kunt vragen naar
+dingen die niets met werk te maken hebben. Boodschappen, koken, schoonmaken, de
+hond uitlaten, wat iemand 's avonds doet.
+
+Dat is geen omweg maar de kortste route. Vraag je "kun je tien kilo tillen?",
+dan krijg je een antwoord over iemands zelfbeeld — de een is bouwvakker en zegt
+ja, de ander is ziek en zegt nee. Vraag je "hoe deed je de boodschappen deze
+week?", dan krijg je gedrag: *mijn zus haalt ze*, *ik ga twee keer want één
+volle tas is te zwaar*, *ik parkeer zo dicht mogelijk bij de deur*. Waarneembaar,
+en de bezoeker hoeft zichzelf niet te beoordelen. Het is ook wat een
+bedrijfsarts doet in een consult; het dagverhaal is daar een vaste techniek.
+
+Dagelijkse bezigheden leggen bovendien verrassend direct op de rubrieken:
+boodschappen raakt tillen, lopen en vervoer; schoonmaken raakt bukken, reiken,
+knielen en boven schouderhoogte; een maaltijd koken raakt staan, aandacht
+vasthouden en planmatig handelen.
+
+**Maar niet één op één.** Eén tas boodschappen per week is geen "frequent tillen
+tijdens werk", en een uur tuinieren op eigen tempo is geen werkdag. Precies op
+dat punt gaan echte beoordelingen mis. De prompt bevat daarom een aparte regel:
+het dagverhaal is een *aanwijzing*, bij twijfel scoort het model lager of vraagt
+het door naar de werksituatie, en iets wat thuis met rustmomenten lukt zegt
+weinig over acht uur achtereen.
+
+Elk voorstel draagt daarom een `bron`: `werk` of `dagelijks_leven`. Op het scherm
+staat dat erbij ("Voorstel assistent, uit je dagverhaal: …"), zodat zichtbaar
+blijft welke scores voorzichtiger gelezen moeten worden.
+
+Twee dingen die de prompt uitdrukkelijk verbiedt: confronteren met
+tegenstellingen (wie zegt zich niet te kunnen concentreren maar elke avond leest,
+krijgt een neutrale vervolgvraag, geen wedervraag — dit is geen controle), en
+doorvragen over privéleven verder dan bezigheden. Geen relaties, geen financiën,
+geen huishoudsamenstelling.
+
+## Wat er op de afdruk komt
+
+Het dagverhaal levert onderbouwingen op die over thuis gaan. Die horen bij de
+bedrijfsarts thuis en niet per se bij een werkgever, terwijl het dezelfde
+uitdraai is. Daarom staat in de actiebalk **Toelichtingen meeprinten**, standaard
+uit: zonder vinkje bevat de afdruk alleen de scores. De markering dát een item
+van de assistent kwam gaat altijd mee — dat is herkomst, geen privé-inhoud.
+
 ## De prompt afstellen
 
 Dat is het eigenlijke werk. Of dit iets wordt hangt niet af van de techniek maar
@@ -42,7 +86,8 @@ rubriek-items weet te leggen — en of het zich inhoudt waar het niets weet.
 
 ```bash
 node scripts/fml-gesprek-cli.mjs                       # gesprek in de terminal
-node scripts/fml-gesprek-cli.mjs --scenario geval.txt  # vast scenario herhalen
+node scripts/fml-gesprek-cli.mjs --scenario scripts/scenarios/stratenmaker.txt
+node scripts/fml-gesprek-cli.mjs --scenario scripts/scenarios/kantoor-burnout.txt
 ```
 
 Met `--scenario` (één antwoord per regel) draai je na elke promptwijziging
@@ -57,6 +102,10 @@ Waar je op let:
 - Corrigeert het netjes als de bezoeker het tegenspreekt?
 - Vraagt het door bij twijfel in plaats van te scoren?
 - Blijft het van diagnoses af?
+- Stapt het uit zichzelf over op het dagverhaal, of blijft het bij werk hangen?
+- Rekent het dagelijkse bezigheden te makkelijk om naar werkbelasting? Zet het
+  `bron` eerlijk op `dagelijks_leven`?
+- Confronteert het met tegenstellingen? Dat mag niet.
 
 Knoppen in `mcp/fml-gesprek.mjs`: `SYSTEEM` (de prompt), `AANSPREEKVORM`
 (`je`/`u` — tooncalibratie, nu `je`), en via de omgeving `FML_EFFORT`
@@ -142,6 +191,11 @@ Kosten zijn bij dit verkeer geen punt: een heel gesprek is in de orde van
 - **Streaming.** Nu verschijnen de voorstellen per beurt in plaats van per woord.
   Voor de demo maakt dat weinig uit; het is later een optie.
 - **`izp.html`.** Zelfde structuur, kan dezelfde assistent gebruiken.
+- **Een spreekknop per vraag.** Een tussenvorm: het formulier stelt de vraag, de
+  bezoeker antwoordt met een knop "inspreken". Goedkoop zodra er transcriptie is,
+  en de veilige uitwijk voor wie geen gesprek wil. Maar het levert alleen
+  dictaat van het formulier op — het dagverhaal hierboven krijg je er niet mee,
+  en dáár zit de waarde. Aanvulling dus, geen vervanging.
 - **Een strengere regel voor werktijden.** `VI.a`/`VI.b` worden nu net als de
   rest als voorstel gemarkeerd. Dat zijn de meest ingrijpende getallen op de
   pagina en die verdienen waarschijnlijk een expliciete bevestiging.

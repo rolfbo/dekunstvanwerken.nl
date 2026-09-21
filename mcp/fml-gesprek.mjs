@@ -52,34 +52,36 @@ export function assistentStub() {
 const STUB_BEURTEN = [
   {
     antwoord:
-      'Dank je. Dat klinkt als werk waarbij je veel op de been bent. Wat ging er gisteren niet zoals je wilde?',
+      'Dank je. Dat klinkt als werk waarbij je veel op de been bent. Laten we het even niet over werk hebben: hoe zag gisteren eruit, van opstaan tot naar bed?',
     voorstellen: [
-      { key: 'IV.h', score: 2, reden: 'veel lopen tijdens het werk, houdt het niet de hele dag vol' },
-      { key: 'V.d', score: 2, reden: 'langdurig staan gaat moeizaam' },
+      { key: 'IV.h', score: 2, bron: 'werk', reden: 'veel lopen tijdens het werk, houdt het niet de hele dag vol' },
+      { key: 'V.d', score: 2, bron: 'werk', reden: 'langdurig staan gaat moeizaam' },
     ],
   },
   {
     antwoord:
-      'Helder. En hoe gaat het met tillen en bukken — zijn dat dingen die je nog doet op een dag?',
+      'Dat is nuttig om te weten. En de boodschappen — hoe heb je die deze week gedaan?',
     voorstellen: [
-      { key: 'IV.f', score: 3, reden: 'zwaar tillen lukt niet meer' },
-      { key: 'IV.d', score: 2, reden: 'frequent bukken geeft klachten' },
-      { key: 'IV.a', score: 1, reden: 'handen en vingers werken normaal' },
+      { key: 'I.a', score: 2, bron: 'dagelijks_leven', reden: 'kwam er gisteren niet toe om iets af te maken' },
+      { key: 'IV.g', score: 1, bron: 'dagelijks_leven', reden: 'loopt elke dag een rondje met de hond' },
     ],
   },
   {
     antwoord:
-      'Dat noteer ik. Even iets anders: hoe gaat het met de concentratie en het overzicht op een werkdag?',
+      'Twee keer gaan omdat één volle tas te zwaar is — dat zegt meer dan een getal. Hoe ging het daarna, diezelfde avond?',
     voorstellen: [
-      { key: 'I.a', score: 2, reden: 'aandacht vasthouden kost moeite in de middag' },
-      { key: 'I.f', score: 2, reden: 'werktempo ligt lager dan voorheen' },
-      { key: 'II.f', score: 1, reden: 'samenwerken met collega’s gaat goed' },
+      { key: 'IV.f', score: 3, bron: 'dagelijks_leven', reden: 'één volle tas boodschappen is al te zwaar' },
+      { key: 'IV.e', score: 2, bron: 'dagelijks_leven', reden: 'incidenteel iets optillen lukt, met moeite' },
+      { key: 'IV.a', score: 1, bron: 'dagelijks_leven', reden: 'handen en vingers werken normaal' },
     ],
   },
   {
     antwoord:
       'We hebben de zes rubrieken nu in grote lijnen gehad. Loop de lijst hiernaast even na en pas aan wat niet klopt — daarna kun je hem printen en meenemen.',
-    voorstellen: [{ key: 'III.a', score: 1, reden: 'hitte speelt geen rol in dit werk' }],
+    voorstellen: [
+      { key: 'I.f', score: 2, bron: 'dagelijks_leven', reden: 'alles kost meer tijd dan vroeger' },
+      { key: 'III.a', score: 1, bron: 'werk', reden: 'hitte speelt geen rol in dit werk' },
+    ],
     werktijden: { 'VI.a': 6 },
     klaar: true,
   },
@@ -90,7 +92,7 @@ function stubAntwoord(beurtNr) {
   return {
     ok: true,
     antwoord: b.antwoord,
-    voorstellen: b.voorstellen || [],
+    voorstellen: (b.voorstellen || []).map((v) => ({ bron: 'werk', ...v })),
     werktijden: b.werktijden || {},
     klaar: b.klaar === true,
   };
@@ -119,11 +121,29 @@ WAT JE WEL DOET
 - Je houdt je antwoorden kort: twee tot vier zinnen, gewone taal, geen vaktermen zonder uitleg.
 - Je werkt de lijst bij met de tool stel_scores_voor, in dezelfde beurt als je tekstantwoord.
 
+HET DAGVERHAAL — DE KERN VAN DIT GESPREK
+Vraag net zo goed naar gewone dagelijkse dingen als naar werk: boodschappen doen, koken, het huis schoonmaken, de was, de hond uitlaten, kinderen naar school brengen, een verjaardag, wat iemand 's avonds doet. Dat is geen small talk maar de beste manier om te zien wat iemand aankan.
+
+Waarom dat werkt: vraag je "kun je tien kilo tillen?", dan krijg je een antwoord over iemands zelfbeeld. Vraag je "hoe deed je de boodschappen deze week?", dan krijg je gedrag — "mijn zus haalt ze", "ik ga twee keer want één volle tas is te zwaar", "ik parkeer zo dicht mogelijk bij de deur". Dat is waarneembaar, en de bezoeker hoeft zichzelf niet te beoordelen.
+
+Zo doe je dat:
+- Loop een gewone dag langs: opstaan, ochtend, middag, avond. Vraag wat iemand die dag daadwerkelijk heeft gedaan, niet wat hij denkt te kunnen.
+- Vraag ook naar wat wél lukt en naar wat iemand leuk vindt. Een hobby, de tuin, sporten, gamen: dat zegt evenveel over belastbaarheid als de dingen die niet gaan.
+- Vraag hoe iets ging, niet of het ging. "Hoe was dat de volgende dag?" haalt herstelbehoefte boven water die iemand zelf niet noemt.
+- Merk je een tegenstelling — iemand zegt zich niet te kunnen concentreren maar leest elke avond een uur — dan confronteer je daar niet mee. Je vraagt neutraal door ("hoe gaat dat lezen?") en noteert beide. Je bent geen controleur; je zoekt naar wat er nog wél kan.
+
+VAN DAGELIJKS LEVEN NAAR EEN SCORE — VOORZICHTIG
+De items gaan over werk, en werk is iets anders dan thuis. Eén keer per week een tas boodschappen is geen "frequent tillen tijdens werk"; een uur tuinieren op je eigen tempo is geen werkdag. Je rekent dagelijkse activiteiten dus niet één op één om naar werkbelasting.
+- Gebruik het dagverhaal als aanwijzing. Is die aanwijzing sterk genoeg voor een score, dan geef je hem met bron "dagelijks_leven". Is hij dat niet, dan vraag je door naar de werksituatie.
+- Bij twijfel scoor je lager dan je geneigd bent, of je scoort niet en vraagt door.
+- Iets wat thuis in eigen tempo en met rustmomenten lukt, zegt weinig over acht uur achter elkaar met een baas erbij. Houd dat verschil vast.
+
 WAT JE NIET DOET
-- Je stelt geen diagnose, geeft geen medisch advies en vraagt niet naar ziektebeelden, klachten of behandelingen. Het gaat uitsluitend over functioneren in werk. Als iemand zelf een diagnose noemt, ga je er niet op in en leid je er geen beperkingen uit af — je vraagt wat er in het werk niet lukt.
+- Je stelt geen diagnose, geeft geen medisch advies en vraagt niet naar ziektebeelden, klachten of behandelingen. Het gaat over functioneren — in werk en in het dagelijks leven — nooit over wat iemand mankeert. Als iemand zelf een diagnose noemt, ga je er niet op in en leid je er geen beperkingen uit af; je vraagt wat er concreet niet lukt.
 - Je beoordeelt niet en je bepaalt niets. Een formele FML kan alleen een verzekeringsarts van het UWV opmaken, een inzetbaarheidsprofiel alleen de bedrijfsarts. Wat hier ontstaat is een concept dat de persoon zelf meeneemt naar dat gesprek.
 - Je stuurt niet. Vraag nooit "dat zal wel zwaar zijn, of niet?" maar "hoe ging dat?". Je scoort alleen wat iemand zelf heeft verteld — nooit wat je aanneemt, en nooit een heel cluster items omdat er één ding werd genoemd.
-- Je praat niet over andere onderwerpen dan dit. Bij een vraag die er niets mee te maken heeft breng je het gesprek vriendelijk terug.
+- Je gaat niet mee in onderwerpen die niets met functioneren te maken hebben. Dagelijkse bezigheden horen er juist wél bij; een vraag over het nieuws of een verzoek om huiswerk niet — dan breng je het gesprek vriendelijk terug.
+- Je vraagt niet naar iemands privéleven verder dan wat hij doet op een dag. Geen relaties, geen financiën, geen huishoudsamenstelling. Alleen bezigheden.
 
 SCOREN
 De schaal per item is: 1 = niet beperkt, 2 = beperkt, 3 = sterk beperkt. Score 0 betekent "onbekend / nog niet besproken" en gebruik je ook om een eerdere score in te trekken als de persoon je corrigeert.
@@ -134,7 +154,9 @@ De schaal per item is: 1 = niet beperkt, 2 = beperkt, 3 = sterk beperkt. Score 0
 - Zet klaar op true zodra de zes rubrieken in grote lijnen langs zijn geweest. Je zegt er dan bij dat de lijst nog nagelopen en aangepast kan worden, en dat die daarna geprint of meegenomen kan worden naar de bedrijfsarts.
 
 OPBOUW VAN HET GESPREK
-Begin bij het werk zelf ("wat voor werk doe ${AANSPREEKVORM === 'u' ? 'u' : 'je'}, en hoe ziet een gewone werkdag eruit?") en laat de rubrieken volgen uit wat er verteld wordt. Loop de lijst niet af als een vragenlijst — dat is precies wat het formulier al doet. Mist er aan het eind een rubriek die er echt toe doet, dan vraag je daar gericht naar.
+Begin bij het werk zelf ("wat voor werk doe ${AANSPREEKVORM === 'u' ? 'u' : 'je'}, en hoe ziet een gewone werkdag eruit?"). Stap daarna over op een gewone dag thuis — dat is vaak het moment waarop het gesprek losser wordt en er meer boven tafel komt dan bij vragen over werk. Wissel daarna af tussen beide.
+
+Laat de rubrieken volgen uit wat er verteld wordt. Loop de lijst niet af als een vragenlijst — dat is precies wat het formulier al doet, en waarom iemand met jou praat in plaats van met het formulier. Mist er aan het eind een rubriek die er echt toe doet, dan vraag je daar gericht naar.
 
 ALS HET ZWAAR WORDT
 Merk je dat iemand het emotioneel moeilijk heeft, dan erken je dat en laat je de lijst even los. Gaat het over zelfdoding of acute nood, dan stop je met scoren en wijs je op 113 Zelfmoordpreventie (113 of 0800-0113) of de eigen huisarts.
@@ -171,8 +193,14 @@ const TOOL = {
               description:
                 'Korte onderbouwing in de woorden van de persoon zelf, één zin. Wordt aan de gebruiker getoond.',
             },
+            bron: {
+              type: 'string',
+              enum: ['werk', 'dagelijks_leven'],
+              description:
+                'Waar de aanwijzing vandaan komt: uit wat iemand over zijn werk vertelde, of uit het dagverhaal. Maakt zichtbaar wanneer een score op dagelijkse bezigheden berust en dus voorzichtiger gelezen moet worden.',
+            },
           },
-          required: ['key', 'score', 'reden'],
+          required: ['key', 'score', 'reden', 'bron'],
           additionalProperties: false,
         },
       },
@@ -342,7 +370,12 @@ export async function handleGesprek(body, req, res, CORS) {
 
   const voorstellen = (Array.isArray(invoer.items) ? invoer.items : [])
     .filter((i) => SCORE_KEYS.includes(i?.key) && Number.isInteger(i?.score) && i.score >= 0 && i.score <= 3)
-    .map((i) => ({ key: i.key, score: i.score, reden: schoon(i.reden, 300) }));
+    .map((i) => ({
+      key: i.key,
+      score: i.score,
+      reden: schoon(i.reden, 300),
+      bron: i.bron === 'dagelijks_leven' ? 'dagelijks_leven' : 'werk',
+    }));
 
   const werktijden = {};
   if (Number.isInteger(invoer.uren_per_dag) && invoer.uren_per_dag > 0) {

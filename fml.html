@@ -314,6 +314,15 @@
             outline: 2px solid var(--secondary-color);
             outline-offset: 2px;
         }
+        .print-keuze {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            cursor: pointer;
+        }
+
         .action-feedback {
             color: var(--text-dark);
             font-size: 0.9rem;
@@ -520,7 +529,14 @@
             /* De bedrijfsarts mag zien wat de assistent voorstelde en
                wat de bezoeker zelf heeft bevestigd. */
             .fml-item.is-suggested { border-left: 3px solid #999; }
-            .fml-item.is-suggested .item-flag { display: block; color: #555; }
+            /* De markering "dit kwam van de assistent" gaat altijd mee; de
+               onderbouwing alleen als de bezoeker daarvoor kiest. Die kan
+               gaan over thuis, en dat is niets voor een werkgever. */
+            .item-flag { display: none !important; }
+            body.print-toelichting .fml-item.is-suggested .item-flag {
+                display: block !important;
+                color: #555;
+            }
             .print-only { display: block !important; }
             body { background: #fff; color: #000; }
             #fml-tool { background: #fff; padding: 0; }
@@ -626,6 +642,10 @@
                     <button type="button" class="btn-action btn-action--ghost" id="btn-reset">
                         Leegmaken
                     </button>
+                    <label class="print-keuze" id="print-keuze" hidden>
+                        <input type="checkbox" id="chk-toelichting">
+                        Toelichtingen meeprinten &mdash; ook wat je over thuis vertelde
+                    </label>
                     <span class="action-feedback" id="share-feedback" role="status" aria-live="polite"></span>
                 </div>
 
@@ -654,11 +674,13 @@
 
         <div class="assistent-body" id="assistent-body">
             <div class="assistent-uitleg" id="assistent-uitleg">
-                <p><strong>Vertel gewoon hoe je werk gaat.</strong> De assistent stelt een paar vragen en vult het formulier hiernaast alvast in. Alles wat wordt ingevuld kun je zelf aanpassen &mdash; jij houdt de pen vast.</p>
+                <p><strong>Vertel gewoon hoe je dagen gaan.</strong> De assistent stelt een paar vragen en vult het formulier hiernaast alvast in. Alles wat wordt ingevuld kun je zelf aanpassen &mdash; jij houdt de pen vast.</p>
                 <ul>
+                    <li>Het gaat over je werk &eacute;n over gewone dagelijkse dingen: boodschappen, koken, de hond uitlaten. Daaruit blijkt vaak beter wat je aankunt dan uit vragen over werk alleen. Je hoeft niets te vertellen wat je liever voor je houdt.</li>
                     <li>Je antwoorden gaan naar een AI-dienst om het gesprek te kunnen voeren.</li>
                     <li>Er wordt niets opgeslagen: sluit je dit venster, dan is het gesprek weg.</li>
-                    <li>Noem geen namen van anderen en geen diagnoses &mdash; het gaat alleen over wat wel en niet lukt in je werk.</li>
+                    <li>Noem geen namen van anderen en geen diagnoses &mdash; het gaat om wat wel en niet lukt, niet om wat je mankeert.</li>
+                    <li>Bij het printen kies je zelf of de toelichtingen meegaan. Standaard staan alleen de scores op de afdruk.</li>
                     <li>Dit is een hulpmiddel, geen beoordeling. Alleen een verzekeringsarts kan een formele FML opmaken.</li>
                 </ul>
                 <button type="button" class="btn-action" id="assistent-akkoord">Begin het gesprek</button>
@@ -773,7 +795,12 @@
                 row.classList.add('is-suggested');
                 flag.innerHTML = '';
                 const b = document.createElement('b');
-                b.textContent = 'Voorstel assistent: ';
+                /* Waar de aanwijzing vandaan komt hoort erbij: een score die op
+                   het dagverhaal berust moet voorzichtiger gelezen worden dan
+                   een score uit de werksituatie zelf. */
+                b.textContent = v.bron === 'dagelijks_leven'
+                    ? 'Voorstel assistent, uit je dagverhaal: '
+                    : 'Voorstel assistent: ';
                 flag.appendChild(b);
                 flag.appendChild(document.createTextNode(v.reden));
             } else {
@@ -1109,7 +1136,7 @@
                     delete voorstellen[i.key];
                 } else {
                     scores[i.key] = i.score;
-                    voorstellen[i.key] = { score: i.score, reden: i.reden };
+                    voorstellen[i.key] = { score: i.score, reden: i.reden, bron: i.bron };
                 }
                 toonVoorstelMarkering(i.key);
                 pulse(i.key);
@@ -1125,6 +1152,8 @@
             updateMeta();
             writeStateToUrl();
 
+            toonPrintKeuze();
+
             const eerste = items[0] || Object.keys(werktijden || {}).map((k) => ({ key: k }))[0];
             if (eerste) brengInBeeld(eerste.key);
         }
@@ -1138,6 +1167,11 @@
             const r = row.getBoundingClientRect();
             const zichtbaar = r.top >= 0 && r.bottom <= (window.innerHeight || 0);
             if (!zichtbaar) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function toonPrintKeuze() {
+            const keuze = document.getElementById('print-keuze');
+            if (keuze && Object.keys(voorstellen).length) keuze.hidden = false;
         }
 
         function zetBezig(aan, melding) {
@@ -1224,6 +1258,13 @@
         async function initAssistent() {
             vulRefs();
             if (!A.paneel || !A.open) return;
+
+            const chk = document.getElementById('chk-toelichting');
+            if (chk) {
+                chk.addEventListener('change', () => {
+                    document.body.classList.toggle('print-toelichting', chk.checked);
+                });
+            }
 
             A.open.addEventListener('click', openPaneel);
             A.sluit.addEventListener('click', sluitPaneel);
