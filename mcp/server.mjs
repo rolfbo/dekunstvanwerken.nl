@@ -22,6 +22,8 @@ import { createServer } from 'node:http';
 import { appendFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { assistentAan, assistentStub, handleGesprek } from './fml-gesprek.mjs';
+
 const SITE = 'https://dekunstvanwerken.nl';
 const PORT = Number(process.env.MCP_PORT || 8321);
 const HOST = process.env.MCP_HOST || '127.0.0.1';
@@ -420,6 +422,13 @@ const server = createServer((req, res) => {
     return res.end();
   }
 
+  // De FML-assistent laat zich alleen zien als deze server een sleutel heeft.
+  // Zonder sleutel blijft de knop op fml.html verborgen en verandert er niets.
+  if (req.method === 'GET' && url.pathname === '/fml-gesprek/status') {
+    res.writeHead(200, { 'Content-Type': 'application/json', ...CORS });
+    return res.end(JSON.stringify({ ok: true, enabled: assistentAan(), stub: assistentStub() }));
+  }
+
   if (req.method === 'GET' && url.pathname === '/healthz') {
     res.writeHead(200, { 'Content-Type': 'application/json', ...CORS });
     return res.end(JSON.stringify({ ok: true, server: SERVER_INFO }));
@@ -458,6 +467,9 @@ const server = createServer((req, res) => {
     if (url.pathname === '/aanmelden') {
       return handleAanmelding(body, req, res);
     }
+    if (url.pathname === '/fml-gesprek') {
+      return handleGesprek(body, req, res, CORS);
+    }
     let parsed;
     try {
       parsed = JSON.parse(body);
@@ -479,4 +491,5 @@ const server = createServer((req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`dekunstvanwerken MCP server listening on http://${HOST}:${PORT} (tools: ${TOOLS.map((t) => t.name).join(', ')})`);
+  console.log(`  FML-assistent: ${assistentAan() ? 'aan' : 'uit (geen ANTHROPIC_API_KEY)'}`);
 });

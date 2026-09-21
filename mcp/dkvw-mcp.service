@@ -20,6 +20,11 @@ Environment=MCP_HOST=127.0.0.1
 # ProtectSystem=strict; the aanmeldformulier submissions land there.
 StateDirectory=dkvw-mcp
 Environment=MCP_STATE_DIR=/var/lib/dkvw-mcp
+# ANTHROPIC_API_KEY voor de FML-assistent staat buiten de repo, in een bestand
+# dat alleen root kan lezen (chmod 600). Zonder dat bestand start de service
+# gewoon, maar blijft de assistent uit en de assistent-knop verborgen.
+# Zie instructions/fml-assistent.md.
+EnvironmentFile=-/etc/dkvw-mcp.env
 Restart=on-failure
 RestartSec=3
 

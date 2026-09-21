@@ -322,6 +322,11 @@
         }
         .action-feedback.show { opacity: 1; }
 
+        /* Een author-regel als .btn-action{display:inline-flex} wint van de
+           UA-regel voor [hidden]; zonder dit blijft de assistent-knop zichtbaar
+           op een server zonder assistent. */
+        [hidden] { display: none !important; }
+
         .print-only { display: none; }
         .print-meta {
             font-size: 0.8rem;
@@ -337,6 +342,170 @@
             border-top: 1px solid var(--border-color);
         }
 
+        /* ---------------------------------------------- FML-assistent */
+
+        /* Items die de assistent heeft voorgesteld blijven zichtbaar
+           gemarkeerd tot de bezoeker ze zelf bevestigt of aanpast. */
+        .fml-item.is-suggested {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 0.6rem;
+            margin-left: -0.6rem;
+        }
+        .item-flag {
+            display: none;
+            margin-top: 0.3rem;
+            font-size: 0.78rem;
+            color: var(--accent-color);
+        }
+        .fml-item.is-suggested .item-flag { display: block; }
+        .item-flag b { font-weight: 600; }
+        @keyframes fml-pulse {
+            from { background: #fff5ec; }
+            to   { background: transparent; }
+        }
+        .fml-item.just-set { animation: fml-pulse 1.8s ease-out; }
+
+        .assistent-open {
+            background: var(--accent-color);
+        }
+        .assistent-open:hover { background: var(--primary-color); }
+
+        /* Zolang het paneel openstaat schuift de pagina op, zodat het
+           formulier zichtbaar blijft terwijl het wordt ingevuld — dat zien
+           is het hele punt. Alleen breed genoeg schermen. */
+        @media (min-width: 1100px) {
+            body.paneel-open { padding-right: 29rem; }
+        }
+
+        #assistent-paneel {
+            position: fixed;
+            z-index: 60;
+            right: 1rem;
+            bottom: 1rem;
+            width: min(27rem, calc(100vw - 2rem));
+            max-height: min(40rem, calc(100vh - 2rem));
+            display: flex;
+            flex-direction: column;
+            background: var(--text-light);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+        }
+        #assistent-paneel[hidden] { display: none; }
+
+        .assistent-kop {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .assistent-kop h2 {
+            font-size: 1rem;
+            margin: 0;
+            color: #fff;
+            flex: 1;
+        }
+        .assistent-sluit {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.3rem;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0 0.25rem;
+        }
+        .assistent-sluit:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+        .assistent-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .assistent-uitleg {
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+        .assistent-uitleg ul { margin: 0.6rem 0 1rem 1.1rem; }
+        .assistent-uitleg li { margin-bottom: 0.35rem; }
+
+        .bericht {
+            margin-bottom: 0.85rem;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .bericht-assistent {
+            background: var(--bg-light);
+            border-radius: 10px 10px 10px 2px;
+            padding: 0.6rem 0.8rem;
+        }
+        .bericht-gebruiker {
+            background: var(--primary-color);
+            color: #fff;
+            border-radius: 10px 10px 2px 10px;
+            padding: 0.6rem 0.8rem;
+            margin-left: 2rem;
+        }
+        .bericht-systeem {
+            font-size: 0.82rem;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .bericht-ingevuld {
+            font-size: 0.82rem;
+            color: var(--accent-color);
+            margin: -0.4rem 0 0.85rem;
+        }
+
+        .assistent-voet {
+            border-top: 1px solid var(--border-color);
+            padding: 0.7rem;
+        }
+        .assistent-invoer {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+        .assistent-invoer textarea {
+            flex: 1;
+            resize: none;
+            font: inherit;
+            font-size: 0.92rem;
+            padding: 0.5rem 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            max-height: 7rem;
+        }
+        .assistent-invoer textarea:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 1px;
+        }
+        .assistent-status {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            min-height: 1.2em;
+            margin-top: 0.4rem;
+        }
+        .assistent-kleinvoet {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 640px) {
+            #assistent-paneel {
+                right: 0;
+                left: 0;
+                bottom: 0;
+                width: auto;
+                max-height: 85vh;
+                border-radius: 12px 12px 0 0;
+            }
+        }
+
         @media (max-width: 640px) {
             .tool-card { padding: 1.5rem; }
             .fml-item {
@@ -347,6 +516,11 @@
 
         @media print {
             nav, footer, .actions, .disclaimer-top { display: none !important; }
+            #assistent-paneel { display: none !important; }
+            /* De bedrijfsarts mag zien wat de assistent voorstelde en
+               wat de bezoeker zelf heeft bevestigd. */
+            .fml-item.is-suggested { border-left: 3px solid #999; }
+            .fml-item.is-suggested .item-flag { display: block; color: #555; }
             .print-only { display: block !important; }
             body { background: #fff; color: #000; }
             #fml-tool { background: #fff; padding: 0; }
@@ -440,6 +614,9 @@
                 </form>
 
                 <div class="actions">
+                    <button type="button" class="btn-action assistent-open" id="btn-assistent" hidden>
+                        <span aria-hidden="true">&#128172;</span> Vul samen met de assistent in
+                    </button>
                     <button type="button" class="btn-action" id="btn-share">
                         <span aria-hidden="true">&#128279;</span> Deel link
                     </button>
@@ -466,6 +643,38 @@
 <li><a href="diensten/bedrijfsarts.html">Toegang tot de bedrijfsarts</a></li></ul></div>
             </div>
     </section>
+
+    <!-- FML-assistent. Blijft verborgen tot de server bevestigt dat het
+         gespreksendpoint aanstaat; zonder dat werkt de pagina als vanouds. -->
+    <div id="assistent-paneel" role="dialog" aria-modal="false" aria-labelledby="assistent-titel" hidden>
+        <div class="assistent-kop">
+            <h2 id="assistent-titel">Samen invullen</h2>
+            <button type="button" class="assistent-sluit" id="assistent-sluit" aria-label="Sluiten">&times;</button>
+        </div>
+
+        <div class="assistent-body" id="assistent-body">
+            <div class="assistent-uitleg" id="assistent-uitleg">
+                <p><strong>Vertel gewoon hoe je werk gaat.</strong> De assistent stelt een paar vragen en vult het formulier hiernaast alvast in. Alles wat wordt ingevuld kun je zelf aanpassen &mdash; jij houdt de pen vast.</p>
+                <ul>
+                    <li>Je antwoorden gaan naar een AI-dienst om het gesprek te kunnen voeren.</li>
+                    <li>Er wordt niets opgeslagen: sluit je dit venster, dan is het gesprek weg.</li>
+                    <li>Noem geen namen van anderen en geen diagnoses &mdash; het gaat alleen over wat wel en niet lukt in je werk.</li>
+                    <li>Dit is een hulpmiddel, geen beoordeling. Alleen een verzekeringsarts kan een formele FML opmaken.</li>
+                </ul>
+                <button type="button" class="btn-action" id="assistent-akkoord">Begin het gesprek</button>
+            </div>
+            <div id="assistent-berichten" aria-live="polite" aria-atomic="false" hidden></div>
+        </div>
+
+        <div class="assistent-voet" id="assistent-voet" hidden>
+            <div class="assistent-invoer">
+                <textarea id="assistent-tekst" rows="2" placeholder="Typ je antwoord&hellip;" aria-label="Je antwoord"></textarea>
+                <button type="button" class="btn-action" id="assistent-verstuur">Stuur</button>
+            </div>
+            <div class="assistent-status" id="assistent-status" role="status"></div>
+            <div class="assistent-kleinvoet">Concept ter voorbereiding op het gesprek met de bedrijfsarts.</div>
+        </div>
+    </div>
 
     <footer>
         <div class="container">
@@ -519,104 +728,13 @@
     })();
     </script>
 
-    <script>
+    <script type="module">
     // FML concept-tool
-    (function () {
-        /* Item-data: zelf geschreven labels gebaseerd op de publiek bekende
-           zes-rubrieken-structuur van de FML. */
-        const RUBRIEKEN = [
-            {
-                id: 'I',
-                titel: 'Persoonlijk functioneren',
-                items: [
-                    { id: 'a', label: 'Vasthouden van aandacht', hint: 'Geconcentreerd blijven op één taak.' },
-                    { id: 'b', label: 'Verdelen van aandacht', hint: 'Meerdere taken tegelijk doen.' },
-                    { id: 'c', label: 'Onthouden / inprenten', hint: 'Nieuwe informatie onthouden.' },
-                    { id: 'd', label: 'Inzicht in eigen kunnen', hint: 'Realistisch inschatten wat wel/niet lukt.' },
-                    { id: 'e', label: 'Doelgericht en planmatig handelen', hint: 'Een werkdag plannen en de planning volgen.' },
-                    { id: 'f', label: 'Handelingstempo', hint: 'In gangbaar werktempo functioneren.' },
-                    { id: 'g', label: 'Zelfstandig handelen', hint: 'Zonder voortdurende aansturing werken.' },
-                    { id: 'h', label: 'Werken zonder verhoogd persoonlijk risico', hint: 'Functies zonder onevenredige veiligheidsrisico’s.' },
-                ],
-            },
-            {
-                id: 'II',
-                titel: 'Sociaal functioneren',
-                items: [
-                    { id: 'a', label: 'Zien', hint: 'Visueel waarnemen voor het werk.' },
-                    { id: 'b', label: 'Horen', hint: 'Gehoor voor instructies, alarm, gesprekken.' },
-                    { id: 'c', label: 'Spreken', hint: 'Mondeling communiceren.' },
-                    { id: 'd', label: 'Eigen gevoelens uiten', hint: 'Aangeven wat nodig is of niet lukt.' },
-                    { id: 'e', label: 'Omgaan met conflicten', hint: 'Niet uit balans raken bij wrijving.' },
-                    { id: 'f', label: 'Samenwerken met collega’s', hint: 'Functioneren in een team.' },
-                    { id: 'g', label: 'Klantcontact / contact met derden', hint: 'Werken met klanten, patiënten, leveranciers.' },
-                    { id: 'h', label: 'Werken met leiding en hiërarchie', hint: 'Aanwijzingen accepteren en opvolgen.' },
-                    { id: 'i', label: 'Vervoer naar werk', hint: 'Zelfstandig reizen naar de werkplek.' },
-                ],
-            },
-            {
-                id: 'III',
-                titel: 'Aanpassing aan fysieke omgevingseisen',
-                items: [
-                    { id: 'a', label: 'Werken in hitte', hint: 'Hoge temperaturen of warmtebelasting.' },
-                    { id: 'b', label: 'Werken in koude', hint: 'Lage temperaturen of koudebelasting.' },
-                    { id: 'c', label: 'Werken in tocht of wind', hint: 'Buiten of in tochtige ruimtes.' },
-                    { id: 'd', label: 'Huidcontact met irriterende stoffen', hint: 'Reinigingsmiddelen, oliën, etc.' },
-                    { id: 'e', label: 'Werken met beschermingsmiddelen', hint: 'Mondkapje, handschoenen, gehoorbescherming.' },
-                    { id: 'f', label: 'Stof, rook, gassen of dampen', hint: 'Werken in ruimtes met luchtbelasting.' },
-                    { id: 'g', label: 'Werken in lawaai', hint: 'Continu of piekgeluid in de werkomgeving.' },
-                    { id: 'h', label: 'Werken met trillingen', hint: 'Bv. hand-arm of lichaamstrillingen.' },
-                ],
-            },
-            {
-                id: 'IV',
-                titel: 'Dynamische handelingen',
-                items: [
-                    { id: 'a', label: 'Hand- en vingergebruik', hint: 'Fijne motoriek, grijpen.' },
-                    { id: 'b', label: 'Repeterende handelingen', hint: 'Telkens dezelfde beweging maken.' },
-                    { id: 'c', label: 'Reiken', hint: 'Armen naar voren of opzij strekken.' },
-                    { id: 'd', label: 'Frequent buigen', hint: 'Voorover buigen tijdens werk.' },
-                    { id: 'e', label: 'Tillen (incidenteel)', hint: 'Eenmaal iets zwaars optillen.' },
-                    { id: 'f', label: 'Tillen of dragen (frequent)', hint: 'Regelmatig zware lasten verplaatsen.' },
-                    { id: 'g', label: 'Lopen', hint: 'Algemeen kunnen lopen.' },
-                    { id: 'h', label: 'Lopen tijdens het werk', hint: 'Lange perioden of grote afstanden.' },
-                    { id: 'i', label: 'Trappenlopen', hint: 'Traploop tijdens werk.' },
-                    { id: 'j', label: 'Klimmen', hint: 'Ladders, steigers, etc.' },
-                    { id: 'k', label: 'Knielen of hurken', hint: 'In knielende of hurkende houding werken.' },
-                    { id: 'l', label: 'Hoofd- en nekbewegingen', hint: 'Veel draaien of buigen van de nek.' },
-                    { id: 'm', label: 'Werken met toetsenbord en muis', hint: 'Beeldschermwerk.' },
-                    { id: 'n', label: 'Autorijden in het werk', hint: 'Rijden als onderdeel van de functie.' },
-                    { id: 'o', label: 'Fietsen', hint: 'Naar het werk of in het werk.' },
-                    { id: 'p', label: 'Openbaar vervoer gebruiken', hint: 'Reizen met OV naar of in het werk.' },
-                ],
-            },
-            {
-                id: 'V',
-                titel: 'Statische houdingen',
-                items: [
-                    { id: 'a', label: 'Zitten', hint: 'Algemeen kunnen zitten.' },
-                    { id: 'b', label: 'Langdurig zitten tijdens werk', hint: 'Hele werkdag aan een tafel.' },
-                    { id: 'c', label: 'Staan', hint: 'Algemeen kunnen staan.' },
-                    { id: 'd', label: 'Langdurig staan tijdens werk', hint: 'Hele werkdag staand werk.' },
-                    { id: 'e', label: 'Geknield of gehurkt actief zijn', hint: 'Lang werken in lage houding.' },
-                    { id: 'f', label: 'Gebogen of gedraaid werken', hint: 'Niet-rechte rughouding.' },
-                    { id: 'g', label: 'Boven schouderhoogte werken', hint: 'Armen omhoog houden.' },
-                    { id: 'h', label: 'Hoofd in een bepaalde stand houden', hint: 'Lange tijd in vaste nekhouding.' },
-                ],
-            },
-            {
-                id: 'VI',
-                titel: 'Werktijden',
-                items: [
-                    { id: 'a', type: 'number', max: 12, label: 'Maximaal aantal uren per dag', hint: 'Laat leeg of 0 als er geen beperking is.' },
-                    { id: 'b', type: 'number', max: 60, label: 'Maximaal aantal uren per week', hint: 'Laat leeg of 0 als er geen beperking is.' },
-                    { id: 'c', label: 'Bijzonderheden in werktijden', hint: 'Nachtdienst, ploegendienst, onregelmatig werk.' },
-                ],
-            },
-        ];
+    // Item-data komt uit fml-items.js — dezelfde bron die de assistent-
+    // endpoint op de server gebruikt, zodat beide nooit uit elkaar lopen.
+    import { RUBRIEKEN, SCORE_LABELS, TOTAL_ITEMS } from './fml-items.js';
 
-        const SCORE_LABELS = ['—', 'Niet beperkt', 'Beperkt', 'Sterk beperkt'];
-        const TOTAL_ITEMS = RUBRIEKEN.reduce((n, r) => n + r.items.length, 0);
+    (function () {
 
         // --- Local notes store (per item-key) — not encoded in URL ---
         const NOTES_KEY = 'fml-notes-v1';
@@ -633,6 +751,36 @@
 
         // --- State: scores keyed by itemKey, 0..3 ---
         const scores = {};
+
+        /* Voorstellen van de assistent, per itemsleutel: { score, reden }.
+           Een item blijft "voorgesteld" tot de bezoeker het zelf aanraakt —
+           dan is het bevestigd en verdwijnt de markering. */
+        const voorstellen = {};
+
+        function bevestigZelf(key) {
+            if (voorstellen[key]) {
+                delete voorstellen[key];
+                toonVoorstelMarkering(key);
+            }
+        }
+
+        function toonVoorstelMarkering(key) {
+            const row = document.querySelector(`.fml-item[data-key="${key}"]`);
+            if (!row) return;
+            const flag = row.querySelector('.item-flag');
+            const v = voorstellen[key];
+            if (v && v.reden) {
+                row.classList.add('is-suggested');
+                flag.innerHTML = '';
+                const b = document.createElement('b');
+                b.textContent = 'Voorstel assistent: ';
+                flag.appendChild(b);
+                flag.appendChild(document.createTextNode(v.reden));
+            } else {
+                row.classList.remove('is-suggested');
+                flag.textContent = '';
+            }
+        }
 
         function render() {
             const wrap = document.getElementById('rubrieken');
@@ -674,6 +822,12 @@
                         hint.textContent = it.hint;
                         left.appendChild(hint);
                     }
+                    // Vlaggetje voor een voorstel van de assistent; leeg zolang
+                    // de bezoeker zelf invult.
+                    const flag = document.createElement('div');
+                    flag.className = 'item-flag';
+                    flag.dataset.flag = key;
+                    left.appendChild(flag);
                     row.appendChild(left);
 
                     if (it.type === 'number') {
@@ -693,6 +847,7 @@
                             const v = parseInt(num.value, 10);
                             if (Number.isFinite(v) && v > 0) scores[key] = v;
                             else delete scores[key];
+                            bevestigZelf(key);
                             updateMeta();
                             writeStateToUrl();
                         });
@@ -717,6 +872,7 @@
                             btn.addEventListener('click', () => {
                                 const current = scores[key] || 0;
                                 scores[key] = (current === s) ? 0 : s;
+                                bevestigZelf(key);
                                 applyScoresToButtons();
                                 updateMeta();
                                 writeStateToUrl();
@@ -870,10 +1026,238 @@
 
         window.addEventListener('beforeprint', refreshPrintMeta);
 
+        // ------------------------------------------------ FML-assistent
+        /* Prototype. De hele conversatie leeft in deze variabele en nergens
+           anders: de server bewaart niets en stuurt niets door. Sluit de
+           bezoeker het venster, dan is het gesprek verdwenen. */
+
+        const ASSISTENT_ENDPOINT =
+            (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+                ? 'http://127.0.0.1:8321'
+                : 'https://mcp.dekunstvanwerken.nl';
+
+        const OPENING = 'Vertel eens: wat voor werk doe je, en hoe ziet een gewone werkdag eruit?';
+
+        const gesprek = [];   // { rol: 'gebruiker' | 'assistent', tekst }
+        let bezig = false;
+
+        const A = {};
+        function vulRefs() {
+            A.paneel = document.getElementById('assistent-paneel');
+            A.open = document.getElementById('btn-assistent');
+            A.sluit = document.getElementById('assistent-sluit');
+            A.uitleg = document.getElementById('assistent-uitleg');
+            A.akkoord = document.getElementById('assistent-akkoord');
+            A.berichten = document.getElementById('assistent-berichten');
+            A.voet = document.getElementById('assistent-voet');
+            A.tekst = document.getElementById('assistent-tekst');
+            A.verstuur = document.getElementById('assistent-verstuur');
+            A.status = document.getElementById('assistent-status');
+            A.body = document.getElementById('assistent-body');
+        }
+
+        function toonBericht(rol, tekst) {
+            const div = document.createElement('div');
+            div.className = 'bericht bericht-' + rol;
+            div.textContent = tekst;
+            A.berichten.appendChild(div);
+            A.body.scrollTop = A.body.scrollHeight;
+            return div;
+        }
+
+        /* Regel onder het antwoord die laat zien wat er zojuist in het
+           formulier is gezet. Zonder dit gebeurt het invullen buiten beeld,
+           en juist het zien is het punt. */
+        function toonIngevuld(items) {
+            if (!items.length) return;
+            const namen = items.map((i) => {
+                const item = FLAT_META[i.key];
+                const label = item ? item.label : i.key;
+                return i.score === 0 ? `${label} (teruggedraaid)` : `${label} → ${SCORE_LABELS[i.score]}`;
+            });
+            const div = document.createElement('div');
+            div.className = 'bericht-ingevuld';
+            div.textContent = 'Ingevuld: ' + namen.join(' · ');
+            A.berichten.appendChild(div);
+            A.body.scrollTop = A.body.scrollHeight;
+        }
+
+        const FLAT_META = {};
+        for (const r of RUBRIEKEN) for (const it of r.items) {
+            FLAT_META[itemKey(r.id, it.id)] = { label: it.label, type: it.type || 'score' };
+        }
+
+        function pulse(key) {
+            const row = document.querySelector(`.fml-item[data-key="${key}"]`);
+            if (!row) return;
+            row.classList.remove('just-set');
+            void row.offsetWidth;   // forceer herstart van de animatie
+            row.classList.add('just-set');
+        }
+
+        function syncNummers() {
+            document.querySelectorAll('.number-input').forEach((inp) => {
+                const v = scores[inp.dataset.itemKey];
+                inp.value = (typeof v === 'number' && v > 0) ? v : '';
+            });
+        }
+
+        function pasVoorstellenToe(items, werktijden) {
+            for (const i of items) {
+                if (i.score === 0) {
+                    delete scores[i.key];
+                    delete voorstellen[i.key];
+                } else {
+                    scores[i.key] = i.score;
+                    voorstellen[i.key] = { score: i.score, reden: i.reden };
+                }
+                toonVoorstelMarkering(i.key);
+                pulse(i.key);
+            }
+            for (const [key, uren] of Object.entries(werktijden || {})) {
+                scores[key] = uren;
+                voorstellen[key] = { score: uren, reden: `${uren} uur, zoals je noemde` };
+                toonVoorstelMarkering(key);
+                pulse(key);
+            }
+            syncNummers();
+            applyScoresToButtons();
+            updateMeta();
+            writeStateToUrl();
+
+            const eerste = items[0] || Object.keys(werktijden || {}).map((k) => ({ key: k }))[0];
+            if (eerste) brengInBeeld(eerste.key);
+        }
+
+        /* Alleen scrollen als het item buiten beeld staat: meescrollen bij elk
+           voorstel maakt de pagina onrustig en laat de bezoeker de draad
+           kwijtraken. */
+        function brengInBeeld(key) {
+            const row = document.querySelector(`.fml-item[data-key="${key}"]`);
+            if (!row) return;
+            const r = row.getBoundingClientRect();
+            const zichtbaar = r.top >= 0 && r.bottom <= (window.innerHeight || 0);
+            if (!zichtbaar) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function zetBezig(aan, melding) {
+            bezig = aan;
+            A.verstuur.disabled = aan;
+            A.tekst.disabled = aan;
+            A.status.textContent = melding || '';
+        }
+
+        async function stuur() {
+            const tekst = A.tekst.value.trim();
+            if (!tekst || bezig) return;
+            A.tekst.value = '';
+            toonBericht('gebruiker', tekst);
+            gesprek.push({ rol: 'gebruiker', tekst });
+            zetBezig(true, 'De assistent leest mee…');
+
+            try {
+                const res = await fetch(ASSISTENT_ENDPOINT + '/fml-gesprek', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ beurten: gesprek, scores }),
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.ok) {
+                    zetBezig(false, data.error || 'Er ging iets mis. Probeer het zo nog eens.');
+                    return;
+                }
+                toonBericht('assistent', data.antwoord);
+                gesprek.push({ rol: 'assistent', tekst: data.antwoord });
+                pasVoorstellenToe(data.voorstellen || [], data.werktijden || {});
+                toonIngevuld(data.voorstellen || []);
+                zetBezig(false, '');
+                if (data.klaar) toonAfronding();
+            } catch {
+                zetBezig(false, 'Geen verbinding met de assistent.');
+            }
+            A.tekst.focus();
+        }
+
+        function toonAfronding() {
+            const div = document.createElement('div');
+            div.className = 'bericht bericht-systeem';
+            div.textContent = 'De zes rubrieken zijn langsgekomen. Loop de lijst na — alles wat de assistent heeft voorgesteld staat gemarkeerd en kun je zelf aanpassen.';
+            A.berichten.appendChild(div);
+
+            const knop = document.createElement('button');
+            knop.type = 'button';
+            knop.className = 'btn-action btn-action--ghost';
+            knop.textContent = 'Naar de lijst';
+            knop.addEventListener('click', () => {
+                const eerste = document.querySelector('.fml-item.is-suggested');
+                (eerste || document.getElementById('rubrieken'))
+                    .scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+            A.berichten.appendChild(knop);
+            A.body.scrollTop = A.body.scrollHeight;
+        }
+
+        function openPaneel() {
+            A.paneel.hidden = false;
+            document.body.classList.add('paneel-open');
+            if (gesprek.length || !A.uitleg.hidden) {
+                (A.uitleg.hidden ? A.tekst : A.akkoord).focus();
+            }
+        }
+        function sluitPaneel() {
+            A.paneel.hidden = true;
+            document.body.classList.remove('paneel-open');
+            A.open.focus();
+        }
+
+        function startGesprek() {
+            A.uitleg.hidden = true;
+            A.berichten.hidden = false;
+            A.voet.hidden = false;
+            /* De openingsvraag staat bewust niet in de geschiedenis: de
+               geschiedenis moet met de bezoeker beginnen, en het model weet
+               uit zijn instructie waar het gesprek begint. */
+            toonBericht('assistent', OPENING);
+            A.tekst.focus();
+        }
+
+        async function initAssistent() {
+            vulRefs();
+            if (!A.paneel || !A.open) return;
+
+            A.open.addEventListener('click', openPaneel);
+            A.sluit.addEventListener('click', sluitPaneel);
+            A.akkoord.addEventListener('click', startGesprek);
+            A.verstuur.addEventListener('click', stuur);
+            A.tekst.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); stuur(); }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !A.paneel.hidden) sluitPaneel();
+            });
+
+            // Alleen tonen als de server daadwerkelijk een assistent heeft.
+            try {
+                const res = await fetch(ASSISTENT_ENDPOINT + '/fml-gesprek/status');
+                const data = await res.json();
+                if (data && data.enabled) A.open.hidden = false;
+                if (data && data.stub) {
+                    const waarschuwing = document.createElement('p');
+                    waarschuwing.className = 'bericht-systeem';
+                    waarschuwing.textContent =
+                        'Demomodus: vaste voorbeeldantwoorden, er komt geen AI aan te pas.';
+                    A.uitleg.prepend(waarschuwing);
+                }
+            } catch {
+                /* endpoint onbereikbaar: knop blijft verborgen, formulier werkt gewoon */
+            }
+        }
+
         // --- Init ---
         applyStateFromUrl();
         render();
         writeStateToUrl();
+        initAssistent();
     })();
     </script>
 </body>
