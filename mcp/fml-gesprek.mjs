@@ -336,13 +336,28 @@ async function roepModelAan(messages) {
     : viaOpenAiCompat(messages);
 }
 
+/* Bij een foutstatus loggen we de responsebody niet — daar kan gespreksinhoud
+   in staan. Wel een bruikbare hint, want anders staat iemand bij de eerste
+   poging naar "even niet bereikbaar" te kijken zonder te weten waarom. */
+const STATUS_HINT = {
+  400: 'het verzoek werd geweigerd — klopt FML_MODEL?',
+  401: 'sleutel niet geaccepteerd — controleer FML_API_KEY / ANTHROPIC_API_KEY',
+  403: 'sleutel heeft geen toegang tot dit model',
+  404: 'onbekende URL of modelnaam',
+  429: 'rate limit of onvoldoende tegoed bij de leverancier',
+  529: 'leverancier is overbelast, probeer het zo nog eens',
+};
+
 async function haal(url, headers, body) {
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'content-type': 'application/json', ...headers },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(`API gaf ${res.status}`);
+  if (!res.ok) {
+    const hint = STATUS_HINT[res.status] || (res.status >= 500 ? 'storing bij de leverancier' : '');
+    throw new Error(`API gaf ${res.status}${hint ? ` — ${hint}` : ''}`);
+  }
   return res.json();
 }
 
