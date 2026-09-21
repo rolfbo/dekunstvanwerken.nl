@@ -440,6 +440,33 @@
         .assistent-uitleg ul { margin: 0.6rem 0 1rem 1.1rem; }
         .assistent-uitleg li { margin-bottom: 0.35rem; }
 
+        /* Waar het verkeer heen gaat, in gewone taal en niet weggestopt. */
+        .herkomst {
+            background: #fff5ec;
+            border-left: 4px solid var(--accent-color);
+            border-radius: 4px;
+            padding: 0.7rem 0.85rem;
+            margin: 0 0 1rem;
+            font-size: 0.86rem;
+            line-height: 1.45;
+        }
+        .herkomst dt {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .herkomst dd {
+            margin: 0 0 0.45rem;
+        }
+        .herkomst dd:last-child { margin-bottom: 0; }
+
+        .assistent-kleinvoet a { color: inherit; }
+        .herkomst-kort {
+            display: block;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.2rem;
+        }
+
         .bericht {
             margin-bottom: 0.85rem;
             font-size: 0.92rem;
@@ -675,10 +702,10 @@
         <div class="assistent-body" id="assistent-body">
             <div class="assistent-uitleg" id="assistent-uitleg">
                 <p><strong>Vertel gewoon hoe je dagen gaan.</strong> De assistent stelt een paar vragen en vult het formulier hiernaast alvast in. Alles wat wordt ingevuld kun je zelf aanpassen &mdash; jij houdt de pen vast.</p>
+                <dl class="herkomst" id="herkomst"></dl>
                 <ul>
                     <li>Het gaat over je werk &eacute;n over gewone dagelijkse dingen: boodschappen, koken, de hond uitlaten. Daaruit blijkt vaak beter wat je aankunt dan uit vragen over werk alleen. Je hoeft niets te vertellen wat je liever voor je houdt.</li>
-                    <li>Je antwoorden gaan naar een AI-dienst om het gesprek te kunnen voeren.</li>
-                    <li>Er wordt niets opgeslagen: sluit je dit venster, dan is het gesprek weg.</li>
+                    <li>Er wordt niets opgeslagen: sluit je dit venster, dan is het gesprek weg. Wij bewaren je gesprek niet en zetten het niet in een dossier.</li>
                     <li>Noem geen namen van anderen en geen diagnoses &mdash; het gaat om wat wel en niet lukt, niet om wat je mankeert.</li>
                     <li>Bij het printen kies je zelf of de toelichtingen meegaan. Standaard staan alleen de scores op de afdruk.</li>
                     <li>Dit is een hulpmiddel, geen beoordeling. Alleen een verzekeringsarts kan een formele FML opmaken.</li>
@@ -694,7 +721,11 @@
                 <button type="button" class="btn-action" id="assistent-verstuur">Stuur</button>
             </div>
             <div class="assistent-status" id="assistent-status" role="status"></div>
-            <div class="assistent-kleinvoet">Concept ter voorbereiding op het gesprek met de bedrijfsarts.</div>
+            <div class="assistent-kleinvoet">
+                <span id="herkomst-kort"></span>
+                Concept ter voorbereiding op het gesprek met de bedrijfsarts &middot;
+                <a href="privacybeleid.html" target="_blank" rel="noopener">Privacybeleid</a>
+            </div>
         </div>
     </div>
 
@@ -1169,6 +1200,36 @@
             if (!zichtbaar) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
+        /* De bezoeker leest vóór de eerste letter waar zijn antwoorden heen
+           gaan: welke leverancier, welk land, wat er bewaard wordt en of er
+           op getraind wordt. Die tekst komt van de server, niet uit deze
+           pagina — anders loopt hij vroeg of laat achter op de werkelijkheid. */
+        function toonHerkomst(h) {
+            const dl = document.getElementById('herkomst');
+            if (dl) {
+                dl.innerHTML = '';
+                const regels = [
+                    ['Je antwoorden gaan naar', h.leverancier],
+                    ['Waar staan hun servers', h.land],
+                    ['Wat wordt er bewaard', h.bewaart],
+                    ['Wordt er een AI mee getraind', h.traint],
+                ];
+                for (const [vraag, antwoord] of regels) {
+                    const dt = document.createElement('dt');
+                    dt.textContent = vraag + ':';
+                    const dd = document.createElement('dd');
+                    dd.textContent = antwoord;
+                    dl.appendChild(dt);
+                    dl.appendChild(dd);
+                }
+            }
+            const kort = document.getElementById('herkomst-kort');
+            if (kort) {
+                kort.className = 'herkomst-kort';
+                kort.textContent = `Je antwoorden gaan naar ${h.leverancier} (${h.land}). Niets wordt opgeslagen.`;
+            }
+        }
+
         function toonPrintKeuze() {
             const keuze = document.getElementById('print-keuze');
             if (keuze && Object.keys(voorstellen).length) keuze.hidden = false;
@@ -1282,6 +1343,7 @@
                 const res = await fetch(ASSISTENT_ENDPOINT + '/fml-gesprek/status');
                 const data = await res.json();
                 if (data && data.enabled) A.open.hidden = false;
+                if (data && data.herkomst) toonHerkomst(data.herkomst);
                 if (data && data.stub) {
                     const waarschuwing = document.createElement('p');
                     waarschuwing.className = 'bericht-systeem';

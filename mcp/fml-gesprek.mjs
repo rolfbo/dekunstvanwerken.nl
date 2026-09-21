@@ -22,10 +22,53 @@
 
 import { RUBRIEKEN, FLAT_ITEMS, SCORE_KEYS, SCORE_LABELS } from '../fml-items.js';
 
-const API_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = process.env.FML_MODEL || 'claude-opus-5';
-// Latency/kwaliteit-knop. 'low' houdt een gespreksbeurt snel; zet hoger als
-// blijkt dat het model items mist. Zie instructions/fml-assistent.md.
+/* ------------------------------------------------- leverancierskeuze
+
+   De modelleverancier is een instelling, geen aanname in de code. Wat er ook
+   gekozen wordt: de bezoeker krijgt de naam, het land en de bewaarafspraak
+   letterlijk te zien voordat hij begint. Daarom staan die drie hier naast de
+   technische gegevens — ze horen bij elkaar en mogen nooit uit elkaar lopen.
+
+   Kiezen met FML_PROVIDER. Voor alles behalve anthropic is FML_MODEL verplicht:
+   modelnamen veranderen te vaak om ze hier te gokken.
+*/
+const PROVIDERS = {
+  anthropic: {
+    naam: 'Anthropic (Claude)',
+    land: 'Verenigde Staten',
+    url: 'https://api.anthropic.com/v1/messages',
+    soort: 'anthropic',
+    model: 'claude-opus-5',
+  },
+  xai: {
+    naam: 'xAI (Grok)',
+    land: 'Verenigde Staten',
+    url: 'https://api.x.ai/v1/chat/completions',
+    soort: 'openai-compat',
+    model: null,
+  },
+  custom: {
+    naam: process.env.FML_LEVERANCIER || 'onbekende leverancier',
+    land: process.env.FML_LAND || 'onbekend',
+    url: process.env.FML_API_URL || '',
+    soort: process.env.FML_SOORT || 'openai-compat',
+    model: null,
+  },
+};
+
+const PROVIDER = PROVIDERS[process.env.FML_PROVIDER || 'anthropic'] || PROVIDERS.anthropic;
+const MODEL = process.env.FML_MODEL || PROVIDER.model;
+const API_URL = process.env.FML_API_URL || PROVIDER.url;
+const API_KEY = process.env.FML_API_KEY || process.env.ANTHROPIC_API_KEY;
+
+// Overschrijfbaar, want dit is wat de bezoeker te lezen krijgt. Staat er een
+// EU-regio of een no-train-afspraak in het contract, zet het hier dan recht.
+const LEVERANCIER = process.env.FML_LEVERANCIER || PROVIDER.naam;
+const LAND = process.env.FML_LAND || PROVIDER.land;
+const TRAINT = process.env.FML_TRAINT || 'nee, contractueel vastgelegd';
+
+// Latency/kwaliteit-knop (alleen Anthropic). 'low' houdt een gespreksbeurt
+// snel; zet hoger als blijkt dat het model items mist.
 const EFFORT = process.env.FML_EFFORT || 'low';
 
 const MAX_BEURTEN = 30;          // gebruikersbeurten per gesprek
@@ -42,7 +85,29 @@ const AANSPREEKVORM = 'je';
 const STUB = process.env.FML_STUB === '1';
 
 export function assistentAan() {
-  return STUB || Boolean(process.env.ANTHROPIC_API_KEY);
+  return STUB || Boolean(API_KEY && API_URL && MODEL);
+}
+
+/* Wat de bezoeker te zien krijgt voordat hij iets intypt. De pagina verzint
+   hier niets bij: alles komt hiervandaan, zodat de tekst op het scherm niet
+   kan verouderen ten opzichte van waar het verkeer werkelijk heen gaat. */
+export function assistentHerkomst() {
+  if (STUB) {
+    return {
+      leverancier: 'niemand — demomodus met vaste antwoorden',
+      land: 'nergens, dit blijft op deze computer',
+      model: 'geen',
+      bewaart: 'niets',
+      traint: 'nee',
+    };
+  }
+  return {
+    leverancier: LEVERANCIER,
+    land: LAND,
+    model: MODEL,
+    bewaart: 'niets — niet op onze server en niet in een dossier',
+    traint: TRAINT,
+  };
 }
 
 export function assistentStub() {
@@ -251,6 +316,100 @@ function rateLimited(ip) {
   return hits.length > MAX_PER_UUR;
 }
 
+/* ---------------------------------------------------------- adapters
+
+   Twee vormen dekken vrijwel de hele markt: de Messages API van Anthropic, en
+   de OpenAI-compatibele chat/completions die onder meer xAI aanbiedt. Beide
+   geven hetzelfde terug: { tekst, invoer, geweigerd }. De rest van dit bestand
+   weet niet welke leverancier er draait — en de validatie hieronder gaat er
+   sowieso van uit dat het antwoord onbetrouwbaar is.
+*/
+
+async function roepModelAan(messages) {
+  return PROVIDER.soort === 'anthropic'
+    ? viaAnthropic(messages)
+    : viaOpenAiCompat(messages);
+}
+
+async function haal(url, headers, body) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', ...headers },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`API gaf ${res.status}`);
+  return res.json();
+}
+
+async function viaAnthropic(messages) {
+  const data = await haal(
+    API_URL,
+    { 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01' },
+    {
+      model: MODEL,
+      max_tokens: 4000,
+      thinking: { type: 'adaptive' },
+      output_config: { effort: EFFORT },
+      system: [{ type: 'text', text: SYSTEEM, cache_control: { type: 'ephemeral' } }],
+      tools: [TOOL],
+      messages,
+    },
+  );
+  if (data.stop_reason === 'refusal') return { geweigerd: true };
+
+  const blokken = Array.isArray(data.content) ? data.content : [];
+  const call = blokken.find((b) => b.type === 'tool_use' && b.name === TOOL.name);
+  logVerbruik(data.usage?.input_tokens, data.usage?.output_tokens);
+  return {
+    tekst: blokken.filter((b) => b.type === 'text').map((b) => b.text).join('\n').trim(),
+    invoer: call?.input || {},
+  };
+}
+
+async function viaOpenAiCompat(messages) {
+  const data = await haal(
+    API_URL,
+    { authorization: `Bearer ${API_KEY}` },
+    {
+      model: MODEL,
+      max_tokens: 4000,
+      messages: [{ role: 'system', content: SYSTEEM }, ...messages],
+      tools: [
+        {
+          type: 'function',
+          function: {
+            name: TOOL.name,
+            description: TOOL.description,
+            parameters: TOOL.input_schema,
+          },
+        },
+      ],
+      tool_choice: 'auto',
+    },
+  );
+
+  const bericht = data.choices?.[0]?.message || {};
+  if (data.choices?.[0]?.finish_reason === 'content_filter') return { geweigerd: true };
+
+  const call = (bericht.tool_calls || []).find((c) => c.function?.name === TOOL.name);
+  let invoer = {};
+  if (call?.function?.arguments) {
+    // Argumenten komen als string terug en kunnen afgekapt of ongeldig zijn.
+    try {
+      invoer = JSON.parse(call.function.arguments);
+    } catch {
+      console.error('fml-gesprek: tool-argumenten niet te lezen, beurt zonder voorstellen');
+    }
+  }
+  logVerbruik(data.usage?.prompt_tokens, data.usage?.completion_tokens);
+  return { tekst: String(bericht.content || '').trim(), invoer };
+}
+
+function logVerbruik(inTok, uitTok) {
+  // Alleen tellers, nooit inhoud.
+  console.log(`fml-gesprek: beurt ok (in ${inTok ?? '?'}, uit ${uitTok ?? '?'})`);
+}
+
 /* ----------------------------------------------------------- handler */
 
 function schoon(v, max) {
@@ -265,6 +424,10 @@ export async function handleGesprek(body, req, res, CORS) {
 
   if (!assistentAan()) {
     return reply(503, { ok: false, error: 'De assistent staat uit op deze server.' });
+  }
+  if (!MODEL) {
+    console.error(`fml-gesprek: FML_MODEL ontbreekt voor provider ${PROVIDER.naam}`);
+    return reply(503, { ok: false, error: 'De assistent is niet volledig ingesteld.' });
   }
 
   let data;
@@ -317,56 +480,27 @@ export async function handleGesprek(body, req, res, CORS) {
     content: `Stand van de lijst op dit moment:\n${standTekst(scores)}`,
   });
 
-  let antwoord;
+  let ruw;
   try {
-    const res2 = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 4000,
-        thinking: { type: 'adaptive' },
-        output_config: { effort: EFFORT },
-        system: [
-          { type: 'text', text: SYSTEEM, cache_control: { type: 'ephemeral' } },
-        ],
-        tools: [TOOL],
-        messages,
-      }),
-    });
-    if (!res2.ok) {
-      // Bewust geen responsebody loggen: daar kan gespreksinhoud in staan.
-      console.error(`fml-gesprek: API gaf ${res2.status}`);
-      return reply(502, { ok: false, error: 'De assistent is even niet bereikbaar.' });
-    }
-    antwoord = await res2.json();
+    ruw = await roepModelAan(messages);
   } catch (e) {
-    console.error('fml-gesprek: netwerkfout:', e.name);
+    // Bewust geen responsebody loggen: daar kan gespreksinhoud in staan.
+    console.error('fml-gesprek: model onbereikbaar:', e.message);
     return reply(502, { ok: false, error: 'De assistent is even niet bereikbaar.' });
   }
 
-  if (antwoord.stop_reason === 'refusal') {
+  if (ruw.geweigerd) {
     return reply(200, {
       ok: true,
-      antwoord:
-        'Hier kan ik niet op ingaan. Zullen we teruggaan naar wat er in je werk wel en niet lukt?',
+      antwoord: 'Hier kan ik niet op ingaan. Zullen we teruggaan naar hoe je dagen gaan?',
       voorstellen: [],
+      werktijden: {},
       klaar: false,
     });
   }
 
-  const blokken = Array.isArray(antwoord.content) ? antwoord.content : [];
-  const tekst = blokken
-    .filter((b) => b.type === 'text')
-    .map((b) => b.text)
-    .join('\n')
-    .trim();
-  const call = blokken.find((b) => b.type === 'tool_use' && b.name === TOOL.name);
-  const invoer = call?.input || {};
+  const tekst = ruw.tekst;
+  const invoer = ruw.invoer || {};
 
   const voorstellen = (Array.isArray(invoer.items) ? invoer.items : [])
     .filter((i) => SCORE_KEYS.includes(i?.key) && Number.isInteger(i?.score) && i.score >= 0 && i.score <= 3)
@@ -384,13 +518,6 @@ export async function handleGesprek(body, req, res, CORS) {
   if (Number.isInteger(invoer.uren_per_week) && invoer.uren_per_week > 0) {
     werktijden['VI.b'] = Math.min(60, invoer.uren_per_week);
   }
-
-  // Alleen tellers, nooit inhoud.
-  console.log(
-    `fml-gesprek: beurt ok (in ${antwoord.usage?.input_tokens ?? '?'}, uit ${
-      antwoord.usage?.output_tokens ?? '?'
-    }, voorstellen ${voorstellen.length})`,
-  );
 
   return reply(200, {
     ok: true,

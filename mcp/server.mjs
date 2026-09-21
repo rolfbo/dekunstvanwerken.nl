@@ -22,7 +22,7 @@ import { createServer } from 'node:http';
 import { appendFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { assistentAan, assistentStub, handleGesprek } from './fml-gesprek.mjs';
+import { assistentAan, assistentStub, assistentHerkomst, handleGesprek } from './fml-gesprek.mjs';
 
 const SITE = 'https://dekunstvanwerken.nl';
 const PORT = Number(process.env.MCP_PORT || 8321);
@@ -426,7 +426,14 @@ const server = createServer((req, res) => {
   // Zonder sleutel blijft de knop op fml.html verborgen en verandert er niets.
   if (req.method === 'GET' && url.pathname === '/fml-gesprek/status') {
     res.writeHead(200, { 'Content-Type': 'application/json', ...CORS });
-    return res.end(JSON.stringify({ ok: true, enabled: assistentAan(), stub: assistentStub() }));
+    return res.end(JSON.stringify({
+      ok: true,
+      enabled: assistentAan(),
+      stub: assistentStub(),
+      // De pagina toont dit letterlijk aan de bezoeker; het komt hiervandaan
+      // zodat de tekst op het scherm nooit kan afwijken van de werkelijkheid.
+      herkomst: assistentHerkomst(),
+    }));
   }
 
   if (req.method === 'GET' && url.pathname === '/healthz') {

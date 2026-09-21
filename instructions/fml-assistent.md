@@ -156,6 +156,72 @@ sudo systemctl restart dkvw-mcp
 `dkvw-mcp.service` leest dat bestand optioneel in (`EnvironmentFile=-`), dus
 zonder dat bestand start de service gewoon en blijft de assistent uit.
 
+## Leverancier kiezen
+
+De modelleverancier is een instelling, geen aanname in de code. Twee vormen
+dekken vrijwel de hele markt en zitten er allebei in: de Messages API van
+Anthropic, en de OpenAI-compatibele `chat/completions` die onder meer xAI
+aanbiedt.
+
+```bash
+# Anthropic (standaard, geen extra instellingen nodig)
+ANTHROPIC_API_KEY=sk-ant-...
+
+# xAI / Grok
+FML_PROVIDER=xai
+FML_API_KEY=xai-...
+FML_MODEL=<modelnaam>          # verplicht: modelnamen wijzigen te vaak om te gokken
+
+# iets anders met een OpenAI-compatibele API
+FML_PROVIDER=custom
+FML_API_URL=https://.../v1/chat/completions
+FML_API_KEY=...
+FML_MODEL=...
+FML_LEVERANCIER="Naam zoals de bezoeker hem te zien krijgt"
+FML_LAND="Waar hun servers staan"
+```
+
+`FML_TRAINT` overschrijft de zin over trainen (standaard "nee, contractueel
+vastgelegd"). Zet die pas op iets geruststellends als het ook echt in het
+contract staat — het is de zin die de bezoeker leest voordat hij iets intypt.
+
+De adapters geven allebei hetzelfde terug, en wat er terugkomt wordt sowieso
+gewantrouwd: onbekende itemsleutels worden weggegooid, scores buiten 0–3
+genegeerd, uren afgekapt op 12 per dag en 60 per week. Dat is met een
+nagemaakte API getest — rommel erin, schone voorstellen eruit.
+
+## Waar het heen gaat, en dat de bezoeker dat weet
+
+`GET /fml-gesprek/status` geeft naast `enabled` ook `herkomst` terug:
+leverancier, land, model, wat er bewaard wordt, of er op getraind wordt. De
+pagina rendert dat letterlijk en verzint er niets bij. Dat is bewust: zo kan de
+tekst op het scherm niet verouderen ten opzichte van waar het verkeer
+werkelijk heen gaat. Wissel je van leverancier, dan wisselt de tekst mee.
+
+De bezoeker ziet het op twee plekken: als een blok in het toestemmingsscherm,
+vóór de eerste letter, en als een regel onderaan het paneel die het hele
+gesprek blijft staan ("Je antwoorden gaan naar … (…). Niets wordt
+opgeslagen."), met een link naar het privacybeleid.
+
+**Wat die openheid wél doet:** het levert geïnformeerde, uitdrukkelijke
+toestemming op — precies de grondslag (AVG artikel 9 lid 2 sub a) die voor een
+publieke zelfbedieningstool de realistische route is. Het is ook eerlijk naar de
+bezoeker, en dat is op zichzelf genoeg reden.
+
+**Wat het niet doet:** een verwerkersovereenkomst vervangen. Die staat tussen
+[de Kunst van Werken] en de leverancier, niet tussen de site en de bezoeker —
+je kunt je daar niet uit toestemmen, hoe duidelijk de pagina ook is. Hetzelfde
+geldt voor de toezegging dat er niet op getraind wordt: dat is contract, geen
+schermtekst. En voor doorgifte buiten de EER biedt uitdrukkelijke toestemming
+wel een uitweg (artikel 49 lid 1 sub a), maar die is bedoeld voor incidentele
+gevallen; toezichthouders zien hem niet graag als vaste basis onder een
+doorlopende dienst. Een EU-regio of standaardcontractbepalingen blijven dus het
+nette antwoord.
+
+Praktische toets bij welke leverancier dan ook, en dit is de enige die telt:
+**tekenen ze een verwerkersovereenkomst, en leggen ze vast dat ze er niet op
+trainen?** Zo ja, dan kan het. Zo nee, dan niet — ongeacht hoe goed het model is.
+
 ## Voordat dit live mag
 
 Het bouwen was het kleine deel. Dit is het grote:
@@ -165,12 +231,15 @@ Het bouwen was het kleine deel. Dit is het grote:
    tool is uitdrukkelijke toestemming (9 lid 2 sub a) de realistische route;
    9 lid 2 sub h kan niet, want dat vereist verwerking onder verantwoordelijk-
    heid van een arts.
-2. **Verwerkersovereenkomst** met de modelleverancier, plus de toezegging dat er
-   niet op getraind wordt.
-3. **EU-regio.** Het privacybeleid zegt nu dat er niets buiten de EER gaat.
-   De `inference_geo`-parameter van de Claude API biedt alleen `us` en `global`,
-   dus EU-residency betekent via Bedrock in een EU-regio of Vertex met regio
-   `eu`. Dat is een clientkeuze, geen vinkje achteraf.
+2. **Verwerkersovereenkomst** met de gekozen leverancier, plus de toezegging dat
+   er niet op getraind wordt. Zie "Waar het heen gaat" hierboven: openheid op de
+   pagina vervangt dit niet.
+3. **Doorgifte buiten de EER.** Het privacybeleid zegt nu dat er niets buiten de
+   EER gaat; dat klopt niet meer zodra dit aanstaat bij een Amerikaanse
+   leverancier. Of je zet er een EU-regio tegenover (bij Anthropic: via Bedrock
+   in een EU-regio of Vertex met regio `eu` — de `inference_geo`-parameter van
+   de Claude API zelf biedt alleen `us` en `global`), of je regelt
+   standaardcontractbepalingen en past het privacybeleid aan.
 4. **Privacybeleid bijwerken** (`privacybeleid.html`): hoofdstuk 2, 6 en 8
    kloppen niet meer zodra dit aanstaat.
 5. **DPIA-toets** en een regel in het verwerkingsregister.
