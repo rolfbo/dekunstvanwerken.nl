@@ -3,21 +3,21 @@
   "days": 30,
   "classifier": 3,
   "hosting_asn_rule": true,
-  "generated": "2026-09-24 12:09 UTC",
-  "requests": 16528,
+  "generated": "2026-09-25 07:49 UTC",
+  "requests": 16610,
   "own_hits": 37,
   "mix": {
-    "bot": 2473,
+    "bot": 2455,
     "engine": 9,
     "scraper": 0,
-    "datacenter": 8636,
-    "oneshot": 668,
-    "human": 4742
+    "datacenter": 8645,
+    "oneshot": 658,
+    "human": 4843
   },
-  "views": 232,
-  "ips": 60,
-  "browsers": 36,
-  "oneshot_ip_days": 476,
+  "views": 221,
+  "ips": 56,
+  "browsers": 33,
+  "oneshot_ip_days": 465,
   "leads": {
     "total": 0,
     "by_type": {
@@ -28,11 +28,6 @@
     "by_day": []
   },
   "by_day": [
-    {
-      "date": "2026-09-10",
-      "views": 11,
-      "ips": 5
-    },
     {
       "date": "2026-09-11",
       "views": 12,
@@ -107,38 +102,30 @@
   "pages": [
     {
       "path": "/",
-      "n": 150
+      "n": 146
     },
     {
       "path": "/opbouwschema.html",
-      "n": 9
-    },
-    {
-      "path": "/diensten/",
-      "n": 5
-    },
-    {
-      "path": "/diensten/verzuimbegeleiding.html",
-      "n": 5
+      "n": 8
     },
     {
       "path": "/diensten/aanstellingskeuring.html",
       "n": 5
     },
     {
-      "path": "/diensten/preventieadvies.html",
-      "n": 5
-    },
-    {
-      "path": "/diensten/rie-toetsing.html",
-      "n": 5
-    },
-    {
-      "path": "/diensten/bedrijfsarts.html",
+      "path": "/diensten/",
       "n": 4
     },
     {
-      "path": "/izp.html",
+      "path": "/diensten/verzuimbegeleiding.html",
+      "n": 4
+    },
+    {
+      "path": "/diensten/preventieadvies.html",
+      "n": 4
+    },
+    {
+      "path": "/diensten/rie-toetsing.html",
       "n": 4
     },
     {
@@ -146,7 +133,7 @@
       "n": 4
     },
     {
-      "path": "/fml.html",
+      "path": "/izp.html",
       "n": 4
     },
     {
@@ -154,11 +141,19 @@
       "n": 4
     },
     {
+      "path": "/diensten/bedrijfsarts.html",
+      "n": 3
+    },
+    {
       "path": "/whitelabel.html",
       "n": 3
     },
     {
       "path": "/diensten/pago-pmo.html",
+      "n": 3
+    },
+    {
+      "path": "/fml.html",
       "n": 3
     },
     {
@@ -173,11 +168,11 @@
     },
     {
       "path": "/opbouwschema.html",
-      "n": 9
+      "n": 8
     },
     {
       "path": "/fml.html",
-      "n": 4
+      "n": 3
     },
     {
       "path": "/izp.html",
@@ -187,15 +182,11 @@
   "referrers": [
     {
       "ref": "https://www.google.com/",
-      "n": 22
+      "n": 21
     },
     {
       "ref": "https://www.bing.com/",
       "n": 4
-    },
-    {
-      "ref": "http://www.google.com.hk",
-      "n": 1
     },
     {
       "ref": "https://duckduckgo.com/",
@@ -220,28 +211,32 @@
     {
       "ref": "http://m.baidu.com/s?wd=gated98",
       "n": 1
+    },
+    {
+      "ref": "http://www.google.com.hk",
+      "n": 1
     }
   ],
   "crawlers": [
     {
       "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
-      "n": 687
+      "n": 697
     },
     {
       "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
-      "n": 249
+      "n": 245
     },
     {
       "ua": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/r",
-      "n": 194
+      "n": 174
     },
     {
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      "n": 114
+      "n": 112
     },
     {
       "ua": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.c",
-      "n": 82
+      "n": 83
     },
     {
       "ua": "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.",
@@ -255,19 +250,19 @@
       "n": 11
     },
     {
-      "path": "/kennisbank/index.json",
-      "n": 3
-    },
-    {
       "path": "/contact.html",
       "n": 3
     },
     {
-      "path": "/tcpconfig.html",
+      "path": "/dashboard.html",
       "n": 2
     },
     {
-      "path": "/dashboard.html",
+      "path": "/kennisbank/index.json",
+      "n": 2
+    },
+    {
+      "path": "/tcpconfig.html",
       "n": 2
     },
     {
@@ -279,7 +274,7 @@
     {
       "status": "405",
       "path": "/",
-      "n": 295
+      "n": 290
     },
     {
       "status": "400",

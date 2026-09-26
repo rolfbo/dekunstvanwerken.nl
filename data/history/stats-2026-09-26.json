@@ -3,21 +3,21 @@
   "days": 30,
   "classifier": 3,
   "hosting_asn_rule": true,
-  "generated": "2026-09-24 12:09 UTC",
-  "requests": 16528,
+  "generated": "2026-09-26 08:08 UTC",
+  "requests": 17395,
   "own_hits": 37,
   "mix": {
-    "bot": 2473,
+    "bot": 3215,
     "engine": 9,
     "scraper": 0,
-    "datacenter": 8636,
-    "oneshot": 668,
-    "human": 4742
+    "datacenter": 8688,
+    "oneshot": 798,
+    "human": 4685
   },
-  "views": 232,
-  "ips": 60,
-  "browsers": 36,
-  "oneshot_ip_days": 476,
+  "views": 213,
+  "ips": 53,
+  "browsers": 30,
+  "oneshot_ip_days": 459,
   "leads": {
     "total": 0,
     "by_type": {
@@ -28,16 +28,6 @@
     "by_day": []
   },
   "by_day": [
-    {
-      "date": "2026-09-10",
-      "views": 11,
-      "ips": 5
-    },
-    {
-      "date": "2026-09-11",
-      "views": 12,
-      "ips": 6
-    },
     {
       "date": "2026-09-12",
       "views": 56,
@@ -102,43 +92,36 @@
       "date": "2026-09-24",
       "views": 10,
       "ips": 1
+    },
+    {
+      "date": "2026-09-26",
+      "views": 4,
+      "ips": 2
     }
   ],
   "pages": [
     {
       "path": "/",
-      "n": 150
+      "n": 142
     },
     {
       "path": "/opbouwschema.html",
-      "n": 9
-    },
-    {
-      "path": "/diensten/",
-      "n": 5
-    },
-    {
-      "path": "/diensten/verzuimbegeleiding.html",
-      "n": 5
+      "n": 7
     },
     {
       "path": "/diensten/aanstellingskeuring.html",
       "n": 5
     },
     {
-      "path": "/diensten/preventieadvies.html",
-      "n": 5
-    },
-    {
-      "path": "/diensten/rie-toetsing.html",
-      "n": 5
-    },
-    {
-      "path": "/diensten/bedrijfsarts.html",
+      "path": "/izp.html",
       "n": 4
     },
     {
-      "path": "/izp.html",
+      "path": "/diensten/rie-toetsing.html",
+      "n": 4
+    },
+    {
+      "path": "/diensten/preventieadvies.html",
       "n": 4
     },
     {
@@ -146,15 +129,23 @@
       "n": 4
     },
     {
-      "path": "/fml.html",
-      "n": 4
-    },
-    {
       "path": "/kennisbank/wet-verbetering-poortwachter-stappenplan.html",
       "n": 4
     },
     {
+      "path": "/privacybeleid.html",
+      "n": 3
+    },
+    {
       "path": "/whitelabel.html",
+      "n": 3
+    },
+    {
+      "path": "/diensten/",
+      "n": 3
+    },
+    {
+      "path": "/diensten/verzuimbegeleiding.html",
       "n": 3
     },
     {
@@ -162,7 +153,11 @@
       "n": 3
     },
     {
-      "path": "/kennisbank/wat-doet-een-bedrijfsarts.html",
+      "path": "/diensten/bedrijfsarts.html",
+      "n": 3
+    },
+    {
+      "path": "/kennisbank/pago-vs-pmo.html",
       "n": 3
     }
   ],
@@ -173,11 +168,11 @@
     },
     {
       "path": "/opbouwschema.html",
-      "n": 9
+      "n": 7
     },
     {
       "path": "/fml.html",
-      "n": 4
+      "n": 3
     },
     {
       "path": "/izp.html",
@@ -187,19 +182,11 @@
   "referrers": [
     {
       "ref": "https://www.google.com/",
-      "n": 22
+      "n": 17
     },
     {
       "ref": "https://www.bing.com/",
-      "n": 4
-    },
-    {
-      "ref": "http://www.google.com.hk",
-      "n": 1
-    },
-    {
-      "ref": "https://duckduckgo.com/",
-      "n": 1
+      "n": 3
     },
     {
       "ref": "http://m.baidu.com/s?wd=startns",
@@ -220,47 +207,51 @@
     {
       "ref": "http://m.baidu.com/s?wd=gated98",
       "n": 1
+    },
+    {
+      "ref": "http://www.google.com.hk",
+      "n": 1
     }
   ],
   "crawlers": [
     {
       "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
-      "n": 687
+      "n": 764
     },
     {
       "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
-      "n": 249
+      "n": 290
     },
     {
       "ua": "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/r",
-      "n": 194
+      "n": 153
+    },
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatib",
+      "n": 123
     },
     {
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      "n": 114
+      "n": 116
     },
     {
-      "ua": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.c",
-      "n": 82
-    },
-    {
-      "ua": "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.",
-      "n": 68
+      "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, l",
+      "n": 110
     }
   ],
   "scrapers": [],
   "notfound": [
     {
       "path": "/kennisbank/arousal-performance-curve.html",
-      "n": 11
-    },
-    {
-      "path": "/kennisbank/index.json",
-      "n": 3
+      "n": 9
     },
     {
       "path": "/contact.html",
       "n": 3
+    },
+    {
+      "path": "/kennisbank/index.json",
+      "n": 2
     },
     {
       "path": "/tcpconfig.html",
@@ -279,7 +270,7 @@
     {
       "status": "405",
       "path": "/",
-      "n": 295
+      "n": 289
     },
     {
       "status": "400",
