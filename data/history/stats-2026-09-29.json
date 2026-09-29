@@ -1,0 +1,306 @@
+{
+  "site": "dekunstvanwerken.nl",
+  "days": 30,
+  "classifier": 3,
+  "hosting_asn_rule": true,
+  "generated": "2026-09-29 05:51 UTC",
+  "requests": 17191,
+  "own_hits": 14,
+  "mix": {
+    "bot": 3170,
+    "engine": 9,
+    "scraper": 0,
+    "datacenter": 8408,
+    "oneshot": 948,
+    "human": 4656
+  },
+  "views": 200,
+  "ips": 58,
+  "browsers": 32,
+  "oneshot_ip_days": 452,
+  "leads": {
+    "total": 0,
+    "by_type": {
+      "werkgever": 0,
+      "whitelabel": 0,
+      "anders": 0
+    },
+    "by_day": []
+  },
+  "by_day": [
+    {
+      "date": "2026-09-15",
+      "views": 13,
+      "ips": 1
+    },
+    {
+      "date": "2026-09-16",
+      "views": 22,
+      "ips": 14
+    },
+    {
+      "date": "2026-09-17",
+      "views": 16,
+      "ips": 2
+    },
+    {
+      "date": "2026-09-18",
+      "views": 9,
+      "ips": 5
+    },
+    {
+      "date": "2026-09-19",
+      "views": 4,
+      "ips": 1
+    },
+    {
+      "date": "2026-09-20",
+      "views": 7,
+      "ips": 7
+    },
+    {
+      "date": "2026-09-21",
+      "views": 4,
+      "ips": 4
+    },
+    {
+      "date": "2026-09-22",
+      "views": 19,
+      "ips": 2
+    },
+    {
+      "date": "2026-09-23",
+      "views": 34,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-24",
+      "views": 10,
+      "ips": 1
+    },
+    {
+      "date": "2026-09-26",
+      "views": 20,
+      "ips": 6
+    },
+    {
+      "date": "2026-09-27",
+      "views": 15,
+      "ips": 5
+    },
+    {
+      "date": "2026-09-28",
+      "views": 22,
+      "ips": 4
+    },
+    {
+      "date": "2026-09-29",
+      "views": 5,
+      "ips": 2
+    }
+  ],
+  "pages": [
+    {
+      "path": "/",
+      "n": 110
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 9
+    },
+    {
+      "path": "/diensten/preventieadvies.html",
+      "n": 8
+    },
+    {
+      "path": "/diensten/pago-pmo.html",
+      "n": 7
+    },
+    {
+      "path": "/diensten/",
+      "n": 7
+    },
+    {
+      "path": "/diensten/rie-toetsing.html",
+      "n": 6
+    },
+    {
+      "path": "/diensten/aanstellingskeuring.html",
+      "n": 5
+    },
+    {
+      "path": "/privacybeleid.html",
+      "n": 4
+    },
+    {
+      "path": "/izp.html",
+      "n": 4
+    },
+    {
+      "path": "/kennisbank/opbouwschema-re-integratie.html",
+      "n": 4
+    },
+    {
+      "path": "/index.html",
+      "n": 4
+    },
+    {
+      "path": "/diensten/verzuimbegeleiding.html",
+      "n": 4
+    },
+    {
+      "path": "/kennisbank/wet-verbetering-poortwachter-stappenplan.html",
+      "n": 3
+    },
+    {
+      "path": "/voorwaarden.html",
+      "n": 3
+    },
+    {
+      "path": "/whitelabel.html",
+      "n": 3
+    }
+  ],
+  "conversion": [
+    {
+      "path": "/whitelabel.html",
+      "n": 3
+    },
+    {
+      "path": "/opbouwschema.html",
+      "n": 9
+    },
+    {
+      "path": "/fml.html",
+      "n": 1
+    },
+    {
+      "path": "/izp.html",
+      "n": 4
+    }
+  ],
+  "referrers": [
+    {
+      "ref": "https://www.google.com/",
+      "n": 14
+    },
+    {
+      "ref": "https://www.bing.com/",
+      "n": 3
+    },
+    {
+      "ref": "http://dekunstvanhetwerken.nl",
+      "n": 1
+    },
+    {
+      "ref": "http://kunstvanhetwerken.nl",
+      "n": 1
+    },
+    {
+      "ref": "http://kunstvanwerken.nl",
+      "n": 1
+    },
+    {
+      "ref": "http://theartofwork.nl",
+      "n": 1
+    },
+    {
+      "ref": "http://www.google.com.hk",
+      "n": 1
+    },
+    {
+      "ref": "http://m.baidu.com/s?wd=startns",
+      "n": 1
+    },
+    {
+      "ref": "http://m.baidu.com/s?wd=skyt6x",
+      "n": 1
+    },
+    {
+      "ref": "http://m.baidu.com/s?wd=avoid8g0",
+      "n": 1
+    }
+  ],
+  "crawlers": [
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
+      "n": 675
+    },
+    {
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
+      "n": 295
+    },
+    {
+      "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatib",
+      "n": 149
+    },
+    {
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      "n": 109
+    },
+    {
+      "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, l",
+      "n": 106
+    },
+    {
+      "ua": "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.",
+      "n": 101
+    }
+  ],
+  "scrapers": [],
+  "notfound": [
+    {
+      "path": "/kennisbank/arousal-performance-curve.html",
+      "n": 9
+    },
+    {
+      "path": "/readme.html",
+      "n": 4
+    },
+    {
+      "path": "/diensten/pago-pmo.html/contact",
+      "n": 3
+    },
+    {
+      "path": "/contact.html",
+      "n": 3
+    },
+    {
+      "path": "/diensten/pago-pmo.html/contact/",
+      "n": 2
+    },
+    {
+      "path": "/diensten/pago-pmo.html/contact-us",
+      "n": 2
+    },
+    {
+      "path": "/diensten/pago-pmo.html/contacteer-ons",
+      "n": 2
+    },
+    {
+      "path": "/tcpconfig.html",
+      "n": 2
+    },
+    {
+      "path": "/kennisbank/index.json",
+      "n": 2
+    },
+    {
+      "path": "/dashboard.html",
+      "n": 2
+    }
+  ],
+  "errors": [
+    {
+      "status": "405",
+      "path": "/",
+      "n": 114
+    },
+    {
+      "status": "400",
+      "path": "/",
+      "n": 1
+    }
+  ],
+  "server_errors": {}
+}
