@@ -3,21 +3,21 @@
   "days": 30,
   "classifier": 3,
   "hosting_asn_rule": true,
-  "generated": "2026-10-02 05:11 UTC",
-  "requests": 24434,
+  "generated": "2026-10-02 13:19 UTC",
+  "requests": 25451,
   "own_hits": 10,
   "mix": {
-    "bot": 3781,
+    "bot": 3824,
     "engine": 15,
     "scraper": 1220,
-    "datacenter": 9684,
-    "oneshot": 1336,
-    "human": 8398
+    "datacenter": 9830,
+    "oneshot": 1430,
+    "human": 9132
   },
-  "views": 565,
+  "views": 568,
   "ips": 114,
   "browsers": 55,
-  "oneshot_ip_days": 665,
+  "oneshot_ip_days": 690,
   "leads": {
     "total": 0,
     "by_type": {
@@ -95,14 +95,14 @@
     },
     {
       "date": "2026-10-02",
-      "views": 2,
-      "ips": 2
+      "views": 5,
+      "ips": 3
     }
   ],
   "pages": [
     {
       "path": "/",
-      "n": 262
+      "n": 265
     },
     {
       "path": "/opbouwschema.html",
@@ -189,6 +189,10 @@
       "n": 5
     },
     {
+      "ref": "https://kunstvanhetwerken.nl/",
+      "n": 4
+    },
+    {
       "ref": "http://dekunstvanwerken.com/",
       "n": 4
     },
@@ -205,38 +209,34 @@
       "n": 4
     },
     {
-      "ref": "https://kunstvanhetwerken.nl/",
+      "ref": "https://www.dekunstvanhetwerken.nl/",
+      "n": 3
+    },
+    {
+      "ref": "https://www.kunstvanhetwerken.nl/",
       "n": 3
     },
     {
       "ref": "https://www.kunstvanwerken.nl/",
-      "n": 3
-    },
-    {
-      "ref": "https://kunstvanwerken.nl/",
-      "n": 3
-    },
-    {
-      "ref": "https://www.bing.com/",
       "n": 3
     }
   ],
   "crawlers": [
     {
       "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
-      "n": 701
+      "n": 707
     },
     {
       "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
-      "n": 370
+      "n": 371
     },
     {
       "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatib",
-      "n": 217
+      "n": 220
     },
     {
       "ua": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.c",
-      "n": 131
+      "n": 132
     },
     {
       "ua": "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.",
@@ -255,11 +255,11 @@
   ],
   "notfound": [
     {
-      "path": "/readme.html",
-      "n": 7
+      "path": "/kennisbank/arousal-performance-curve.html",
+      "n": 8
     },
     {
-      "path": "/kennisbank/arousal-performance-curve.html",
+      "path": "/readme.html",
       "n": 7
     },
     {
@@ -299,7 +299,7 @@
     {
       "status": "405",
       "path": "/",
-      "n": 76
+      "n": 78
     },
     {
       "status": "405",
