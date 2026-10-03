@@ -86,7 +86,7 @@ class HostingAsnRule(unittest.TestCase):
         self.assertEqual(r["mix"]["human"], 0)
         self.assertEqual(r["views"], 0)
         self.assertEqual(r["ips"], 0)
-        self.assertEqual(r["classifier"], 3)
+        self.assertEqual(r["classifier"], 5)
         self.assertIs(r["hosting_asn_rule"], True)
 
     def test_unlisted_ip_is_unaffected(self):
@@ -95,7 +95,7 @@ class HostingAsnRule(unittest.TestCase):
         self.assertEqual(r["mix"]["datacenter"], 0)
         self.assertEqual(r["views"], 6)
         self.assertEqual(r["ips"], 2)
-        self.assertEqual(r["classifier"], 3)
+        self.assertEqual(r["classifier"], 5)
 
     def test_volumetric_scraper_is_still_a_scraper(self):
         lines = [line("47.79.202.11", f"/kennisbank/a-{n}.html") for n in range(150)]
@@ -133,6 +133,60 @@ class HostingAsnRule(unittest.TestCase):
             input="".join(self.wave("47.79.202.10")), capture_output=True, text=True, check=True,
         ).stdout
         self.assertIn("table missing, rule OFF", out)
+
+
+# Classifier 5 fixtures: a page path on this site, and an asset a real browser fetches.
+PAGE = "/page-%d.html"
+CSS = "/style.css"
+
+class NoCssRule(unittest.TestCase):
+    """Classifier 5 (3 oct 2026): >=3 pages in a day from an address that never fetched a
+    stylesheet or script anywhere in the window is not a reader.
+
+    28 sep - 1 oct 2026: a proxy pool (Sprious, Global Connections, Cyberzone, but also
+    Virgin Media, Orange and Jio home ranges) read 3-99 pages per address — on hcdb exactly
+    30 each — with no stylesheet, no referrer and no render beacon. Above the one-shot cap,
+    below the scraper floor, outside every hosting ASN: classifier 4 counted 96% of hcdb's
+    30 sep "human" views from it, and the same shape drove the spike on every site.
+    """
+
+    def pages(self, ip, n, **kw):
+        return [line(ip, PAGE % i, **kw) for i in range(n)]
+
+    def test_pool_address_is_not_a_reader(self):
+        r = run(self.pages("203.0.113.7", 30))
+        self.assertEqual(r["views"], 0)
+        self.assertEqual(r["mix"]["nocss"], 30)
+        self.assertEqual(r["nocss_ip_days"], 1)
+        self.assertTrue(r["nocss_rule"])
+
+    def test_two_pages_stay_one_shot(self):
+        r = run(self.pages("203.0.113.8", 2))
+        self.assertEqual(r["mix"]["oneshot"], 2)
+        self.assertEqual(r["mix"]["nocss"], 0)
+
+    def test_reader_with_cached_css_from_an_earlier_day_counts(self):
+        # Assets are cached, so a returning reader fetches none on day two. One stylesheet
+        # anywhere in the window is enough to stay a reader.
+        lines = [line("198.51.100.4", PAGE % 0, day_offset=1),
+                 line("198.51.100.4", CSS, day_offset=1)] + self.pages("198.51.100.4", 4)
+        r = run(lines)
+        self.assertEqual(r["views"], 5)
+        self.assertEqual(r["mix"]["nocss"], 0)
+
+    def test_search_arrival_counts(self):
+        r = run(self.pages("198.51.100.5", 4, ref="https://www.google.com/"))
+        self.assertEqual(r["views"], 4)
+        self.assertEqual(r["mix"]["nocss"], 0)
+
+    def test_text_report_names_the_bucket(self):
+        with tempfile.TemporaryDirectory() as empty:
+            out = subprocess.run(
+                [sys.executable, SCRIPT, "--days", "7", "--asn-dir", empty,
+                 "--hosting-asns", os.path.join(empty, "x.json")],
+                input="".join(self.pages("203.0.113.9", 5)), capture_output=True, text=True, check=True,
+            ).stdout
+        self.assertIn("no-CSS", out)
 
 
 if __name__ == "__main__":

@@ -49,6 +49,17 @@ ENGINE_PREFIXES = ("66.249.",)
 SCRAPER_MIN_PAGES = 100
 SCRAPER_PAGES_PER_ASSET = 20
 ONESHOT_MAX_PAGES = 2
+# Classifier 5 (3 oct 2026): an address that reads more than ONESHOT_MAX_PAGES pages in a day
+# and fetches no stylesheet, script, font, image or favicon anywhere in the window is not a
+# reader, unless it arrived from a search engine or fetched the render beacon. 28 sep - 1 oct
+# 2026 a proxy pool (Sprious, Global Connections, Cyberzone, and Virgin Media / Orange / Jio home
+# ranges) read 3-99 pages per address — on healthcaredatabase exactly 30 each — with no
+# stylesheet, no referrer and no beacon: above the one-shot cap, below SCRAPER_MIN_PAGES,
+# outside every hosting ASN. It drove the spike on every site that week. Counted as "nocss".
+# robots.txt, sitemaps and /.well-known/ are crawler fetches, never a browser's, so they do
+# not acquit anyone. Known cost: a returning reader whose cached assets outlive the window
+# and who never fires a beacon is lost; sites with the beacon do not have that problem.
+NOT_BROWSER = re.compile(r"^/(robots\.txt|sitemap[^/]*\.xml|\.well-known/.*)$")
 SEARCH_REFERRER = re.compile(
     r"^https?://([a-z0-9-]+\.)*"
     r"(google\.[a-z.]+|bing\.com|duckduckgo\.com|yandex\.(com|ru)|baidu\.com"
@@ -208,8 +219,12 @@ def classify(rows, hosting=None):
     cloud network is bucketed "datacenter" whatever its volume.
     """
     pages_by_ip, assets_by_ip = Counter(), Counter()
+    browser_assets, rendered = Counter(), set()  # classifier 5, see NOT_BROWSER
     day_pages, day_assets, day_search = Counter(), Counter(), set()
     for ip, when, bare, status, ref, ua, is_asset in rows:
+        # Classifier 5 tally — see NOT_BROWSER.
+        if is_asset and status in OK_STATUS and not BOT.search(ua) and not NOT_BROWSER.match(bare):
+            browser_assets[ip] += 1
         if status not in OK_STATUS or BOT.search(ua):
             continue
         key = (ip, when.strftime("%Y-%m-%d"))
@@ -238,6 +253,19 @@ def classify(rows, hosting=None):
         and key[0] not in scrapers
         and not key[0].startswith(ENGINE_PREFIXES)
     }
+    # Classifier 5 — see NOT_BROWSER. Per (ip, day) like the one-shot rule, but the asset
+    # test looks at the whole window: a reader's assets are cached after the first page.
+    nocss = {
+        key
+        for key, n in day_pages.items()
+        if n > ONESHOT_MAX_PAGES
+        and not browser_assets[key[0]]
+        and key[0] not in rendered
+        and key not in day_search
+        and key not in oneshot
+        and key[0] not in scrapers
+        and not key[0].startswith(ENGINE_PREFIXES)
+    }
     bucket = {}
     for ip in set(pages_by_ip) | set(assets_by_ip):
         if ip.startswith(ENGINE_PREFIXES):
@@ -250,7 +278,7 @@ def classify(rows, hosting=None):
             bucket[ip] = "datacenter"
         else:
             bucket[ip] = "human"
-    return bucket, scrapers, oneshot, pages_by_ip, assets_by_ip
+    return bucket, scrapers, oneshot, pages_by_ip, assets_by_ip, nocss
 
 
 def main():
@@ -274,7 +302,7 @@ def main():
             continue
         rows.append(row)
     hosting = Hosting(args.asn_dir or default_asn_dir(), args.hosting_asns)
-    bucket, scrapers, oneshot, pages_by_ip, assets_by_ip = classify(rows, hosting)
+    bucket, scrapers, oneshot, pages_by_ip, assets_by_ip, nocss = classify(rows, hosting)
 
     mix = Counter()
     days, uniq_by_day, pages, refs, bots = Counter(), {}, Counter(), Counter(), Counter()
@@ -286,6 +314,8 @@ def main():
         kind = "bot" if BOT.search(ua) else bucket.get(ip, "human")
         if kind == "human" and (ip, when.strftime("%Y-%m-%d")) in oneshot:
             kind = "oneshot"
+        elif kind == "human" and (ip, when.strftime("%Y-%m-%d")) in nocss:
+            kind = "nocss"
         mix[kind] += 1
         if kind == "bot":
             bots[ua[:60]] += 1
@@ -320,16 +350,19 @@ def main():
                 # 3 = classifier 2 plus the hosting-ASN rule (12 sep 2026, as booksofpodcast).
                 # Snapshots written as classifier 2 count cloud traffic as human and overstate
                 # every human figure; they are not comparable with these.
-                "classifier": 3 if hosting else 2,
+                # 5 = everything above plus the no-CSS rule (3 oct 2026, see NOT_BROWSER); see nocss_rule.
+                "classifier": 5 if hosting else 2,
                 "hosting_asn_rule": bool(hosting),
                 "generated": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
                 "requests": sum(mix.values()),
                 "own_hits": own_hits,
-                "mix": {k: mix[k] for k in ("bot", "engine", "scraper", "datacenter", "oneshot", "human")},
+                "mix": {k: mix[k] for k in ("bot", "engine", "scraper", "datacenter", "oneshot", "nocss", "human")},
                 "views": sum(days.values()),
                 "ips": len(human_ips),
                 "browsers": len(browsers),
                 "oneshot_ip_days": len(oneshot),
+                "nocss_ip_days": len(nocss),
+                "nocss_rule": True,
                 "leads": {
                     "total": len(leads),
                     "by_type": {t: lead_type[t] for t in LEAD_TYPES},
@@ -361,6 +394,7 @@ def main():
     out(f"  {mix['datacenter']:>6}  hosting networks (cloud ASNs; not readers at any volume)"
         + ("" if hosting else " — table missing, rule OFF"))
     out(f"  {mix['oneshot']:>6}  one-shot no-asset hits ({len(oneshot)} IP-days, <=2 pages, no assets, not from search)")
+    out(f"  {mix['nocss']:>6}  no-CSS multi-page hits ({len(nocss)} IP-days, >=3 pages, no CSS/JS in window, no beacon, not from search)")
     out("")
     out(f"  {sum(days.values()):>6}  page views (human, assets excluded)")
     out(f"  {len(human_ips):>6}  distinct IPs")
