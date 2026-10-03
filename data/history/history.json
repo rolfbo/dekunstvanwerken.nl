@@ -30,9 +30,10 @@
   "stats-2026-09-29.json",
   "stats-2026-09-30.json",
   "stats-2026-10-01.json",
-  "stats-2026-10-02.json"
+  "stats-2026-10-02.json",
+  "stats-2026-10-03.json"
  ],
- "merged_on": "2026-10-02",
+ "merged_on": "2026-10-03",
  "by_day": [
   {
    "date": "2026-06-11",
@@ -838,7 +839,7 @@
    "date": "2026-09-19",
    "views": 4,
    "ips": 1,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -846,7 +847,7 @@
    "date": "2026-09-20",
    "views": 7,
    "ips": 7,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -854,7 +855,7 @@
    "date": "2026-09-21",
    "views": 4,
    "ips": 4,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -862,7 +863,7 @@
    "date": "2026-09-22",
    "views": 19,
    "ips": 2,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -870,7 +871,7 @@
    "date": "2026-09-23",
    "views": 34,
    "ips": 6,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -878,7 +879,7 @@
    "date": "2026-09-24",
    "views": 10,
    "ips": 1,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -886,7 +887,7 @@
    "date": "2026-09-26",
    "views": 20,
    "ips": 6,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -894,7 +895,7 @@
    "date": "2026-09-27",
    "views": 15,
    "ips": 5,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -902,7 +903,7 @@
    "date": "2026-09-28",
    "views": 22,
    "ips": 4,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -910,7 +911,7 @@
    "date": "2026-09-29",
    "views": 266,
    "ips": 43,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -918,7 +919,7 @@
    "date": "2026-09-30",
    "views": 63,
    "ips": 13,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
@@ -926,15 +927,23 @@
    "date": "2026-10-01",
    "views": 90,
    "ips": 26,
-   "from": "2026-10-02",
+   "from": "2026-10-03",
    "complete": true,
    "classifier": 3
   },
   {
    "date": "2026-10-02",
-   "views": 5,
-   "ips": 3,
-   "from": "2026-10-02",
+   "views": 104,
+   "ips": 9,
+   "from": "2026-10-03",
+   "complete": true,
+   "classifier": 3
+  },
+  {
+   "date": "2026-10-03",
+   "views": 47,
+   "ips": 6,
+   "from": "2026-10-03",
    "complete": false,
    "classifier": 3
   }
