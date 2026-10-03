@@ -1,23 +1,26 @@
 {
   "site": "dekunstvanwerken.nl",
   "days": 30,
-  "classifier": 3,
+  "classifier": 5,
   "hosting_asn_rule": true,
-  "generated": "2026-10-03 14:17 UTC",
-  "requests": 25697,
-  "own_hits": 15,
+  "generated": "2026-10-03 15:26 UTC",
+  "requests": 25710,
+  "own_hits": 16,
   "mix": {
-    "bot": 3802,
+    "bot": 3807,
     "engine": 14,
     "scraper": 1220,
-    "datacenter": 9645,
-    "oneshot": 1465,
-    "human": 9551
+    "datacenter": 9648,
+    "oneshot": 1466,
+    "nocss": 3641,
+    "human": 5914
   },
-  "views": 705,
-  "ips": 120,
-  "browsers": 58,
-  "oneshot_ip_days": 714,
+  "views": 120,
+  "ips": 73,
+  "browsers": 51,
+  "oneshot_ip_days": 716,
+  "nocss_ip_days": 89,
+  "nocss_rule": true,
   "leads": {
     "total": 0,
     "by_type": {
@@ -28,11 +31,6 @@
     "by_day": []
   },
   "by_day": [
-    {
-      "date": "2026-09-19",
-      "views": 4,
-      "ips": 1
-    },
     {
       "date": "2026-09-20",
       "views": 7,
@@ -45,13 +43,13 @@
     },
     {
       "date": "2026-09-22",
-      "views": 19,
-      "ips": 2
+      "views": 2,
+      "ips": 1
     },
     {
       "date": "2026-09-23",
-      "views": 34,
-      "ips": 6
+      "views": 6,
+      "ips": 4
     },
     {
       "date": "2026-09-24",
@@ -60,123 +58,123 @@
     },
     {
       "date": "2026-09-26",
-      "views": 20,
-      "ips": 6
-    },
-    {
-      "date": "2026-09-27",
-      "views": 15,
-      "ips": 5
-    },
-    {
-      "date": "2026-09-28",
-      "views": 22,
+      "views": 5,
       "ips": 4
     },
     {
+      "date": "2026-09-27",
+      "views": 3,
+      "ips": 3
+    },
+    {
+      "date": "2026-09-28",
+      "views": 3,
+      "ips": 2
+    },
+    {
       "date": "2026-09-29",
-      "views": 266,
-      "ips": 43
+      "views": 29,
+      "ips": 25
     },
     {
       "date": "2026-09-30",
-      "views": 63,
-      "ips": 13
+      "views": 11,
+      "ips": 6
     },
     {
       "date": "2026-10-01",
-      "views": 90,
-      "ips": 26
+      "views": 25,
+      "ips": 16
     },
     {
       "date": "2026-10-02",
-      "views": 104,
-      "ips": 9
+      "views": 2,
+      "ips": 2
     },
     {
       "date": "2026-10-03",
-      "views": 47,
-      "ips": 6
+      "views": 13,
+      "ips": 3
     }
   ],
   "pages": [
     {
       "path": "/",
-      "n": 283
+      "n": 68
     },
     {
       "path": "/opbouwschema.html",
-      "n": 37
-    },
-    {
-      "path": "/diensten/preventieadvies.html",
-      "n": 29
-    },
-    {
-      "path": "/index.html",
-      "n": 28
-    },
-    {
-      "path": "/diensten/pago-pmo.html",
-      "n": 27
-    },
-    {
-      "path": "/diensten/",
-      "n": 26
-    },
-    {
-      "path": "/diensten/rie-toetsing.html",
-      "n": 26
-    },
-    {
-      "path": "/voorwaarden.html",
       "n": 22
     },
     {
-      "path": "/diensten/verzuimbegeleiding.html",
-      "n": 21
-    },
-    {
-      "path": "/diensten/aanstellingskeuring.html",
-      "n": 21
-    },
-    {
-      "path": "/diensten/bedrijfsarts.html",
-      "n": 18
-    },
-    {
-      "path": "/privacybeleid.html",
-      "n": 17
+      "path": "/diensten/preventieadvies.html",
+      "n": 3
     },
     {
       "path": "/whitelabel.html",
-      "n": 16
+      "n": 3
+    },
+    {
+      "path": "/diensten/rie-toetsing.html",
+      "n": 3
+    },
+    {
+      "path": "/diensten/aanstellingskeuring.html",
+      "n": 3
     },
     {
       "path": "/izp.html",
-      "n": 16
+      "n": 3
     },
     {
-      "path": "/kennisbank/wet-verbetering-poortwachter-stappenplan.html",
-      "n": 15
+      "path": "/diensten/",
+      "n": 2
+    },
+    {
+      "path": "/diensten/pago-pmo.html",
+      "n": 2
+    },
+    {
+      "path": "/diensten/bedrijfsarts.html",
+      "n": 2
+    },
+    {
+      "path": "/diensten/verzuimbegeleiding.html",
+      "n": 2
+    },
+    {
+      "path": "/diensten/index.html",
+      "n": 2
+    },
+    {
+      "path": "/kennisbank/opbouwschema-re-integratie.html",
+      "n": 2
+    },
+    {
+      "path": "/kennisbank/pago-vs-pmo.html",
+      "n": 1
+    },
+    {
+      "path": "/privacybeleid.html",
+      "n": 1
     }
   ],
   "conversion": [
     {
       "path": "/whitelabel.html",
-      "n": 16
+      "n": 3
     },
     {
       "path": "/opbouwschema.html",
-      "n": 37
+      "n": 22
     },
     {
       "path": "/fml.html",
-      "n": 13
+      "n": 0
     },
     {
       "path": "/izp.html",
-      "n": 16
+      "n": 3
     }
   ],
   "referrers": [
@@ -185,46 +183,46 @@
       "n": 28
     },
     {
-      "ref": "http://theartofwork.nl",
-      "n": 5
-    },
-    {
-      "ref": "http://www.kunstvanwerken.nl/",
-      "n": 4
-    },
-    {
-      "ref": "https://www.kunstvanwerken.nl/",
-      "n": 4
-    },
-    {
-      "ref": "https://kunstvanhetwerken.nl/",
-      "n": 4
-    },
-    {
-      "ref": "http://dekunstvanwerken.com/",
-      "n": 4
-    },
-    {
-      "ref": "http://kunstvanwerken.nl/",
-      "n": 4
-    },
-    {
-      "ref": "http://dekunstvanwerken.com",
-      "n": 4
-    },
-    {
-      "ref": "https://37.97.226.65",
-      "n": 4
-    },
-    {
-      "ref": "https://www.dekunstvanhetwerken.nl/",
+      "ref": "https://www.bing.com/",
       "n": 3
+    },
+    {
+      "ref": "https://bing.com/",
+      "n": 2
+    },
+    {
+      "ref": "https://duckduckgo.com/",
+      "n": 1
+    },
+    {
+      "ref": "http://www.google.com.hk",
+      "n": 1
+    },
+    {
+      "ref": "http://m.baidu.com/s?wd=startns",
+      "n": 1
+    },
+    {
+      "ref": "http://m.baidu.com/s?wd=skyt6x",
+      "n": 1
+    },
+    {
+      "ref": "http://m.baidu.com/s?wd=avoid8g0",
+      "n": 1
+    },
+    {
+      "ref": "http://m.baidu.com/s?wd=its487",
+      "n": 1
+    },
+    {
+      "ref": "http://m.baidu.com/s?wd=gated98",
+      "n": 1
     }
   ],
   "crawlers": [
     {
       "ua": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatibl",
-      "n": 689
+      "n": 692
     },
     {
       "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/",
