@@ -27,10 +27,11 @@
 
 ## Tools
 - [Opbouwschema-calculator](https://dekunstvanwerken.nl/opbouwschema.html): gefaseerd opbouwschema bij re-integratie.
+- [Maatmanloon-calculator](https://dekunstvanwerken.nl/maatmanloon.html): maatmanloon per uur, indexatie, restverdiencapaciteit en arbeidsongeschiktheidspercentage (WIA/WAO).
 - [FML concept-tool](https://dekunstvanwerken.nl/fml.html): 6-rubrieken Functionele Mogelijkheden Lijst (concept).
 - [IZP concept-tool](https://dekunstvanwerken.nl/izp.html): 6-rubrieken Inzetbaarheidsprofiel (concept).
 
 ## MCP
 AI-agents kunnen rechtstreeks verbinden met onze MCP-server (Model Context
 Protocol, Streamable HTTP): https://mcp.dekunstvanwerken.nl/
-Tools: bereken_opbouwschema, faq, bedrijfsinfo.
+Tools: bereken_opbouwschema, bereken_maatmanloon, faq, bedrijfsinfo.

@@ -8,6 +8,7 @@
  *
  * Exposed tools:
  *   - bereken_opbouwschema   the opbouwschema calculator as a tool
+ *   - bereken_maatmanloon    maatmanloon / AO-percentage calculator
  *   - faq                    the site's FAQ answers
  *   - bedrijfsinfo           services & contact details
  *
@@ -44,7 +45,7 @@ const HOST = process.env.MCP_HOST || '127.0.0.1';
 // Signup submissions are appended here as JSONL; picked up weekly over SSH.
 const STATE_DIR = process.env.MCP_STATE_DIR || '/var/lib/dkvw-mcp';
 
-const SERVER_INFO = { name: 'dekunstvanwerken', version: '1.4.0' };
+const SERVER_INFO = { name: 'dekunstvanwerken', version: '1.5.0' };
 const PROTOCOL_VERSIONS = ['2025-06-18', '2025-03-26', '2024-11-05'];
 
 const FAQ = [
@@ -80,6 +81,7 @@ const BEDRIJFSINFO = {
   ],
   tools: [
     { naam: 'Opbouwschema-calculator', url: `${SITE}/opbouwschema.html` },
+    { naam: 'Maatmanloon-calculator', url: `${SITE}/maatmanloon.html` },
     { naam: 'FML concept-tool', url: `${SITE}/fml.html` },
     { naam: 'IZP concept-tool', url: `${SITE}/izp.html` },
   ],
@@ -271,6 +273,177 @@ function berekenOpbouwschema(args) {
   };
 }
 
+// ---------------------------------------------- maatmanloon calculator
+// Rekenkern: identiek aan die in maatmanloon.html — wijzig ze samen.
+// Regels: Schattingsbesluit arbeidsongeschiktheidswetten art. 7a (uurloon),
+// art. 8 (indexatie), art. 9/10 (resterende verdiencapaciteit).
+const WEKEN_PER_JAAR = 52.2;
+function berekenMaatman(inv) {
+  const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+  const fouten = [], meldingen = [];
+
+  // 1. SV-loon in het refertejaar
+  let svLoon;
+  if (inv.loonModus === 'maand') {
+    const basis = num(inv.maandloon) * 12;
+    svLoon = basis * (1 + num(inv.vakantiegeldPct) / 100 + num(inv.eindejaarsPct) / 100)
+      + num(inv.toeslagenJaar) - num(inv.aftrekJaar);
+  } else {
+    svLoon = num(inv.svLoonJaar);
+  }
+  if (!(svLoon > 0)) fouten.push('Vul het SV-loon in het refertejaar in (stap 1).');
+
+  // 2. Uren
+  const urenWeek = num(inv.urenWeek);
+  if (!(urenWeek > 0)) fouten.push('Vul het aantal uren per week van het eigen werk in (stap 2).');
+  const urenJaar = inv.urenModus === 'totaal' ? num(inv.urenTotaal) : urenWeek * WEKEN_PER_JAAR;
+  if (inv.urenModus === 'totaal' && !(urenJaar > 0)) fouten.push('Vul het totaal aantal uren in het refertejaar in (stap 2).');
+  if (fouten.length) return { ok: false, fouten, meldingen };
+
+  // 3. Maatmanloon per uur + indexatie
+  const uurloon = svLoon / urenJaar;
+  const iStart = num(inv.indexStart), iNu = num(inv.indexNu);
+  let indexFactor = 1, geindexeerd = false;
+  if (iStart > 0 && iNu > 0) { indexFactor = iNu / iStart; geindexeerd = true; }
+  else if (iStart > 0 || iNu > 0) meldingen.push('Vul beide indexcijfers in om te indexeren; nu is zonder indexatie gerekend.');
+  const maatman = uurloon * indexFactor;
+
+  // 4. Restverdiencapaciteit
+  const belastbaar = num(inv.belastbareUren) > 0 ? num(inv.belastbareUren) : null;
+  const urenBeperkt = belastbaar !== null && belastbaar < urenWeek;
+  let rvc = null, basisLoon = null, basisUren = null, basisNaam = null;
+  let gemaximeerd = false, effUren = null, reductie = null, functies = [];
+  if (inv.rvcModus === 'feitelijk') {
+    basisLoon = num(inv.feitelijkLoon); basisUren = num(inv.feitelijkUren);
+    if (basisLoon > 0 && basisUren > 0) {
+      basisNaam = 'feitelijke verdiensten';
+      effUren = Math.min(basisUren, urenWeek);
+      if (basisUren > urenWeek) meldingen.push('Er wordt meer gewerkt dan de maatmanomvang; de uren zijn afgetopt op ' + urenWeek + ' uur per week.');
+    } else basisLoon = null;
+  } else {
+    functies = (inv.functies || [])
+      .map((f, i) => ({ naam: (f.naam || '').trim() || ('Functie ' + (i + 1)), loon: num(f.loon), uren: num(f.uren) }))
+      .filter((f) => f.loon > 0);
+    if (functies.length >= 3) {
+      if (functies.length > 3) meldingen.push('Er zijn meer dan drie functies ingevuld; de drie met het hoogste uurloon tellen.');
+      const top = functies.slice().sort((a, b) => b.loon - a.loon).slice(0, 3);
+      const mid = top[1];
+      basisNaam = mid.naam; basisLoon = mid.loon; basisUren = mid.uren > 0 ? mid.uren : urenWeek;
+      effUren = Math.min(basisUren, urenWeek, belastbaar !== null ? belastbaar : Infinity);
+      if (urenBeperkt && basisLoon > maatman) { gemaximeerd = true; }
+    } else if (functies.length > 0) {
+      meldingen.push('Het UWV rekent met minimaal drie functies. Vul er drie in, of kies "Feitelijke verdiensten" voor één bedrag.');
+    }
+  }
+  let resultaat = null;
+  if (basisLoon !== null) {
+    const loon = gemaximeerd ? maatman : basisLoon;
+    reductie = effUren / urenWeek;
+    rvc = loon * reductie;
+    const verlies = Math.max(0, maatman - rvc);
+    const pct = Math.max(0, (maatman - rvc) / maatman * 100);
+    if (rvc >= maatman) meldingen.push('De restverdiencapaciteit is gelijk aan of hoger dan het maatmanloon: er is geen loonverlies.');
+    resultaat = { rvc, verlies, pct, loonNaMaximering: loon };
+  }
+  return {
+    ok: true, fouten, meldingen,
+    svLoon, urenWeek, urenJaar, uurloon, indexFactor, geindexeerd, iStart, iNu, maatman,
+    maatmanMaand: maatman * urenWeek * WEKEN_PER_JAAR / 12,
+    maatmanJaar: maatman * urenWeek * WEKEN_PER_JAAR,
+    belastbaar, urenBeperkt, functies, basisNaam, basisLoon, basisUren, gemaximeerd, effUren, reductie,
+    grens35: maatman * 0.65, grens80: maatman * 0.20,
+    resultaat,
+  };
+}
+// Klasse-indeling. Het percentage wordt niet afgerond voor de klassegrens.
+function aoKlasse(pct, wet) {
+  if (wet === 'wao') {
+    const k = [[80, '80–100%'], [65, '65–80%'], [55, '55–65%'], [45, '45–55%'], [35, '35–45%'], [25, '25–35%'], [15, '15–25%']];
+    for (const [g, l] of k) if (pct >= g) return { klasse: l, uitleg: g === 80 ? 'Volledig arbeidsongeschikt.' : 'Gedeeltelijk arbeidsongeschikt.' };
+    return { klasse: 'minder dan 15%', uitleg: 'Onder de 15% bestaat geen recht op een WAO-uitkering.' };
+  }
+  if (pct >= 80) return { klasse: '80–100%', uitleg: 'Volledig arbeidsongeschikt: IVA-uitkering als dit duurzaam is, anders WGA.' };
+  if (pct >= 35) return { klasse: '35–80%', uitleg: 'Gedeeltelijk arbeidsongeschikt: WGA-uitkering.' };
+  return { klasse: 'minder dan 35%', uitleg: 'Onder de 35% bestaat geen recht op een WIA-uitkering.' };
+}
+
+function berekenMaatmanloonTool(a) {
+  const f = Array.isArray(a.functies) ? a.functies.slice(0, 10) : [];
+  const feitelijk = a.feitelijk_uurloon != null;
+  const inv = {
+    loonModus: a.sv_loon_jaar != null ? 'jaar' : 'maand',
+    svLoonJaar: a.sv_loon_jaar, maandloon: a.maandloon,
+    vakantiegeldPct: a.vakantiegeld_pct ?? 8, eindejaarsPct: a.eindejaarsuitkering_pct ?? 0,
+    toeslagenJaar: a.toeslagen_jaar, aftrekJaar: a.aftrek_jaar,
+    urenWeek: a.uren_per_week, urenModus: a.uren_refertejaar != null ? 'totaal' : 'week', urenTotaal: a.uren_refertejaar,
+    indexStart: a.index_begin, indexNu: a.index_beoordeling,
+    rvcModus: feitelijk ? 'feitelijk' : 'functies',
+    functies: f.map((x) => ({ naam: String(x?.naam ?? '').slice(0, 60), loon: x?.uurloon, uren: x?.uren_per_week })),
+    belastbareUren: a.belastbare_uren_per_week,
+    feitelijkLoon: a.feitelijk_uurloon, feitelijkUren: a.feitelijk_uren_per_week ?? a.uren_per_week,
+  };
+  const wet = a.wet === 'wao' ? 'wao' : 'wia';
+  const r = berekenMaatman(inv);
+  if (!r.ok) return { fout: r.fouten.join(' ') };
+  const r2 = (n) => Math.round(n * 100) / 100;
+  const eur = (n) => '€ ' + n.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const pct = r.resultaat ? Math.floor(r.resultaat.pct * 100 + 1e-9) / 100 : null;
+  const klasse = r.resultaat ? aoKlasse(r.resultaat.pct, wet) : null;
+
+  const lines = ['Berekening maatmanloon en arbeidsongeschiktheidspercentage', '',
+    `SV-loon refertejaar: ${eur(r.svLoon)}`,
+    `Uren refertejaar: ${r2(r.urenJaar)} (maatmanomvang ${r.urenWeek} uur per week)`,
+    `Maatmanloon per uur: ${eur(r.uurloon)}`];
+  if (r.geindexeerd) lines.push(`Indexatie: × ${Math.round(r.indexFactor * 1e4) / 1e4} → ${eur(r.maatman)} per uur`);
+  if (r.resultaat) {
+    lines.push(`${feitelijk ? 'Feitelijk uurloon' : 'Middelste functie (' + r.basisNaam + ')'}: ${eur(r.basisLoon)}`);
+    if (r.gemaximeerd) lines.push(`Maximering op het maatmanloon: ${eur(r.resultaat.loonNaMaximering)}`);
+    lines.push(`Reductiefactor: ${r.effUren} ÷ ${r.urenWeek} = ${Math.round(r.reductie * 1e4) / 1e4}`);
+    lines.push(`Restverdiencapaciteit per uur: ${eur(r.resultaat.rvc)}`);
+    lines.push(`Arbeidsongeschiktheid: ${pct.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}% — klasse ${wet.toUpperCase()} ${klasse.klasse}. ${klasse.uitleg}`);
+  }
+  if (r.meldingen.length) lines.push('Let op: ' + r.meldingen.join(' '));
+  lines.push('', 'Indicatieve berekening; het UWV stelt de bedragen vast.');
+
+  // Zelfde sleutels als de deel-link van maatmanloon.html
+  const p = new URLSearchParams({ lm: inv.loonModus, um: inv.urenModus, rm: inv.rvcModus, w: wet });
+  const zet = (k, v) => { if (v != null && v !== '') p.set(k, String(v)); };
+  if (inv.loonModus === 'jaar') zet('sv', inv.svLoonJaar);
+  else { zet('ml', inv.maandloon); zet('vg', inv.vakantiegeldPct); zet('ej', inv.eindejaarsPct); zet('ts', inv.toeslagenJaar); zet('af', inv.aftrekJaar); }
+  zet('uw', inv.urenWeek); zet('ut', inv.urenTotaal); zet('i0', inv.indexStart); zet('i1', inv.indexNu);
+  if (feitelijk) { zet('fl', inv.feitelijkLoon); zet('fu', inv.feitelijkUren); }
+  else {
+    inv.functies.slice(0, 3).forEach((x, i) => { zet('n' + (i + 1), x.naam); zet('l' + (i + 1), x.loon); zet('u' + (i + 1), x.uren); });
+    zet('bu', inv.belastbareUren);
+  }
+
+  return {
+    sv_loon_refertejaar: r2(r.svLoon),
+    uren_refertejaar: r2(r.urenJaar),
+    maatmanomvang_uren_per_week: r.urenWeek,
+    maatmanloon_per_uur_ongeindexeerd: r2(r.uurloon),
+    indexatiefactor: r.geindexeerd ? Math.round(r.indexFactor * 1e4) / 1e4 : null,
+    maatmanloon_per_uur: r2(r.maatman),
+    maatmanloon_per_maand: r2(r.maatmanMaand),
+    restverdiencapaciteit: r.resultaat ? {
+      basis: feitelijk ? 'feitelijke verdiensten' : 'middelste van drie functies',
+      functie: feitelijk ? null : r.basisNaam,
+      uurloon: r2(r.basisLoon),
+      gemaximeerd_op_maatmanloon: r.gemaximeerd,
+      reductiefactor: Math.round(r.reductie * 1e4) / 1e4,
+      per_uur: r2(r.resultaat.rvc),
+    } : null,
+    loonverlies_per_uur: r.resultaat ? r2(r.resultaat.verlies) : null,
+    arbeidsongeschiktheid_pct: pct,
+    klasse: klasse ? { wet: wet.toUpperCase(), klasse: klasse.klasse, uitleg: klasse.uitleg } : null,
+    grenzen: { restverdiencapaciteit_bij_35_pct: r2(r.grens35), restverdiencapaciteit_bij_80_pct: r2(r.grens80) },
+    meldingen: r.meldingen,
+    rapport_tekst: lines.join('\n'),
+    deel_link: `${SITE}/maatmanloon.html#${p.toString()}`,
+    disclaimer: 'Indicatieve berekening op basis van het Schattingsbesluit arbeidsongeschiktheidswetten; het UWV stelt maatmanloon, functies en percentage vast.',
+  };
+}
+
 // ----------------------------------------------------------- MCP tools
 const TOOLS = [
   {
@@ -298,6 +471,37 @@ const TOOLS = [
       },
     },
     handler: (args) => berekenOpbouwschema(args || {}),
+  },
+  {
+    name: 'bereken_maatmanloon',
+    description: 'Bereken het maatmanloon per uur (SV-loon refertejaar ÷ gewerkte uren), optioneel geïndexeerd met de CBS-index cao-lonen, en — als functies of feitelijke verdiensten zijn opgegeven — de restverdiencapaciteit, het arbeidsongeschiktheidspercentage en de WIA- of WAO-klasse. Geeft alle tussenstappen, een rapporttekst en een deelbare link naar de web-calculator.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        sv_loon_jaar: { type: 'number', description: 'SV-loon in het refertejaar (jaar vóór de eerste ziektedag), incl. vakantiegeld en eindejaarsuitkering. Geef dit óf maandloon.' },
+        maandloon: { type: 'number', description: 'Alternatief voor sv_loon_jaar: bruto loon per maand; het SV-loon wordt dan benaderd als 12 × maandloon × (1 + vakantiegeld% + eindejaarsuitkering%) + toeslagen − aftrek.' },
+        vakantiegeld_pct: { type: 'number', description: 'Bij maandloon: vakantiegeld in procenten. Default 8.' },
+        eindejaarsuitkering_pct: { type: 'number', description: 'Bij maandloon: eindejaarsuitkering/13e maand in procenten. Default 0.' },
+        toeslagen_jaar: { type: 'number', description: 'Bij maandloon: overige toeslagen per jaar in euro (ploegen, overwerk, bijtelling auto). Default 0.' },
+        aftrek_jaar: { type: 'number', description: 'Bij maandloon: aftrek per jaar in euro (werknemersdeel pensioenpremie). Default 0.' },
+        uren_per_week: { type: 'number', description: 'Maatmanomvang: uren per week in het eigen werk. Verplicht.' },
+        uren_refertejaar: { type: 'number', description: 'Werkelijk aantal gewerkte uren in het refertejaar. Default uren_per_week × 52,2.' },
+        index_begin: { type: 'number', description: 'CBS-indexcijfer cao-lonen per uur incl. bijzondere beloningen bij het begin van het refertejaar. Optioneel; alleen samen met index_beoordeling.' },
+        index_beoordeling: { type: 'number', description: 'Zelfde indexcijfer op het moment van de beoordeling.' },
+        functies: { type: 'array', description: 'De (minimaal drie) door de arbeidsdeskundige geduide functies; het uurloon van de middelste telt.',
+          items: { type: 'object', properties: {
+            naam: { type: 'string' },
+            uurloon: { type: 'number', description: 'Uurloon van de functie in euro.' },
+            uren_per_week: { type: 'number', description: 'Urenomvang van de functie. Default gelijk aan de maatmanomvang.' },
+          }, required: ['uurloon'] } },
+        belastbare_uren_per_week: { type: 'number', description: 'Alleen bij een medische urenbeperking: het aantal uren dat de werknemer per week kan werken.' },
+        feitelijk_uurloon: { type: 'number', description: 'Alternatief voor functies: het uurloon dat de werknemer nu werkelijk verdient.' },
+        feitelijk_uren_per_week: { type: 'number', description: 'Bij feitelijk_uurloon: uren per week in het huidige werk. Default gelijk aan de maatmanomvang.' },
+        wet: { type: 'string', enum: ['wia', 'wao'], description: 'Wet voor de klasse-indeling. Default wia.' },
+      },
+      required: ['uren_per_week'],
+    },
+    handler: (args) => berekenMaatmanloonTool(args || {}),
   },
   {
     name: 'faq',
@@ -335,7 +539,7 @@ function handleRpc(msg) {
         protocolVersion: version,
         capabilities: { tools: { listChanged: false } },
         serverInfo: SERVER_INFO,
-        instructions: 'MCP-server van de Kunst van Werken (arbodienstverlening, NL). Gebruik bereken_opbouwschema voor re-integratie-opbouwschema\'s, en faq/bedrijfsinfo voor algemene informatie.',
+        instructions: 'MCP-server van de Kunst van Werken (arbodienstverlening, NL). Gebruik bereken_opbouwschema voor re-integratie-opbouwschema\'s, bereken_maatmanloon voor maatmanloon en arbeidsongeschiktheidspercentage, en faq/bedrijfsinfo voor algemene informatie.',
       });
     }
     case 'ping':

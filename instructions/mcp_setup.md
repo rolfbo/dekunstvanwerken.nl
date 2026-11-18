@@ -1,7 +1,7 @@
 # MCP server op mcp.dekunstvanwerken.nl
 
 De MCP-server (`mcp/server.mjs`) stelt de opbouwschema-calculator, de
-FAQ en bedrijfsinfo beschikbaar aan AI-clients via het Model Context
+maatmanloon-calculator, de FAQ en bedrijfsinfo beschikbaar aan AI-clients via het Model Context
 Protocol (Streamable HTTP transport). Zero dependencies: alleen
 Node.js ≥ 18 is nodig, geen `npm install`.
 
@@ -10,6 +10,7 @@ Node.js ≥ 18 is nodig, geen `npm install`.
 | Tool | Doet |
 |---|---|
 | `bereken_opbouwschema` | het opbouwschema als tool (zelfde logica als de site, incl. rapporttekst + deel-link) |
+| `bereken_maatmanloon` | maatmanloon, indexatie, restverdiencapaciteit en AO-percentage (zelfde rekenkern als `maatmanloon.html`, incl. rapporttekst + deel-link) |
 | `faq` | de FAQ-antwoorden |
 | `bedrijfsinfo` | diensten, contact, tools |
 
