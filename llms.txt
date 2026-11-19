@@ -30,7 +30,7 @@
 - [Maatmanloon-calculator](https://dekunstvanwerken.nl/maatmanloon.html): maatmanloon per uur, indexatie, restverdiencapaciteit en arbeidsongeschiktheidspercentage (WIA/WAO).
 - [FML concept-tool](https://dekunstvanwerken.nl/fml.html): 6-rubrieken Functionele Mogelijkheden Lijst (concept).
 - [IZP concept-tool](https://dekunstvanwerken.nl/izp.html): 6-rubrieken Inzetbaarheidsprofiel (concept).
-- [Vragenlijsten](https://dekunstvanwerken.nl/vragenlijsten.html): PHQ-9 (somberheid) en GAD-7 (angst) als anonieme zelftest in de browser.
+- [Vragenlijsten](https://dekunstvanwerken.nl/vragenlijsten.html): PHQ-9 (somberheid), GAD-7 (angst), BAT-12 (burn-outklachten) en werkvermogen als anonieme zelftest in de browser.
 
 ## MCP
 AI-agents kunnen rechtstreeks verbinden met onze MCP-server (Model Context

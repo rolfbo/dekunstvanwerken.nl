@@ -1,6 +1,6 @@
 <!--
    Vragenlijsten for [de Kunst van Werken] B.V.
-   Vrij te gebruiken zelftests (PHQ-9, GAD-7). Alles wordt in de browser
+   Vrij te gebruiken zelftests (PHQ-9, GAD-7, BAT-12, werkvermogen). Alles wordt in de browser
    uitgerekend: antwoorden worden niet verstuurd, niet opgeslagen en niet
    in de URL gezet. Een nieuwe lijst toevoegen = een object toevoegen aan
    LIJSTEN in het script onderaan; neem alleen lijsten op waarvan de
@@ -14,8 +14,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vragenlijsten: zelftest somberheid en angst | [de Kunst van Werken]</title>
-    <meta name="description" content="Vul gratis en anoniem de PHQ-9 (somberheid) of GAD-7 (angst en piekeren) in. De score wordt in je eigen browser berekend; er wordt niets opgeslagen of verstuurd.">
+    <title>Vragenlijsten: somberheid, angst, burn-out en werkvermogen | [de Kunst van Werken]</title>
+    <meta name="description" content="Vul gratis en anoniem een vragenlijst in over somberheid (PHQ-9), angst (GAD-7), burn-outklachten (BAT-12) of werkvermogen. De score wordt in je eigen browser berekend; er wordt niets opgeslagen.">
     <meta name="author" content="[de Kunst van Werken] B.V.">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://dekunstvanwerken.nl/vragenlijsten.html">
@@ -25,8 +25,8 @@
     <meta property="og:site_name" content="[de Kunst van Werken]">
     <meta property="og:locale" content="nl_NL">
     <meta property="og:url" content="https://dekunstvanwerken.nl/vragenlijsten.html">
-    <meta property="og:title" content="Vragenlijsten: zelftest somberheid en angst | [de Kunst van Werken]">
-    <meta property="og:description" content="Vul gratis en anoniem de PHQ-9 of GAD-7 in. De score wordt in je eigen browser berekend; er wordt niets opgeslagen.">
+    <meta property="og:title" content="Vragenlijsten: somberheid, angst, burn-out en werkvermogen | [de Kunst van Werken]">
+    <meta property="og:description" content="Vragenlijsten over somberheid, angst, burn-outklachten en werkvermogen. Gratis en anoniem: de score wordt in je eigen browser berekend.">
     <meta property="og:image" content="https://dekunstvanwerken.nl/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -34,8 +34,8 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Vragenlijsten: zelftest somberheid en angst | [de Kunst van Werken]">
-    <meta name="twitter:description" content="Vul gratis en anoniem de PHQ-9 of GAD-7 in. De score wordt in je eigen browser berekend; er wordt niets opgeslagen.">
+    <meta name="twitter:title" content="Vragenlijsten: somberheid, angst, burn-out en werkvermogen | [de Kunst van Werken]">
+    <meta name="twitter:description" content="Vragenlijsten over somberheid, angst, burn-outklachten en werkvermogen. Gratis en anoniem: de score wordt in je eigen browser berekend.">
     <meta name="twitter:image" content="https://dekunstvanwerken.nl/og-image.png">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -52,7 +52,7 @@
           "url": "https://dekunstvanwerken.nl/vragenlijsten.html",
           "inLanguage": "nl",
           "isAccessibleForFree": true,
-          "description": "Vrij te gebruiken vragenlijsten (PHQ-9 en GAD-7) die je anoniem in de browser invult.",
+          "description": "Vrij te gebruiken vragenlijsten (PHQ-9, GAD-7, BAT-12 en werkvermogen) die je anoniem in de browser invult.",
           "publisher": {
             "@type": "Organization",
             "name": "de Kunst van Werken B.V.",
@@ -160,7 +160,19 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 0.4rem;
         }
-        .opties.breed { grid-template-columns: repeat(4, 1fr); }
+        .opties.k5 { grid-template-columns: repeat(5, 1fr); }
+        .opties.k11 { grid-template-columns: repeat(11, 1fr); }
+        .opties.k11 label { padding: 0.4rem 0; font-variant-numeric: tabular-nums; }
+        .ankers {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            font-size: 0.82rem;
+            color: #5d6d7e;
+            margin-top: 0.4rem;
+        }
+        .ankers span:last-child { text-align: right; }
+        .lijst-vraag[hidden] { display: none; }
         .opties label {
             position: relative;
             display: flex;
@@ -302,7 +314,9 @@
         @media (max-width: 600px) {
             .calculator-card { padding: 1.5rem; }
             .lijst-keuze { grid-template-columns: 1fr; }
-            .opties, .opties.breed { grid-template-columns: repeat(2, 1fr); }
+            .opties.k4 { grid-template-columns: repeat(2, 1fr); }
+            .opties.k5 label { font-size: 0.82rem; padding: 0.4rem 0.2rem; }
+            .opties.k11 { grid-template-columns: repeat(6, 1fr); }
         }
     </style>
 </head>
@@ -399,8 +413,10 @@
                 <ul>
                     <li><strong>PHQ-9</strong> &mdash; negen vragen over somberheid in de afgelopen twee weken. Veel gebruikt door huisartsen en bedrijfsartsen om de ernst van depressieve klachten te volgen.</li>
                     <li><strong>GAD-7</strong> &mdash; zeven vragen over angst, spanning en piekeren in de afgelopen twee weken.</li>
+                    <li><strong>BAT-12</strong> &mdash; twaalf uitspraken over hoe je je werk beleeft. De verkorte Burnout Assessment Tool van de KU Leuven meet uitputting, mentale distantie en cognitieve en emotionele ontregeling.</li>
+                    <li><strong>Werkvermogen</strong> &mdash; &eacute;&eacute;n vraag: hoe schat je je werkvermogen nu in, vergeleken met je beste periode?</li>
                 </ul>
-                <p>Beide lijsten zijn bedoeld voor volwassenen. Een hoge score betekent niet dat je een depressie of angststoornis hebt; een lage score betekent niet dat er niets aan de hand is. Klachten kunnen ook een lichamelijke oorzaak hebben, of passen bij een ingrijpende gebeurtenis zoals rouw.</p>
+                <p>De lijsten zijn bedoeld voor volwassenen. Een hoge score betekent niet dat je een depressie, angststoornis of burn-out hebt; een lage score betekent niet dat er niets aan de hand is. Klachten kunnen ook een lichamelijke oorzaak hebben, of passen bij een ingrijpende gebeurtenis zoals rouw.</p>
                 <h2>Werk en klachten</h2>
                 <p>Hebben je klachten met werk te maken, of belemmeren ze je in je werk? Elke werknemer mag zonder toestemming van de werkgever naar het open spreekuur van de bedrijfsarts. Wat je daar bespreekt, valt onder het medisch beroepsgeheim.</p>
             </div>
@@ -537,6 +553,86 @@
         ];
         // Vanaf deze score raden de makers verder onderzoek aan ("yellow flag").
         const GRENS_ADVIES = 10;
+        function adviesPhq(l, u) {
+            if (u.score >= GRENS_ADVIES) {
+                return 'Bij een score van ' + GRENS_ADVIES + ' of hoger is het verstandig om je klachten met een arts te bespreken. Maak een afspraak met je huisarts, of ga naar het open spreekuur van de bedrijfsarts als de klachten met je werk te maken hebben of je werk erdoor lastiger wordt.';
+            }
+            if (u.idx === 1) {
+                return 'Lichte klachten gaan vaak vanzelf over. Houd in de gaten hoe het gaat en vul de lijst over twee weken opnieuw in. Worden de klachten niet minder, of belemmeren ze je, bespreek ze dan met je huisarts of bedrijfsarts.';
+            }
+            return 'Je score wijst niet op ' + l.soort + ' van betekenis. Herken je jezelf daar niet in, of maak je je toch zorgen? Dan is een gesprek met je huisarts of bedrijfsarts altijd zinvol.';
+        }
+        LIJSTEN.forEach((l) => { l.advies = adviesPhq; });
+
+        LIJSTEN.push(
+            {
+                // Verkorte werkgerelateerde versie (BAT-12) en grenswaarden uit de
+                // Gebruikshandleiding BAT 2.0 (tabel 6). Mag volgens de makers
+                // gratis en zonder toestemming worden gebruikt, mits ongewijzigd
+                // en met bronvermelding.
+                id: 'bat12', naam: 'BAT-12', onderwerp: 'Burn-outklachten', duur: '12 vragen · 3 minuten',
+                titel: 'BAT-12: burn-outklachten',
+                intro: 'De verkorte Burnout Assessment Tool meet vier kernklachten van burn-out: uitputting, mentale distantie, en cognitieve en emotionele ontregeling. Bedoeld voor mensen die werken.',
+                vraag: 'De volgende uitspraken hebben betrekking op hoe u uw werk beleeft en hoe u zich daarbij voelt. Wilt u aangeven hoe vaak iedere uitspraak op u van toepassing is door steeds het best passende antwoord aan te kruisen.',
+                opties: ['Nooit', 'Zelden', 'Soms', 'Vaak', 'Altijd'],
+                basis: 1,
+                items: [
+                    'Op het werk voel ik me geestelijk uitgeput',
+                    'Ik raak maar niet uitgerust nadat ik gewerkt heb',
+                    'Op het werk voel ik me lichamelijk uitgeput',
+                    'Ik kan geen belangstelling en enthousiasme opbrengen voor mijn werk',
+                    'Ik voel een sterke weerzin tegen mijn werk',
+                    'Ik ben cynisch over wat mijn werk voor anderen betekent',
+                    'Op het werk kan ik er mijn aandacht moeilijk bijhouden',
+                    'Als ik aan het werk ben, kan ik me moeilijk concentreren',
+                    'Ik maak fouten in mijn werk omdat ik er met mijn hoofd ‘niet goed bij ben’',
+                    'Op mijn werk heb ik het gevoel geen controle te hebben over mijn emoties',
+                    'Ik herken mezelf niet in de wijze waarop ik emotioneel reageer op mijn werk',
+                    'Op mijn werk kan ik onbedoeld te sterk emotioneel reageren',
+                ],
+                score: 'gemiddelde', min: 1, max: 5,
+                banden: [
+                    { tot: 2.53, label: 'Groen: geen risico op burn-out', kort: 'groen', bereik: '1,00–2,53' },
+                    { tot: 2.95, label: 'Oranje: risico op burn-out', kort: 'oranje', bereik: '2,54–2,95' },
+                    { tot: 5, label: 'Rood: zeer hoog risico op burn-out', kort: 'rood', bereik: '2,96–5,00' },
+                ],
+                advies: (l, u) => [
+                    'Je gemiddelde score ligt onder de grens waarbij van een risico op burn-out wordt gesproken. Heb je toch het gevoel dat het werk je te veel wordt? Bespreek het op tijd met je leidinggevende of de bedrijfsarts.',
+                    'Je score ligt in het gebied waar een risico op burn-out bestaat. Bespreek je klachten met de bedrijfsarts of je huisarts, ook als je nog gewoon werkt: op tijd bijsturen voorkomt uitval.',
+                    'Je score ligt in het gebied met een zeer hoog risico op burn-out. Maak op korte termijn een afspraak met je huisarts of de bedrijfsarts.',
+                ][u.idx] + ' De grenswaarden zijn vastgesteld bij Vlaamse werknemers; voor Nederland bestaan alleen vergelijkingsnormen.',
+                bron: 'Schaufeli, W. B., Desart, S., & De Witte, H. (2020). Burnout Assessment Tool (BAT) – Development, validity and reliability. International Journal of Environmental Research and Public Health, 17, 9495. Vragen en grenswaarden: Gebruikshandleiding BAT, versie 2.0, © Schaufeli, De Witte & Desart (2020).',
+            },
+            {
+                // Eerste vraag van de Work Ability Index, los gebruikt. Het Finnish
+                // Institute of Occupational Health staat gebruik zonder toestemming
+                // toe; de volledige WAI is in Nederland gelicentieerd (OVAL) en
+                // staat hier bewust niet. Formulering: TNO (NEA); indeling: El
+                // Fassi e.a., BMC Public Health 2013.
+                id: 'werkvermogen', naam: 'Werkvermogen', onderwerp: 'Eén vraag', duur: '1 vraag · 10 seconden',
+                titel: 'Werkvermogen in één vraag',
+                intro: 'Eén vraag die in onderzoek veel wordt gebruikt om in te schatten hoe goed iemand zijn werk nog aankan. Dit is niet de volledige Work Ability Index.',
+                vraag: '',
+                opties: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                ankers: ['0 = niet in staat om te werken', '10 = werkvermogen in uw beste periode'],
+                items: ['Als u aan uw werkvermogen in de beste periode van uw leven 10 punten geeft, hoeveel punten zou u dan aan uw werkvermogen op dit moment toekennen?'],
+                ongenummerd: true,
+                max: 10,
+                banden: [
+                    { tot: 5, label: 'Slecht werkvermogen', kort: 'slecht' },
+                    { tot: 7, label: 'Matig werkvermogen', kort: 'matig' },
+                    { tot: 9, label: 'Goed werkvermogen', kort: 'goed' },
+                    { tot: 10, label: 'Uitstekend werkvermogen', kort: 'uitstekend' },
+                ],
+                advies: (l, u) => [
+                    'Je schat je werkvermogen duidelijk lager in dan in je beste periode. Bespreek met de bedrijfsarts wat je belemmert en wat er in je werk aangepast kan worden; dat kan ook als je niet ziek gemeld bent.',
+                    'Je werkvermogen is minder dan het was. Ga na wat het verschil maakt, in je gezondheid of in je werk, en bespreek het met je leidinggevende of de bedrijfsarts voordat het verder afneemt.',
+                    'Je werkvermogen is goed. Blijf letten op wat je energie geeft en wat energie kost.',
+                    'Je werkvermogen is op het niveau van je beste periode.',
+                ][u.idx],
+                bron: 'Eerste vraag van de Work Ability Index (Finnish Institute of Occupational Health), hier los gebruikt; Nederlandse formulering uit de Nationale Enquête Arbeidsomstandigheden (TNO). Indeling volgens El Fassi e.a., BMC Public Health 2013;13:305.',
+            },
+        );
 
         const $ = (id) => document.getElementById(id);
         const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -545,7 +641,9 @@
         // Rekent de uitslag uit; null zolang niet alle vragen beantwoord zijn.
         function uitslag(l, antwoorden) {
             if (antwoorden.some((a) => a === null)) return null;
-            const score = antwoorden.reduce((s, a) => s + a, 0);
+            const som = antwoorden.reduce((s, a) => s + a + (l.basis || 0), 0);
+            // Gemiddelde op twee decimalen, zoals de grenswaarden zijn opgegeven.
+            const score = l.score === 'gemiddelde' ? Math.round(som / antwoorden.length * 100) / 100 : som;
             const idx = l.banden.findIndex((b) => score <= b.tot);
             return { score, idx, band: l.banden[idx] };
         }
@@ -561,22 +659,21 @@
             return el ? Number(el.value) : null;
         }
 
-        function advies(l, u) {
-            if (u.score >= GRENS_ADVIES) {
-                return 'Bij een score van ' + GRENS_ADVIES + ' of hoger is het verstandig om je klachten met een arts te bespreken. Maak een afspraak met je huisarts, of ga naar het open spreekuur van de bedrijfsarts als de klachten met je werk te maken hebben of je werk erdoor lastiger wordt.';
-            }
-            if (u.idx === 1) {
-                return 'Lichte klachten gaan vaak vanzelf over. Houd in de gaten hoe het gaat en vul de lijst over twee weken opnieuw in. Worden de klachten niet minder, of belemmeren ze je, bespreek ze dan met je huisarts of bedrijfsarts.';
-            }
-            return 'Je score wijst niet op ' + l.soort + ' van betekenis. Herken je jezelf daar niet in, of maak je je toch zorgen? Dan is een gesprek met je huisarts of bedrijfsarts altijd zinvol.';
+        const komma = (n) => n.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        function scoreTekst(l, u) {
+            return l.score === 'gemiddelde'
+                ? { getal: komma(u.score), rest: 'gemiddeld, op een schaal van ' + l.min + ' tot ' + l.max }
+                : { getal: String(u.score), rest: 'van ' + l.max };
         }
 
         function uitslagTekst() {
             const u = uitslag(lijst, leesAntwoorden());
             if (!u) return '';
             const regels = [lijst.titel + ' — ingevuld op ' + new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }), '',
-                'Score: ' + u.score + ' van ' + lijst.max + ' — ' + u.band.label.toLowerCase(), ''];
-            leesAntwoorden().forEach((a, i) => regels.push((i + 1) + '. ' + lijst.items[i] + ': ' + lijst.opties[a] + ' (' + a + ')'));
+                'Score: ' + scoreTekst(lijst, u).getal + ' ' + scoreTekst(lijst, u).rest + ' — ' + u.band.label.toLowerCase(), ''];
+            if (lijst.items.length > 1) {
+                leesAntwoorden().forEach((a, i) => regels.push((i + 1) + '. ' + lijst.items[i] + ': ' + lijst.opties[a] + ' (' + (a + (lijst.basis || 0)) + ')'));
+            }
             const ex = leesExtra();
             if (lijst.extra && ex !== null) regels.push('', 'Hinder in werk, huishouden en contact: ' + lijst.extra.opties[ex].toLowerCase());
             regels.push('', 'Zelf ingevulde vragenlijst; geen diagnose.');
@@ -598,26 +695,33 @@
             }
             $('voortgang').textContent = '';
             document.querySelectorAll('.item.open').forEach((el) => el.classList.remove('open'));
-            let vanaf = 0;
+            // Somscores zijn hele getallen (band 0–4 is vijf waarden breed);
+            // een gemiddelde loopt door, dus daar telt de afstand tussen de grenzen.
+            const doorlopend = lijst.score === 'gemiddelde';
+            let vanaf = doorlopend ? lijst.min : 0;
             const delen = lijst.banden.map((b, i) => {
-                const breedte = (b.tot - vanaf + 1) / (lijst.max + 1) * 100;
+                const breedte = doorlopend
+                    ? (b.tot - vanaf) / (lijst.max - lijst.min) * 100
+                    : (b.tot - vanaf + 1) / (lijst.max + 1) * 100;
+                const bereik = b.bereik || (vanaf === b.tot ? String(b.tot) : vanaf + '–' + b.tot);
                 const html = { balk: '<i style="width:' + breedte + '%"' + (i === u.idx ? ' class="actief"' : '') + '></i>',
-                    label: '<span style="width:' + breedte + '%">' + vanaf + '–' + b.tot + '<br>' + esc(b.kort) + '</span>' };
-                vanaf = b.tot + 1;
+                    label: '<span style="width:' + breedte + '%">' + bereik + '<br>' + esc(b.kort) + '</span>' };
+                vanaf = doorlopend ? b.tot : b.tot + 1;
                 return html;
             });
+            const st = scoreTekst(lijst, u);
             const ex = leesExtra();
-            res.innerHTML = '<div class="groot">' + u.score + ' <small>van ' + lijst.max + '</small></div>'
+            res.innerHTML = '<div class="groot">' + st.getal + ' <small>' + st.rest + '</small></div>'
                 + '<div><strong>' + esc(u.band.label) + '</strong></div>'
                 + '<div class="schaal" aria-hidden="true">' + delen.map((d) => d.balk).join('') + '</div>'
                 + '<div class="schaal-labels" aria-hidden="true">' + delen.map((d) => d.label).join('') + '</div>'
-                + '<p style="margin:0">' + esc(advies(lijst, u)) + '</p>'
+                + '<p style="margin:0">' + esc(lijst.advies(lijst, u)) + '</p>'
                 + (lijst.extra && ex !== null && ex >= 2 ? '<p style="margin:0.75rem 0 0">Je geeft aan dat de klachten je dagelijks leven erg bemoeilijken. Dat is op zichzelf al een reden om hulp te zoeken, wat de score ook is.</p>' : '');
             res.hidden = false;
         }
 
-        function radioRij(naam, opties, breed) {
-            return '<div class="opties' + (breed ? ' breed' : '') + '">' + opties.map((o, v) =>
+        function radioRij(naam, opties) {
+            return '<div class="opties k' + opties.length + '">' + opties.map((o, v) =>
                 '<label><input type="radio" name="' + naam + '" value="' + v + '">' + esc(o) + '</label>').join('') + '</div>';
         }
 
@@ -627,9 +731,11 @@
             $('lijst-titel').textContent = l.titel;
             $('lijst-intro').textContent = l.intro;
             $('lijst-vraag').textContent = l.vraag;
+            $('lijst-vraag').hidden = !l.vraag;
             let html = l.items.map((t, i) =>
-                '<fieldset class="item" data-item="' + i + '"><legend>' + (i + 1) + '. ' + esc(t) + '</legend>' + radioRij('q' + i, l.opties) + '</fieldset>').join('');
-            if (l.extra) html += '<fieldset class="item"><legend>' + esc(l.extra.tekst) + '</legend>' + radioRij('extra', l.extra.opties, true) + '</fieldset>';
+                '<fieldset class="item" data-item="' + i + '"><legend>' + (l.ongenummerd ? '' : (i + 1) + '. ') + esc(t) + '</legend>' + radioRij('q' + i, l.opties)
+                + (l.ankers ? '<div class="ankers"><span>' + esc(l.ankers[0]) + '</span><span>' + esc(l.ankers[1]) + '</span></div>' : '') + '</fieldset>').join('');
+            if (l.extra) html += '<fieldset class="item"><legend>' + esc(l.extra.tekst) + '</legend>' + radioRij('extra', l.extra.opties) + '</fieldset>';
             $('items').innerHTML = html;
             $('bron').textContent = l.bron;
             update();
