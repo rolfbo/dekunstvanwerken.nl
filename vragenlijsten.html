@@ -1,0 +1,686 @@
+<!--
+   Vragenlijsten for [de Kunst van Werken] B.V.
+   Vrij te gebruiken zelftests (PHQ-9, GAD-7). Alles wordt in de browser
+   uitgerekend: antwoorden worden niet verstuurd, niet opgeslagen en niet
+   in de URL gezet. Een nieuwe lijst toevoegen = een object toevoegen aan
+   LIJSTEN in het script onderaan; neem alleen lijsten op waarvan de
+   rechthebbende vrij gebruik uitdrukkelijk toestaat, en neem de
+   vraagteksten letterlijk over uit de officiële vertaling.
+   Location: /var/www/dekunstvanwerken.nl/vragenlijsten.html
+-->
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vragenlijsten: zelftest somberheid en angst | [de Kunst van Werken]</title>
+    <meta name="description" content="Vul gratis en anoniem de PHQ-9 (somberheid) of GAD-7 (angst en piekeren) in. De score wordt in je eigen browser berekend; er wordt niets opgeslagen of verstuurd.">
+    <meta name="author" content="[de Kunst van Werken] B.V.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://dekunstvanwerken.nl/vragenlijsten.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="[de Kunst van Werken]">
+    <meta property="og:locale" content="nl_NL">
+    <meta property="og:url" content="https://dekunstvanwerken.nl/vragenlijsten.html">
+    <meta property="og:title" content="Vragenlijsten: zelftest somberheid en angst | [de Kunst van Werken]">
+    <meta property="og:description" content="Vul gratis en anoniem de PHQ-9 of GAD-7 in. De score wordt in je eigen browser berekend; er wordt niets opgeslagen.">
+    <meta property="og:image" content="https://dekunstvanwerken.nl/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="[de Kunst van Werken] — professionele arbodienstverlening">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vragenlijsten: zelftest somberheid en angst | [de Kunst van Werken]">
+    <meta name="twitter:description" content="Vul gratis en anoniem de PHQ-9 of GAD-7 in. De score wordt in je eigen browser berekend; er wordt niets opgeslagen.">
+    <meta name="twitter:image" content="https://dekunstvanwerken.nl/og-image.png">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#004a99">
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "Vragenlijsten",
+          "url": "https://dekunstvanwerken.nl/vragenlijsten.html",
+          "inLanguage": "nl",
+          "isAccessibleForFree": true,
+          "description": "Vrij te gebruiken vragenlijsten (PHQ-9 en GAD-7) die je anoniem in de browser invult.",
+          "publisher": {
+            "@type": "Organization",
+            "name": "de Kunst van Werken B.V.",
+            "url": "https://dekunstvanwerken.nl/"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://dekunstvanwerken.nl/" },
+            { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://dekunstvanwerken.nl/vragenlijsten.html" },
+            { "@type": "ListItem", "position": 3, "name": "Vragenlijsten" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <link rel="stylesheet" href="brand-variables.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="content.css">
+
+    <style>
+        /* Page-specific styles. Basisblokken gelijk aan de calculators. */
+        #vragenlijsten { background: var(--bg-light); }
+
+        .calculator-card {
+            max-width: 820px;
+            margin: 0 auto 2rem;
+            background: var(--text-light);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+        }
+        .calculator-card h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        .calculator-card h2:first-child { margin-top: 0; }
+        .calculator-card p { margin-bottom: 1rem; }
+        .calculator-card ul { margin: 0 0 1rem 1.25rem; }
+        .calculator-card li { margin-bottom: 0.35rem; }
+
+        .privacy-note {
+            background: #e8f4fd;
+            border-left: 5px solid var(--secondary-color);
+            padding: 0.85rem 1rem;
+            border-radius: 4px;
+            margin: 0 0 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .lijst-keuze {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin: 0 0 1.5rem;
+        }
+        .lijst-keuze button {
+            text-align: left;
+            font: inherit;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            cursor: pointer;
+            transition: border-color 0.12s, background 0.12s;
+        }
+        .lijst-keuze button strong { display: block; font-size: 1.05rem; color: var(--primary-color); }
+        .lijst-keuze button span { font-size: 0.88rem; color: #5d6d7e; }
+        .lijst-keuze button[aria-pressed="true"] {
+            border-color: var(--primary-color);
+            background: #e8f4fd;
+        }
+        .lijst-keuze button:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        .lijst-intro { color: #5d6d7e; font-size: 0.95rem; }
+        .lijst-vraag { font-weight: bold; margin: 1.25rem 0 0.5rem; }
+
+        .item {
+            border: none;
+            padding: 0.9rem 0;
+            margin: 0;
+            min-width: 0;
+            border-top: 1px solid var(--border-color);
+        }
+        .item legend {
+            padding: 0;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            float: left;
+            width: 100%;
+        }
+        .item.open legend { color: #922b21; }
+        .opties {
+            clear: both;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.4rem;
+        }
+        .opties.breed { grid-template-columns: repeat(4, 1fr); }
+        .opties label {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 2.75rem;
+            padding: 0.4rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-light);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.12s, color 0.12s;
+        }
+        .opties input {
+            position: absolute;
+            opacity: 0;
+            inset: 0;
+            margin: 0;
+            cursor: pointer;
+        }
+        .opties label:has(input:checked) {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+        .opties label:has(input:focus-visible) {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        .crisis {
+            background: #fdecea;
+            border-left: 5px solid var(--color-error);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            color: #641e16;
+        }
+        .crisis[hidden], .resultaat[hidden] { display: none; }
+        .crisis strong { color: #922b21; }
+
+        .voortgang { font-size: 0.9rem; color: #5d6d7e; margin: 1rem 0 0; }
+
+        .resultaat {
+            background: #e8f4fd;
+            border-left: 5px solid var(--secondary-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        .resultaat .groot {
+            font-size: 1.9rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            line-height: 1.2;
+            font-variant-numeric: tabular-nums;
+        }
+        .resultaat .groot small { font-size: 1rem; font-weight: normal; color: #5d6d7e; }
+        .schaal {
+            display: flex;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0.75rem 0 0.25rem;
+            background: #d6e4f0;
+        }
+        .schaal i { display: block; border-right: 2px solid #fff; background: #b8cfe4; }
+        .schaal i:last-child { border-right: none; }
+        .schaal i.actief { background: var(--primary-color); }
+        .schaal-labels { display: flex; font-size: 0.72rem; color: #5d6d7e; margin-bottom: 0.75rem; }
+        .schaal-labels span { text-align: center; }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1rem;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-action:hover { background: var(--secondary-color); }
+        .btn-action.stil {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        .btn-action.stil:hover { background: #e8f4fd; }
+        .btn-action:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+        .action-feedback { color: var(--text-dark); font-size: 0.9rem; opacity: 0; transition: opacity 0.2s; }
+        .action-feedback.show { opacity: 1; }
+
+        .bron { font-size: 0.8rem; color: #7f8c8d; margin-top: 1.5rem; }
+        .print-only { display: none; }
+        .print-meta { font-size: 0.8rem; color: #7f8c8d; margin-top: 1rem; }
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media print {
+            nav, footer, .actions, .lijst-keuze, .uitleg-card, .meer-lezen, .privacy-note, .voortgang { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: #fff; color: #000; }
+            #vragenlijsten { background: #fff; padding: 0; }
+            .calculator-card { box-shadow: none; padding: 0; max-width: 100%; background: #fff; }
+            .section-title { text-align: left; margin-bottom: 0.75rem; }
+            .section-title p { display: none; }
+            .item { padding: 0.4rem 0; page-break-inside: avoid; }
+            .opties label { min-height: 0; padding: 0.2rem 0.3rem; font-size: 0.8rem; }
+            .opties label:has(input:checked) {
+                background: #000; color: #fff; border-color: #000;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            .resultaat, .crisis { page-break-inside: avoid; }
+            a[href]::after { content: ''; }
+        }
+
+        @media (max-width: 600px) {
+            .calculator-card { padding: 1.5rem; }
+            .lijst-keuze { grid-template-columns: 1fr; }
+            .opties, .opties.breed { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav>
+        <div class="container">
+            <a href="index.html#hero" class="logo" aria-label="[de Kunst van Werken] — home">
+                <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+                    <rect width="40" height="40" rx="8" fill="var(--color-primary)"/>
+                    <path d="M14 10 V30 M14 20 L26 10 M14 20 L26 30" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M10 33 Q20 35.5 30 33" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                </svg>
+                <span class="logo-text">[de Kunst van Werken]</span>
+            </a>
+            <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu openen">
+                <span class="nav-toggle-bar"></span>
+            </button>
+            <ul class="nav-links" id="primary-nav">
+                <li><a href="index.html#hero">Home</a></li>
+                <li><a href="index.html#services">Diensten</a></li>
+                <li><a href="index.html#werkwijze">Werkwijze</a></li>
+                <li><a href="index.html#whitelabel">Whitelabel</a></li>
+                <li class="has-dropdown">
+                    <button class="nav-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="tools-menu">
+                        Tools <span class="caret" aria-hidden="true">&#9662;</span>
+                    </button>
+                    <ul class="nav-dropdown" id="tools-menu">
+                        <li><a href="opbouwschema.html">Opbouwschema</a></li>
+                        <li><a href="maatmanloon.html">Maatmanloon</a></li>
+                        <li><a href="fml.html">FML concept</a></li>
+                        <li><a href="izp.html">IZP concept</a></li>
+                        <li><a href="vragenlijsten.html" aria-current="page">Vragenlijsten</a></li>
+                    </ul>
+                </li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Vragenlijsten -->
+    <section id="vragenlijsten">
+        <div class="container">
+            <div class="section-title">
+                <h1>Vragenlijsten</h1>
+                <p>Korte, wetenschappelijk onderbouwde vragenlijsten die je zelf invult. Je ziet direct je score en wat die betekent. Handig als voorbereiding op een gesprek met de bedrijfsarts of huisarts.</p>
+            </div>
+
+            <div class="calculator-card">
+                <p class="privacy-note"><strong>Anoniem.</strong> Je antwoorden blijven in je eigen browser. Er wordt niets verstuurd of opgeslagen, en na het sluiten van de pagina zijn ze weg.</p>
+
+                <div class="lijst-keuze" id="lijst-keuze" role="group" aria-label="Kies een vragenlijst"></div>
+
+                <form id="form" onsubmit="return false;">
+                    <h2 id="lijst-titel"></h2>
+                    <p class="lijst-intro" id="lijst-intro"></p>
+                    <p class="lijst-vraag" id="lijst-vraag"></p>
+                    <div id="items"></div>
+                </form>
+
+                <div class="crisis" id="crisis" role="alert" hidden>
+                    <strong>Denk je aan zelfmoord of aan jezelf pijn doen?</strong> Praat erover, je hoeft dit niet alleen te dragen. Bel gratis en anoniem <strong>113</strong> of <strong>0800-0113</strong>, of chat via <a href="https://www.113.nl" target="_blank" rel="noopener">113.nl</a> &mdash; dag en nacht bereikbaar. Is er direct gevaar? Bel dan <strong>112</strong>. Neem daarnaast contact op met je huisarts.
+                </div>
+
+                <p class="voortgang" id="voortgang" aria-live="polite"></p>
+                <div class="resultaat" id="resultaat" aria-live="polite" hidden></div>
+
+                <div class="actions">
+                    <button type="button" class="btn-action" id="btn-print">
+                        <span aria-hidden="true">&#128424;</span> Print
+                    </button>
+                    <button type="button" class="btn-action" id="btn-copy">
+                        <span aria-hidden="true">&#128203;</span> Kopieer uitslag
+                    </button>
+                    <button type="button" class="btn-action stil" id="btn-wis">Wis antwoorden</button>
+                    <span class="action-feedback" id="feedback" role="status" aria-live="polite"></span>
+                </div>
+
+                <p class="bron" id="bron"></p>
+
+                <div class="print-only print-meta">
+                    Ingevuld op <span id="print-date"></span> via dekunstvanwerken.nl/vragenlijsten.html
+                </div>
+
+                <p class="disclaimer">
+                    Een vragenlijst is een momentopname en geen diagnose. De uitslag vervangt geen gesprek met een arts. Maak je je zorgen, wacht dan niet op een score en neem contact op met je huisarts of bedrijfsarts.
+                </p>
+            </div>
+
+            <div class="calculator-card uitleg-card">
+                <h2>Over deze vragenlijsten</h2>
+                <p>We plaatsen hier alleen vragenlijsten waarvan de makers uitdrukkelijk toestaan dat iedereen ze vrij gebruikt, en nemen de vragen letterlijk over uit de offici&euml;le Nederlandse vertaling.</p>
+                <ul>
+                    <li><strong>PHQ-9</strong> &mdash; negen vragen over somberheid in de afgelopen twee weken. Veel gebruikt door huisartsen en bedrijfsartsen om de ernst van depressieve klachten te volgen.</li>
+                    <li><strong>GAD-7</strong> &mdash; zeven vragen over angst, spanning en piekeren in de afgelopen twee weken.</li>
+                </ul>
+                <p>Beide lijsten zijn bedoeld voor volwassenen. Een hoge score betekent niet dat je een depressie of angststoornis hebt; een lage score betekent niet dat er niets aan de hand is. Klachten kunnen ook een lichamelijke oorzaak hebben, of passen bij een ingrijpende gebeurtenis zoals rouw.</p>
+                <h2>Werk en klachten</h2>
+                <p>Hebben je klachten met werk te maken, of belemmeren ze je in je werk? Elke werknemer mag zonder toestemming van de werkgever naar het open spreekuur van de bedrijfsarts. Wat je daar bespreekt, valt onder het medisch beroepsgeheim.</p>
+            </div>
+
+        <div class="meer-lezen"><h2>Meer lezen</h2><ul>
+<li><a href="kennisbank/wat-doet-een-bedrijfsarts.html">Wat doet een bedrijfsarts?</a></li>
+<li><a href="diensten/bedrijfsarts.html">Toegang tot de bedrijfsarts</a></li>
+<li><a href="diensten/pago-pmo.html">Preventief medisch onderzoek (PAGO/PMO)</a></li></ul></div>
+            </div>
+    </section>
+
+    <!-- Footer Area -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 [de Kunst van Werken] B.V. Alle rechten voorbehouden.</p>
+            <div class="footer-links" style="margin-top: 1rem;">
+                <a href="klachten.html">Klachtenregeling</a>
+                <a href="privacybeleid.html">Privacybeleid</a>
+                <a href="voorwaarden.html">Algemene Voorwaarden</a>
+            </div>
+            <p style="font-size: 0.8rem; color: #bdc3c7; margin-top: 1rem;">
+                [de Kunst van Werken] B.V. | KVK: 94098344
+            </p>
+        </div>
+    </footer>
+
+    <script>
+    // Mobile hamburger + Tools dropdown (same as index.html)
+    (function () {
+        const toggle = document.querySelector('.nav-toggle');
+        const menu = document.getElementById('primary-nav');
+        if (toggle && menu) {
+            const close = () => {
+                menu.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-label', 'Menu openen');
+            };
+            toggle.addEventListener('click', () => {
+                const open = menu.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+            });
+            menu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') close();
+            });
+        }
+
+        const dropTrigger = document.querySelector('.nav-dropdown-trigger');
+        if (dropTrigger) {
+            const closeDrop = () => dropTrigger.setAttribute('aria-expanded', 'false');
+            dropTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const expanded = dropTrigger.getAttribute('aria-expanded') === 'true';
+                dropTrigger.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.has-dropdown')) closeDrop();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeDrop();
+            });
+        }
+    })();
+    </script>
+
+    <script>
+    // Vragenlijsten
+    (function () {
+        // Vraagteksten letterlijk uit de officiële Nederlandse versies op
+        // phqscreeners.com ("Dutch for the Netherlands"); grenswaarden uit de
+        // bijbehorende "Instruction manual". Niet herformuleren.
+        const VIER = ['Helemaal niet', 'Verscheidene dagen', 'Meer dan de helft van de dagen', 'Bijna elke dag'];
+        const PHQ_BRON = 'Ontwikkeld door drs. Robert L. Spitzer, Janet B.W. Williams, Kurt Kroenke en collega’s, dankzij een onderzoeksbeurs van Pfizer Inc. Geen toestemming nodig om te reproduceren, te vertalen, te vertonen of te verspreiden.';
+        const LIJSTEN = [
+            {
+                id: 'phq9', naam: 'PHQ-9', onderwerp: 'Somberheid', duur: '9 vragen · 2 minuten',
+                titel: 'PHQ-9: somberheid',
+                intro: 'De Patiënten Gezondheidsvragenlijst-9 meet hoe vaak je de afgelopen twee weken last had van klachten die bij somberheid horen.',
+                vraag: 'Hoe vaak hebt u in de afgelopen 2 weken last gehad van één of meer van de volgende problemen?',
+                opties: VIER,
+                items: [
+                    'Weinig interesse of plezier in activiteiten',
+                    'Zich neerslachtig, depressief of hopeloos voelen',
+                    'Moeilijk inslapen, moeilijk doorslapen of te veel slapen',
+                    'Zich moe voelen of gebrek aan energie hebben',
+                    'Weinig eetlust of overmatig eten',
+                    'Een slecht gevoel hebben over uzelf — of het gevoel hebben dat u een mislukkeling bent of het gevoel dat u zichzelf of uw familie teleurgesteld hebt',
+                    'Problemen om u te concentreren, bijvoorbeeld om de krant te lezen of om tv te kijken',
+                    'Zo traag bewegen of zo langzaam spreken dat andere mensen dit opgemerkt kunnen hebben? Of het tegenovergestelde, zo zenuwachtig of rusteloos zijn dat u veel meer bewoog dan gebruikelijk',
+                    'De gedachte dat u beter dood zou kunnen zijn of de gedachte uzelf op een bepaalde manier pijn te doen',
+                ],
+                crisisItem: 8,
+                // Niet meegeteld in de score; geeft aan hoeveel hinder iemand ervaart.
+                extra: {
+                    tekst: 'Als u enig probleem hebt aangekruist, hoe moeilijk maakten deze problemen het dan voor u om uw werk of uw taken in en om het huis te doen, of om met andere mensen om te gaan?',
+                    opties: ['Helemaal niet moeilijk', 'Enigszins moeilijk', 'Erg moeilijk', 'Extreem moeilijk'],
+                },
+                max: 27,
+                banden: [
+                    { tot: 4, label: 'Geen of minimale klachten', kort: 'minimaal' },
+                    { tot: 9, label: 'Lichte klachten', kort: 'licht' },
+                    { tot: 14, label: 'Matige klachten', kort: 'matig' },
+                    { tot: 19, label: 'Matig ernstige klachten', kort: 'matig ernstig' },
+                    { tot: 27, label: 'Ernstige klachten', kort: 'ernstig' },
+                ],
+                soort: 'sombere klachten',
+                bron: PHQ_BRON,
+            },
+            {
+                id: 'gad7', naam: 'GAD-7', onderwerp: 'Angst en piekeren', duur: '7 vragen · 2 minuten',
+                titel: 'GAD-7: angst en piekeren',
+                intro: 'De GAD-7 meet hoe vaak je de afgelopen twee weken last had van angst, spanning en piekeren.',
+                vraag: 'Hoe vaak hebt u in de afgelopen 2 weken last gehad van één of meer van de volgende problemen?',
+                opties: VIER,
+                items: [
+                    'U nerveus, angstig of gespannen voelen',
+                    'Niet kunnen stoppen met u zorgen maken of dit niet kunnen beteugelen',
+                    'U te veel zorgen maken om verschillende dingen',
+                    'Moeite hebben u te ontspannen',
+                    'Zo rusteloos zijn dat het moeilijk is om stil te zitten',
+                    'Snel geërgerd of geïrriteerd zijn',
+                    'Bang zijn dat er iets vreselijks zou kunnen gebeuren',
+                ],
+                max: 21,
+                banden: [
+                    { tot: 4, label: 'Geen of minimale klachten', kort: 'minimaal' },
+                    { tot: 9, label: 'Lichte klachten', kort: 'licht' },
+                    { tot: 14, label: 'Matige klachten', kort: 'matig' },
+                    { tot: 21, label: 'Ernstige klachten', kort: 'ernstig' },
+                ],
+                soort: 'angst- en spanningsklachten',
+                bron: PHQ_BRON,
+            },
+        ];
+        // Vanaf deze score raden de makers verder onderzoek aan ("yellow flag").
+        const GRENS_ADVIES = 10;
+
+        const $ = (id) => document.getElementById(id);
+        const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        let lijst = LIJSTEN[0];
+
+        // Rekent de uitslag uit; null zolang niet alle vragen beantwoord zijn.
+        function uitslag(l, antwoorden) {
+            if (antwoorden.some((a) => a === null)) return null;
+            const score = antwoorden.reduce((s, a) => s + a, 0);
+            const idx = l.banden.findIndex((b) => score <= b.tot);
+            return { score, idx, band: l.banden[idx] };
+        }
+
+        function leesAntwoorden() {
+            return lijst.items.map((_, i) => {
+                const el = document.querySelector('input[name="q' + i + '"]:checked');
+                return el ? Number(el.value) : null;
+            });
+        }
+        function leesExtra() {
+            const el = document.querySelector('input[name="extra"]:checked');
+            return el ? Number(el.value) : null;
+        }
+
+        function advies(l, u) {
+            if (u.score >= GRENS_ADVIES) {
+                return 'Bij een score van ' + GRENS_ADVIES + ' of hoger is het verstandig om je klachten met een arts te bespreken. Maak een afspraak met je huisarts, of ga naar het open spreekuur van de bedrijfsarts als de klachten met je werk te maken hebben of je werk erdoor lastiger wordt.';
+            }
+            if (u.idx === 1) {
+                return 'Lichte klachten gaan vaak vanzelf over. Houd in de gaten hoe het gaat en vul de lijst over twee weken opnieuw in. Worden de klachten niet minder, of belemmeren ze je, bespreek ze dan met je huisarts of bedrijfsarts.';
+            }
+            return 'Je score wijst niet op ' + l.soort + ' van betekenis. Herken je jezelf daar niet in, of maak je je toch zorgen? Dan is een gesprek met je huisarts of bedrijfsarts altijd zinvol.';
+        }
+
+        function uitslagTekst() {
+            const u = uitslag(lijst, leesAntwoorden());
+            if (!u) return '';
+            const regels = [lijst.titel + ' — ingevuld op ' + new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }), '',
+                'Score: ' + u.score + ' van ' + lijst.max + ' — ' + u.band.label.toLowerCase(), ''];
+            leesAntwoorden().forEach((a, i) => regels.push((i + 1) + '. ' + lijst.items[i] + ': ' + lijst.opties[a] + ' (' + a + ')'));
+            const ex = leesExtra();
+            if (lijst.extra && ex !== null) regels.push('', 'Hinder in werk, huishouden en contact: ' + lijst.extra.opties[ex].toLowerCase());
+            regels.push('', 'Zelf ingevulde vragenlijst; geen diagnose.');
+            return regels.join('\n');
+        }
+
+        function update() {
+            const antw = leesAntwoorden();
+            const beantwoord = antw.filter((a) => a !== null).length;
+            const u = uitslag(lijst, antw);
+
+            $('crisis').hidden = !(lijst.crisisItem !== undefined && antw[lijst.crisisItem] > 0);
+
+            const res = $('resultaat');
+            if (!u) {
+                res.hidden = true;
+                $('voortgang').textContent = beantwoord === 0 ? '' : beantwoord + ' van ' + lijst.items.length + ' vragen beantwoord. Je score verschijnt als je alle vragen hebt ingevuld.';
+                return;
+            }
+            $('voortgang').textContent = '';
+            document.querySelectorAll('.item.open').forEach((el) => el.classList.remove('open'));
+            let vanaf = 0;
+            const delen = lijst.banden.map((b, i) => {
+                const breedte = (b.tot - vanaf + 1) / (lijst.max + 1) * 100;
+                const html = { balk: '<i style="width:' + breedte + '%"' + (i === u.idx ? ' class="actief"' : '') + '></i>',
+                    label: '<span style="width:' + breedte + '%">' + vanaf + '–' + b.tot + '<br>' + esc(b.kort) + '</span>' };
+                vanaf = b.tot + 1;
+                return html;
+            });
+            const ex = leesExtra();
+            res.innerHTML = '<div class="groot">' + u.score + ' <small>van ' + lijst.max + '</small></div>'
+                + '<div><strong>' + esc(u.band.label) + '</strong></div>'
+                + '<div class="schaal" aria-hidden="true">' + delen.map((d) => d.balk).join('') + '</div>'
+                + '<div class="schaal-labels" aria-hidden="true">' + delen.map((d) => d.label).join('') + '</div>'
+                + '<p style="margin:0">' + esc(advies(lijst, u)) + '</p>'
+                + (lijst.extra && ex !== null && ex >= 2 ? '<p style="margin:0.75rem 0 0">Je geeft aan dat de klachten je dagelijks leven erg bemoeilijken. Dat is op zichzelf al een reden om hulp te zoeken, wat de score ook is.</p>' : '');
+            res.hidden = false;
+        }
+
+        function radioRij(naam, opties, breed) {
+            return '<div class="opties' + (breed ? ' breed' : '') + '">' + opties.map((o, v) =>
+                '<label><input type="radio" name="' + naam + '" value="' + v + '">' + esc(o) + '</label>').join('') + '</div>';
+        }
+
+        function toonLijst(l) {
+            lijst = l;
+            document.querySelectorAll('#lijst-keuze button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === l.id ? 'true' : 'false'));
+            $('lijst-titel').textContent = l.titel;
+            $('lijst-intro').textContent = l.intro;
+            $('lijst-vraag').textContent = l.vraag;
+            let html = l.items.map((t, i) =>
+                '<fieldset class="item" data-item="' + i + '"><legend>' + (i + 1) + '. ' + esc(t) + '</legend>' + radioRij('q' + i, l.opties) + '</fieldset>').join('');
+            if (l.extra) html += '<fieldset class="item"><legend>' + esc(l.extra.tekst) + '</legend>' + radioRij('extra', l.extra.opties, true) + '</fieldset>';
+            $('items').innerHTML = html;
+            $('bron').textContent = l.bron;
+            update();
+        }
+
+        $('lijst-keuze').innerHTML = LIJSTEN.map((l) =>
+            '<button type="button" data-id="' + l.id + '" aria-pressed="false"><strong>' + esc(l.naam) + ' · ' + esc(l.onderwerp) + '</strong><span>' + esc(l.duur) + '</span></button>').join('');
+        $('lijst-keuze').addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn || btn.dataset.id === lijst.id) return;
+            // Alleen de gekozen lijst staat in de URL, nooit de antwoorden.
+            history.replaceState(null, '', '#' + btn.dataset.id);
+            toonLijst(LIJSTEN.find((l) => l.id === btn.dataset.id));
+        });
+        $('form').addEventListener('change', update);
+
+        function feedback(text) {
+            const fb = $('feedback');
+            fb.textContent = text;
+            fb.classList.add('show');
+            clearTimeout(fb._t);
+            fb._t = setTimeout(() => fb.classList.remove('show'), 2500);
+        }
+        // Markeer bij printen/kopiëren zonder volledige lijst welke vragen nog open staan.
+        function compleet() {
+            const antw = leesAntwoorden();
+            if (!antw.some((a) => a === null)) return true;
+            antw.forEach((a, i) => document.querySelector('.item[data-item="' + i + '"]').classList.toggle('open', a === null));
+            const eerste = document.querySelector('.item.open');
+            if (eerste) eerste.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            feedback('Vul eerst alle vragen in');
+            return false;
+        }
+        $('btn-print').addEventListener('click', () => {
+            if (!compleet()) return;
+            $('print-date').textContent = new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+            window.print();
+        });
+        $('btn-copy').addEventListener('click', async () => {
+            if (!compleet()) return;
+            try {
+                await navigator.clipboard.writeText(uitslagTekst());
+                feedback('Uitslag gekopieerd naar klembord');
+            } catch {
+                feedback('Kopiëren niet beschikbaar — gebruik Print');
+            }
+        });
+        $('btn-wis').addEventListener('click', () => { toonLijst(lijst); feedback('Antwoorden gewist'); });
+
+        toonLijst(LIJSTEN.find((l) => l.id === location.hash.replace(/^#/, '')) || LIJSTEN[0]);
+    })();
+    </script>
+</body>
+</html>

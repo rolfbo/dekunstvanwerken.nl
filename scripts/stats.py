@@ -169,7 +169,7 @@ SITE = "dekunstvanwerken.nl"
 # checking the site on the phone, …). Counted apart so the exclusion stays visible.
 OWN_IPS = {"84.85.56.148"}
 # The pages that ask the visitor to do something. Always reported, even at zero.
-CONVERSION_PAGES = ("/whitelabel.html", "/opbouwschema.html", "/maatmanloon.html", "/fml.html", "/izp.html")
+CONVERSION_PAGES = ("/whitelabel.html", "/opbouwschema.html", "/maatmanloon.html", "/fml.html", "/izp.html", "/vragenlijsten.html")
 LEAD_TYPES = ("werkgever", "whitelabel", "anders")
 # Our own URL patterns — a 404 here is a broken link (or a stale sitemap), not a scanner.
 # Flat .html files at the root plus the diensten/ and kennisbank/ folders; the .php and

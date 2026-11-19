@@ -84,6 +84,7 @@ const BEDRIJFSINFO = {
     { naam: 'Maatmanloon-calculator', url: `${SITE}/maatmanloon.html` },
     { naam: 'FML concept-tool', url: `${SITE}/fml.html` },
     { naam: 'IZP concept-tool', url: `${SITE}/izp.html` },
+    { naam: 'Vragenlijsten (PHQ-9, GAD-7)', url: `${SITE}/vragenlijsten.html` },
   ],
   werkwijze: 'Klanten houden de verzuimsoftware in eigen beheer: geen vendor lock-in, maximale controle over eigen werknemersgegevens.',
 };
