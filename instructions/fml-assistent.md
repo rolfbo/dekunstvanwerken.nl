@@ -156,6 +156,68 @@ sudo systemctl restart dkvw-mcp
 `dkvw-mcp.service` leest dat bestand optioneel in (`EnvironmentFile=-`), dus
 zonder dat bestand start de service gewoon en blijft de assistent uit.
 
+## De referentielijst
+
+`fml-referenties.js` bevat op dit moment 198 herkenbare maten in 17 groepen,
+samen goed voor alle 50 scoorbare FML-items. Van gewicht (een pak suiker tot
+een zak cement) via afstand, zit- en staduur, hoogte, laag werken, handen,
+trappen, nek, zien/horen/spreken, sociale situaties, overzicht en geheugen,
+vervoer en omgeving, tot herstel en dagritme.
+
+Elke ingang noemt de FML-items waar hij iets over zegt. Daardoor werkt de lijst
+twee kanten op: van een antwoord naar een score, en van een nog leeg item naar
+een vraag die erbij past. Mist de assistent aan het eind rubriek V, dan vraagt
+hij niet "hoe zit het met boven schouderhoogte werken?" maar "kom je nog bij de
+bovenste plank van de keukenkast?".
+
+Elke groep heeft ook een peilvraag — de vraag die het verschil maakt tussen een
+ja/nee en een getal. Bij gewicht: *wat is het zwaarste dat nog gaat, en wat is
+het lichtste dat al niet meer lukt?* Bij herstel: *en hoe was het de dag erna?*
+
+### Uitbreiden
+
+```bash
+node scripts/fml-referenties-check.mjs           # samenvatting + fouten
+node scripts/fml-referenties-check.mjs --items   # per item wat eraan hangt
+```
+
+Dat controleert of elke itemsleutel bestaat en laat zien welke items nog geen
+ingang hebben. Draai het na elke wijziging; een typfout in een sleutel maakt een
+referentie stilletjes nutteloos.
+
+Eén regel bij het uitbreiden: **een slechte referentie is erger dan geen
+referentie.** Een verkeerd gewicht maakt elke score eromheen onbetrouwbaar, en
+dat is precies het verwijt dat een bedrijfsarts terecht zou maken. Voeg alleen
+toe wat je durft te verdedigen.
+
+### Wanneer wordt dit een database?
+
+Nu niet, en niet om de reden die je zou verwachten. De lijst zit in de prompt en
+kost daar ongeveer 4.100 tokens — gecachet, dus verwaarloosbaar. Zelfs met
+duizend ingangen blijft dat zo. **Omvang is niet het omslagpunt.**
+
+Het omslagpunt is *wie hem bewerkt*. Zolang jij het bent, is een bestand in de
+repo beter dan een database: het heeft versiebeheer, je ziet in de diff wat er
+veranderde, het controlescript draait eroverheen en er is geen extra component
+die kan omvallen.
+
+Een database wordt nuttig zodra één van deze dingen waar wordt:
+
+1. **Een bedrijfsarts wil zelf ingangen toevoegen** zonder tussenkomst van een
+   deploy. Dit is de waarschijnlijke eerste trigger.
+2. **Whitelabel-partners krijgen hun eigen lijst** — een uitzendbureau in de
+   bouw heeft andere voorwerpen nodig dan een zorginstelling.
+3. **Je wilt meten welke ingangen werken.** Welke vragen leveren bruikbare
+   antwoorden op, welke worden overgeslagen? Dat vraagt om tellers per ingang,
+   en dus om schrijfbare opslag — maar let op: dat botst met de keuze om niets
+   van gesprekken te bewaren. Alleen geaggregeerd tellen, nooit per gesprek.
+4. **De lijst past niet meer in één prompt.** Pas bij duizenden ingangen. Dan
+   selecteer je per gesprek de relevante groepen in plaats van alles te sturen,
+   en pas dán heb je een index nodig.
+
+Punt 1 en 2 zijn beheer­vragen, 3 is een meetvraag, 4 is pas over de horizon.
+Tot die tijd: gewoon dit bestand.
+
 ## Leverancier kiezen
 
 De modelleverancier is een instelling, geen aanname in de code. Twee vormen

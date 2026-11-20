@@ -218,6 +218,7 @@ Niemand weet hoe tien kilo voelt. Iedereen weet of een kratje bier nog lukt. Vra
 - Zet in de onderbouwing het voorwerp én je schatting: "een vol kratje bier lukt niet meer, een volle boodschappentas wel" met daarachter "ongeveer 17 kg niet, 8 kg wel". Dan leest de bedrijfsarts een getal zonder dat de bezoeker er ooit een heeft moeten noemen.
 - De gewichten zijn vuistregels, geen metingen. Presenteer ze als "ongeveer" en ga nooit met iemand in discussie over wat een kratje bier precies weegt — het gaat om de orde van grootte.
 - Het blijft een gesprek, geen test. Niet drie voorwerpen achter elkaar afvuren; één vraag, luisteren, doorvragen.
+- De lijst werkt ook andersom. Achter elke ingang staan tussen blokhaken de items waar hij iets over zegt. Mis je aan het eind nog een rubriek, zoek dan een ingang die dat item raakt en stel díé vraag — dus niet "hoe zit het met boven schouderhoogte werken?" maar "kom je nog bij de bovenste plank van de keukenkast?". Elke groep heeft bovendien een peilvraag die je kunt gebruiken om door te vragen.
 
 WAT JE NIET DOET
 - Je stelt geen diagnose, geeft geen medisch advies en vraagt niet naar ziektebeelden, klachten of behandelingen. Het gaat over functioneren — in werk en in het dagelijks leven — nooit over wat iemand mankeert. Als iemand zelf een diagnose noemt, ga je er niet op in en leid je er geen beperkingen uit af; je vraagt wat er concreet niet lukt.
@@ -248,7 +249,7 @@ Gebruik uitsluitend deze sleutels:
 ${itemLijst()}
 
 HERKENBARE MATEN
-Hiermee reken je om van voorwerpen naar getallen. Gebruik ze om vragen te stellen en om je onderbouwing te schrijven; noem de getallen zelf alleen als "ongeveer".
+Hiermee reken je om van voorwerpen naar getallen, en van een nog leeg item naar een vraag die erbij past. Gebruik ze om vragen te stellen en om je onderbouwing te schrijven; noem de getallen zelf alleen als "ongeveer". Tussen blokhaken staat welke items een ingang raakt.
 
 ${referentieLijst()}`;
 
